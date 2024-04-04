@@ -1,0 +1,19 @@
+{
+  "name": "pokeselect",
+  "version": "1.0.0",
+  "description": "The PokeSelect application allows users to create Pokemon Draft Leagues with their friends with customized settings",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/everlastingflame/CS546-Group-3-Final-Project.git"
+  },
+  "author": "Todd Bechtel, Charles Booth, Alexander Ha, & Matthew Turner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/everlastingflame/CS546-Group-3-Final-Project/issues"
+  },
+  "homepage": "https://github.com/everlastingflame/CS546-Group-3-Final-Project#readme"
+}
