@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/everlastingflame/CS546-Group-3-Final-Project.git"
+    "url": "git+https://github.com/everlastingflame/PokeSelect.git"
   },
   "author": "Todd Bechtel, Charles Booth, Alexander Ha, & Matthew Turner",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/everlastingflame/CS546-Group-3-Final-Project/issues"
+    "url": "https://github.com/everlastingflame/PokeSelect/issues"
   },
-  "homepage": "https://github.com/everlastingflame/CS546-Group-3-Final-Project#readme",
+  "homepage": "https://github.com/everlastingflame/PokeSelect#readme",
   "dependencies": {
     "axios": "^1.6.8",
     "express": "^4.19.2",
