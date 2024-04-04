@@ -1,3 +1,3 @@
-# CS546-Group-3-Final-Project
+# PokeSelect
 
 ## Todd Bechtel, Alexander Ha, Charles Booth, Matthew Turner
