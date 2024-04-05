@@ -20,6 +20,7 @@
     "axios": "^1.6.8",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
-    "mongodb": "^6.5.0"
+    "mongodb": "^6.5.0",
+    "node-cache": "^5.1.2"
   }
 }
