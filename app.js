@@ -3,6 +3,9 @@ import express from 'express';
 const app = express();
 import exphbs from 'express-handlebars';
 import configRoutes from './routes/index.js';
+import {dbConnection, closeConnection} from './config/mongoConnection.js';
+
+// const db = await dbConnection();
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
