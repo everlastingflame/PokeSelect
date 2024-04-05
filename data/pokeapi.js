@@ -23,13 +23,24 @@ async function getPokedexByName(pokedexName) {
 }
 
 async function resolveQuery(url) {
+  // Return query result from node-cache if previously cached
+  let cachedValue = cache.get(url);
+  if (cachedValue) {
+    return cachedValue;
+  }
+
+  // Otherwise, request the result from PokeAPI with a 20 second timeout
   try {
-    let { data } = await axios.get(url);
+    let { data } = await axios.get(url, { timeout: 20 * 1000 });
+
+    // If successful, cache the result for 1 hour
+    cache.set(url, data, 1000 * 60 * 60);
 
     return data;
   } catch (e) {
     throw `${e.name}: ${e.message}`;
   }
+
 }
 
 export default { getPokedexByName };
