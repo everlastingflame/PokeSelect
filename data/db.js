@@ -1,1 +1,3 @@
-// TODO: Import db collection from ../config/mongoCollections.js
+import * as db from '../config/mongoCollections';
+
+export default {};
