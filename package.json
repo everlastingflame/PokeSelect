@@ -5,6 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "test-pokeapi": "node data/test_pokeapi.js",
     "start": "node app.js"
   },
   "repository": {
@@ -21,6 +22,7 @@
     "axios": "^1.6.8",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
-    "mongodb": "^6.5.0"
+    "mongodb": "^6.5.0",
+    "node-cache": "^5.1.2"
   }
 }
