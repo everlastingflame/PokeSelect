@@ -14,6 +14,6 @@ const getCollectionFn = (collection) => {
 };
 
 export const users = getCollectionFn('users');
-export const team = getCollectionFn('team');
-export const draft = getCollectionFn('draft');
-export const tournament = getCollectionFn('tournament');
+export const teams = getCollectionFn('team');
+export const drafts = getCollectionFn('draft');
+export const tournaments = getCollectionFn('tournament');
