@@ -31,6 +31,27 @@ function validateDate(date, name = "date") {
   return date;
 }
 
+// Validates if input is a valid ObjectId given a string or an ObjectId object
+function validateId(id, name = "ObjectId") {
+  if (!id) {
+    throw "Error: You must provide an id to search for";
+  }
+  if (typeof id !== "string" && typeof id !== "object") {
+    throw `Error: ${name} must be a string or an object`;
+  }
+  if (typeof id === "string") {
+    id = id.trim();
+    if (id.length === 0) {
+      throw `Error: string ${name} cannot be empty or just spaces`;
+    }
+  }
+  if (!ObjectId.isValid(id)) throw "Error: Invalid ObjectId";
+  return id;
+}
+
+
 export default {
-  validateString, validateDate
+  validateString,
+  validateDate,
+  validateId,
 };
