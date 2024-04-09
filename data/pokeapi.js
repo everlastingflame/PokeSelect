@@ -22,6 +22,44 @@ async function getPokedexByName(pokedexName) {
   return data;
 }
 
+async function getPokemon(pokemonName) {
+  pokemonName = validate.validateString(pokemonName, "pokemonName");
+  const endpoint = `${API_URI}/pokemon/${encodeURIComponent(pokemonName)}`;
+
+  let data = await resolveQuery(endpoint);
+
+  return data;
+
+}
+
+async function getPokemonSpecies(pokemonName) {
+  pokemonName = validate.validateString(pokemonName, "pokemonName");
+  const endpoint = `${API_URI}/pokemon-species/${encodeURIComponent(pokemonName)}`;
+
+  let data = await resolveQuery(endpoint);
+
+  /* 
+  Get species of said pokemon
+  Check if varieties array is > 1
+  If > 1, check name of each suffix
+  Ignore if mega or gmax, do something if regional suffix (i.e. hisui)
+  */
+
+
+  return data;
+
+}
+
+async function getGameGeneration(generationName) {
+  generationName = validate.validateString(generationName, "generationName");
+  const endpoint = `${API_URI}/generation/${encodeURIComponent(generationName)}`;
+
+  let data = await resolveQuery(endpoint);
+
+  return data;
+
+}
+
 async function resolveQuery(url) {
   // Return query result from node-cache if previously cached
   let cachedValue = cache.get(url);
@@ -43,4 +81,4 @@ async function resolveQuery(url) {
 
 }
 
-export default { getPokedexByName };
+export default { getPokedexByName, getPokemon, getGameGeneration };
