@@ -22,6 +22,17 @@ async function getPokedexByName(pokedexName) {
   return data;
 }
 
+async function getAllPokemonByPokedex(pokedexName) {
+  pokedex = getPokedexByName(pokedexName);
+  // find way to get all pokemon using pokedex.pokemon_entries.pokemon_species
+  /**
+   * Step 1: get array of entries by podex.pokemon_entries
+   * Step 2: for each entry object, query api for species using pokemon_species.url
+   * Step 3: (in species response) for each variety object in response.varieties,
+   *         query variety_obj.url if pokemon suffix is not gmax/mega and gen is valid for region
+   */
+}
+
 async function getPokemon(pokemonName) {
   pokemonName = validate.validateString(pokemonName, "pokemonName");
   const endpoint = `${API_URI}/pokemon/${encodeURIComponent(pokemonName)}`;
