@@ -68,9 +68,9 @@ async function addTeamToUser(user_id, team_id) {
   const userCollection = await users();
   const updatedUser = await userCollection.findOneAndUpdate(
     { _id: team_id },
-    { $push: { teams: team_id, } },
+    { $push: { teams: team_id } },
     { returnDocument: "after" }
-  )
+  );
 
   if (!updatedUser) {
     throw `Error: Failed to add team to user with id "${user_id}"`;
