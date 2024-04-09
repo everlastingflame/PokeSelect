@@ -55,7 +55,8 @@ function validateId(id, name = "ObjectId") {
 }
 
 function validateUsername(username, name = "username") {
-  username = validateString(username);
+  username = validateString(username, name);
+
   if (username.length < 3 || username.length > 32) {
     throw `Error: ${name} must be between 3 and 32 characters`;
   }
@@ -65,9 +66,23 @@ function validateUsername(username, name = "username") {
   return username;
 }
 
+function validatePassword(password, name = "password") {
+  password = validateString(password, name);
+
+  return password;
+}
+
+function validateEmail(email, name = "email") {
+  email = validateString(email, name);
+
+  return email;
+}
+
 export default {
   validateString,
   validateDate,
   validateId,
   validateUsername,
+  validatePassword,
+  validateEmail,
 };

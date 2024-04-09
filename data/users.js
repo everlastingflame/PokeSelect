@@ -2,14 +2,17 @@ import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import validation from "../data/data_validation.js";
 
-async function createNewUser(username, password, email, dob) {
-  username = validation.validateString(username, "username");
-  password = validation.validateString(password, "password");
-  email = validation.validateString(email, "email");
-  dob = validation.validateDate(dob, "dob");
+// TODO: Finish implementing createNewUser()
+async function createUser(username, password, email, dob) {
+  username = validation.validateUsername(username);
+  password = validation.validatePassword(password);
+  email = validation.validateEmail(email);
+  dob = validation.validateDate(dob, "Date of Birth");
 
   // TODO: Hash password with bcrypt
   let password_hash = password;
+
+  // TODO: Get age from date of birth
 
   let newUser = {
     username: username,
@@ -23,7 +26,7 @@ async function createNewUser(username, password, email, dob) {
   const userCollection = await users();
   const insertInfo = await userCollection.insertOne(newUser);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-    throw "Error: Could not add user";
+    throw `Error: Failed to add user "${username}"`;
   }
 
   const newId = insertInfo.insertedId.toString();
@@ -57,6 +60,22 @@ async function getUserByName(username) {
   return user;
 }
 
-// TODO: Create addTeam function (add team ObjectId to teams array)
+// Adds team_id ObjectId to the user with id user_id
+async function addTeamToUser(user_id, team_id) {
+  user_id = validation.validateId(user_id);
+  team_id = validation.validateId(team_id);
 
-export default { createNewUser, getUserByName, getUserById };
+  const userCollection = await users();
+  const updatedUser = await userCollection.findOneAndUpdate(
+    { _id: team_id },
+    { $push: { teams: team_id, } },
+    { returnDocument: "after" }
+  )
+
+  if (!updatedUser) {
+    throw `Error: Failed to add team to user with id "${user_id}"`;
+  }
+  return updatedUser;
+}
+
+export default { createUser, getUserByName, getUserById, addTeamToUser };
