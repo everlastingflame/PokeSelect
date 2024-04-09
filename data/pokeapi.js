@@ -22,6 +22,26 @@ async function getPokedexByName(pokedexName) {
   return data;
 }
 
+async function getPokemon(pokemonName) {
+  pokemonName = validate.validateString(pokemonName, "pokemonName");
+  const endpoint = `${API_URI}/pokemon/${encodeURIComponent(pokemonName)}`;
+
+  let data = await resolveQuery(endpoint);
+
+  return data;
+
+}
+
+async function getGameGeneration(generationName) {
+  generationName = validate.validateString(generationName, "generationName");
+  const endpoint = `${API_URI}/generation/${encodeURIComponent(generationName)}`;
+
+  let data = await resolveQuery(endpoint);
+
+  return data;
+
+}
+
 async function resolveQuery(url) {
   // Return query result from node-cache if previously cached
   let cachedValue = cache.get(url);
@@ -43,4 +63,4 @@ async function resolveQuery(url) {
 
 }
 
-export default { getPokedexByName };
+export default { getPokedexByName, getPokemon, getGameGeneration };
