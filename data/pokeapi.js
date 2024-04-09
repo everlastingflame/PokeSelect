@@ -32,6 +32,24 @@ async function getPokemon(pokemonName) {
 
 }
 
+async function getPokemonSpecies(pokemonName) {
+  pokemonName = validate.validateString(pokemonName, "pokemonName");
+  const endpoint = `${API_URI}/pokemon-species/${encodeURIComponent(pokemonName)}`;
+
+  let data = await resolveQuery(endpoint);
+
+  /* 
+  Get species of said pokemon
+  Check if varieties array is > 1
+  If > 1, check name of each suffix
+  Ignore if mega or gmax, do something if regional suffix (i.e. hisui)
+  */
+
+
+  return data;
+
+}
+
 async function getGameGeneration(generationName) {
   generationName = validate.validateString(generationName, "generationName");
   const endpoint = `${API_URI}/generation/${encodeURIComponent(generationName)}`;
