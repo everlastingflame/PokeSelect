@@ -8,15 +8,17 @@ const createNewUser = async (username, password, email, dob) => {
     email = data_validation.validateString(email, "email");
     dob = data_validation.validateDate(dob, "dob");
 
+    // TODO: Hash password with bcrypt
+    let password_hash = password;
+
     let newUser = {
         username: username,
-        password: password,
+        password_hash: password_hash,
         email: email,
         dob: dob,
         teams: [],
         age : age
     }
-
 
     const userCollection = await users();
     const insertInfo = await userCollection.insertOne(newUser);
@@ -29,6 +31,7 @@ const createNewUser = async (username, password, email, dob) => {
     return user;
 }
 
+// TODO: Create functions to get user by name and get user by _id
 const get = async (userId) => {
     userId = helpers.validateId(userId);
   
@@ -41,5 +44,7 @@ const get = async (userId) => {
     }
     return product;
   };
+
+// TODO: Create addTeam function (add team ObjectId to teams array)
 
 export default {createNewUser, getUser}

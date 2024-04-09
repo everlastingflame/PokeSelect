@@ -22,6 +22,8 @@ async function getPokedexByName(pokedexName) {
   return data;
 }
 
+// TODO: add getPokedexById function
+
 async function getPokemon(pokemonName) {
   pokemonName = validate.validateString(pokemonName, "pokemonName");
   const endpoint = `${API_URI}/pokemon/${encodeURIComponent(pokemonName)}`;
