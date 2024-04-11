@@ -1,5 +1,5 @@
 import {users} from '../config/mongoCollections.js';
-import {data_validation} from '../data/data_validation.js';
+import data_validation from '../data/data_validation.js';
 import { ObjectId } from "mongodb";
 
 const createNewUser = async (username, password, email, dob) => {
@@ -32,7 +32,7 @@ const createNewUser = async (username, password, email, dob) => {
 }
 
 // TODO: Create functions to get user by name and get user by _id
-const get = async (userId) => {
+const getUser = async (userId) => {
     userId = helpers.validateId(userId);
   
     const userCollection = await users();
@@ -42,9 +42,15 @@ const get = async (userId) => {
     if (user === null) {
       throw `Error: No user with id of ${userId}`;
     }
-    return product;
+    return user;
   };
 
+
+  const getAll = async () => {
+    const userCollection = await users();
+    const userList = await userCollection.find({}).toArray();
+    return userList;
+  };
 // TODO: Create addTeam function (add team ObjectId to teams array)
 
-export default {createNewUser, getUser}
+export default {createNewUser, getUser, getAll}
