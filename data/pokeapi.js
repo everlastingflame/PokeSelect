@@ -23,7 +23,22 @@ async function getPokedexByName(pokedexName) {
 }
 
 async function getAllPokemonByPokedex(pokedexName) {
-  pokedex = getPokedexByName(pokedexName);
+  let pokedex = getPokedexByName(pokedexName);
+  let pokemonList = [];
+
+  for (pokemon of pokedex.pokemon_entries) {
+    pokemonList.push(pokemon); // only adds the object with entry_num and poke_species (name & url). do we want full pokemon entry?
+    checkPokemon = await resolveQuery(pokemon.pokemon_species.url);
+    // or pokemonList.push(checkPokemon) OR we wait for next step before adding
+    for (variety of checkPokemon.varieties) {
+      if(variety.pokemon.name !== "") { // regex specific pokemon varieties that are legal
+        pokemonList.push(await resolveQuery(variety.pokemon.url)); // specific variety for that pokedex
+      }
+    }
+  }
+  return pokemonList;
+
+
   // find way to get all pokemon using pokedex.pokemon_entries.pokemon_species
   /**
    * Step 1: get array of entries by podex.pokemon_entries
@@ -71,6 +86,21 @@ async function getGameGeneration(generationName) {
 
 }
 
+async function getAllPokedexesForGeneration(generationName) { // currently does not cache, discuss how to fix
+  generationName = validate.validateString(generationName, "generationName");
+  let generationData = await getGameGeneration(generationName);
+  let pokedexList = [];
+
+  for (let game of generationData.version_groups) {
+    let gameURL = await resolveQuery(game.url);
+    for (let pokedex of gameURL.pokedexes) {
+     pokedexList.push(await resolveQuery(pokedex.url));
+    }
+  }
+  return pokedexList;
+
+}
+
 async function resolveQuery(url) {
   // Return query result from node-cache if previously cached
   let cachedValue = cache.get(url);
@@ -92,4 +122,4 @@ async function resolveQuery(url) {
 
 }
 
-export default { getPokedexByName, getPokemon, getGameGeneration };
+export default { getPokedexByName, getPokemon, getAllPokedexesForGeneration, getAllPokemonByPokedex, getGameGeneration };
