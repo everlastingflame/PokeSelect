@@ -1,12 +1,17 @@
 import {draft} from '../config/mongoCollections.js';
-import {data_validation} from './data_validation.js';
+import {data_validation, validateId} from './data_validation.js';
 import { ObjectId } from "mongodb";
 
 const createNewDraft = async (dex_name, draft_master, point_budget) => {
+
+    
+    
     // dex_name = id, can also be name
 
     // function to get pkmn_list
     //
+
+
 
     let newDraft = {
         user_ids: [],
@@ -14,35 +19,35 @@ const createNewDraft = async (dex_name, draft_master, point_budget) => {
         tera_banlist: [],
         dex_id: dex_name, // call function to convert name to id
         pkmn_list: pkmn_list,
-        draft_master: 0,
-        pick_number: 0,
+        draft_master: id,
+        pick_number: 1,
         team_size: 0,
         point_budget: point_budget
     };
 
 
-    const teamCollection = await team();
-    const insertInfo = await teamCollection.insertOne(newTeam);
+    const draftCollection = await draft();
+    const insertInfo = await draftCollection.insertOne(newDraft);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-      throw "Error: Could not add user";
+      throw "Error: Could not add draft";
     }
   
     const newId = insertInfo.insertedId.toString();
-    const team = await getTeam(newId);
-    return team;
+    const draft = await getTeam(newId);
+    return draft;
 }
 
-const getTeam = async(teamId) => {
-    teamId = helpers.validateId(teamId);
+const getDraft = async(draftId) => {
+  draftId = validateId(draftId);
   
-    const teamCollection = await team();
-    const team = await teamCollection.findOne({
-      _id: new ObjectId(teamId),
+    const draftCollection = await draft();
+    const draft = await draftCollection.findOne({
+      _id: new ObjectId(draftId),
     });
-    if (team === null) {
-      throw `Error: No user with id of ${userId}`;
+    if (draft === null) {
+      throw `Error: No draft with id of ${draftId}`;
     }
-    return team;
+    return draft;
 }
 
-export {createNewTeam, getTeam}
+export {createNewDraft, getDraft}
