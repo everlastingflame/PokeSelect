@@ -86,12 +86,12 @@ async function getGameGeneration(generationName) {
 
 }
 
-async function getAllPokedexesForGeneration(generationName) { // currently does not cache, discuss how to fix
+async function getAllPokedexesForGeneration(generationName) {
   generationName = validate.validateString(generationName, "generationName");
   let generationData = await getGameGeneration(generationName);
   let pokedexList = [];
 
-  for (let game of generationData.version_groups) {
+  for (let game of generationData.version_groups) { // for each game in the generation
     let gameURL = await resolveQuery(game.url);
     for (let pokedex of gameURL.pokedexes) {
      pokedexList.push(await resolveQuery(pokedex.url));
