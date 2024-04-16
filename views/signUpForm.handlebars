@@ -1,25 +1,26 @@
-<body>
-    <div class="signup-container">
-        <form action="/signup" method="POST">
-            <h2>Sign Up</h2>
-            <div class="input-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="dob" required>
-            </div>
-            <button type="submit">Sign Up</button>
-        </form>
+<body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="container d-flex justify-content-center">
+        <div class="signup-container w-100" style="max-width: 400px;">
+            <form action="/signup" method="POST" class="p-4 shadow rounded">
+                <h2 class="text-center mb-3">Sign Up</h2>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+            </form>
+        </div>
     </div>
 </body>
-</html>

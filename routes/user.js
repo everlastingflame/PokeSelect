@@ -43,7 +43,8 @@ router
 .post(async (req, res) => {
     try{
         let user = req.body;
-        data_validation.validateNonEmptyString(user.name, "name");
+        console.log(user);
+        data_validation.validateNonEmptyString(user.username, "username");
         data_validation.validateNonEmptyString(user.password, "password");
         data_validation.validateNonEmptyString(user.email, "email");
         data_validation.validateDate(user.dob, "dob");
@@ -54,8 +55,8 @@ router
     }
     try {
         let user = req.body;
-        const newUser = await userFuncs.createNewUser(user.name, user.password, user.email, user.dob);
-        res.render('userhome', {newUser: name});
+        const newUser = await userFuncs.createNewUser(user.username, user.password, user.email, user.dob);
+        res.render('userhome', {newUser: user.username});
     } catch (e) {
         console.log(e);
         res.status(500).send(e.message);

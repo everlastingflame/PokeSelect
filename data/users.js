@@ -31,16 +31,18 @@ const createNewUser = async (username, password, email, dob) => {
 }
 
 // TODO: Create functions to get user by name and get user by _id
-const getUser = async (username) => {
-    username = data_validation.validateString(username, "username");
+const getUser = async (userid) => {
+    userid = data_validation.validateString(userid, "userid");
     const userCollection = await users();
     const user = await userCollection.findOne({
-      username: username
+      _id: new ObjectId(userid)
     });
-    if (user === null) {
+    if (userid === null) {
       throw `Error: No user with username ${username}`;
     }
-    return user;
+    console.log("Hit");
+    console.log(user);
+    return user.username;
   };
 
 

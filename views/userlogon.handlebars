@@ -1,16 +1,18 @@
-<body>
-    <div class="signup-container">
-        <form action="/login" method="POST">
-            <h2>Log in</h2>
-            <div class="input-group">
-                <label for="name">Username</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Log in</button>
-        </form>
+<body class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="container d-flex justify-content-center">
+        <div class="login-container w-100" style="max-width: 400px;">
+            <form action="/login" method="POST" class="p-4 shadow rounded">
+                <h2 class="text-center mb-3">Log In</h2>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Log In</button>
+            </form>
+        </div>
     </div>
 </body>
