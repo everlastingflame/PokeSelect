@@ -16,8 +16,7 @@ const createNewUser = async (username, password, email, dob) => {
         password_hash: password_hash,
         email: email,
         dob: dob,
-        teams: [],
-        age : age
+        teams: []
     }
 
     const userCollection = await users();
@@ -27,20 +26,19 @@ const createNewUser = async (username, password, email, dob) => {
     }
   
     const newId = insertInfo.insertedId.toString();
-    const user = await get(newId);
+    const user = await getUser(newId);
     return user;
 }
 
 // TODO: Create functions to get user by name and get user by _id
-const getUser = async (userId) => {
-    userId = helpers.validateId(userId);
-  
+const getUser = async (username) => {
+    username = data_validation.validateString(username, "username");
     const userCollection = await users();
     const user = await userCollection.findOne({
-      _id: new ObjectId(userId),
+      username: username
     });
     if (user === null) {
-      throw `Error: No user with id of ${userId}`;
+      throw `Error: No user with username ${username}`;
     }
     return user;
   };

@@ -1,3 +1,22 @@
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import { ObjectId } from "mongodb";
+
+
+function validateNonEmptyString(string, name = "string") {
+  if (!string) {
+    throw `Error: Did not supply ${name}`;
+  }
+  if (typeof string !== "string") {
+    throw `Error: ${name} must be a string`;
+  }
+  string = string.trim();
+  if (string.length === 0) {
+    throw `Error: ${name} cannot be empty or just spaces`;
+  }
+  return string;
+}
+
 function validateString(string, name = "string") {
   if (!string) {
     throw `Error: Did not supply ${name}`;
@@ -14,9 +33,7 @@ function validateString(string, name = "string") {
 
 function validateDate(date, name = "date") {
   date = validateNonEmptyString(date, name);
-  if (!date.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}/)) {
-    throw `Error: ${date} is not in mm/dd/yyyy format`;
-  }
+
   const _day = dayjs(date, "MM/DD/YYYY", true);
   if (!_day.isValid()) {
     throw `Error: ${date} is invalid`;
@@ -54,4 +71,5 @@ export default {
   validateString,
   validateDate,
   validateId,
+  validateNonEmptyString
 };

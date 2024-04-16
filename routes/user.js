@@ -41,15 +41,23 @@ router
     res.render('signUpForm');
 })
 .post(async (req, res) => {
+    try{
+        let user = req.body;
+        data_validation.validateNonEmptyString(user.name, "name");
+        data_validation.validateNonEmptyString(user.password, "password");
+        data_validation.validateNonEmptyString(user.email, "email");
+        data_validation.validateDate(user.dob, "dob");
+    }
+    catch(e){
+        res.status(400).send(`Invalid input, ${e.message}`); 
+        return;
+    }
     try {
-        const user = req.body;
-        if (!data_validation.isValidUser(user)) {
-            res.status(400).send('Invalid user');
-            return;
-        }
-        const newUser = await userFuncs.createNewUser(user);
-        res.status(201).json(newUser);
+        let user = req.body;
+        const newUser = await userFuncs.createNewUser(user.name, user.password, user.email, user.dob);
+        res.render('userhome', {newUser: name});
     } catch (e) {
+        console.log(e);
         res.status(500).send(e.message);
     }
 });
@@ -60,19 +68,25 @@ router
     res.render('userlogon');
 })
 .post(async (req, res) => {
-    try {
-        const user = req.body;
-        if (!data_validation.isValidUser(user)) {
-            res.status(400).send('Invalid user');
-            return;
-        }
+    try{
+        let user = req.body;
+        data_validation.validateNonEmptyString(user.name, "name");
+        data_validation.validateNonEmptyString(user.password, "password");
+    }
+    catch(e){
+        res.status(400).send(`Invalid input, ${e}`); 
+        return;
+    }
+    try{
+        let user = req.body;
         const existingUser = await userFuncs.getUser(user.username);
         if (!existingUser || existingUser.password !== user.password) {
             res.status(401).send('Invalid user or password');
             return;
         }
-        res.render('welcome', { user: existingUser });
+        res.render('userhome', {user: existingUser.name});  
     } catch (e) {
+        console.log(e);
         res.status(500).send(e.message);
     }
 });
