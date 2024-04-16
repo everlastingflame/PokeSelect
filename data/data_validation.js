@@ -12,6 +12,16 @@ function validateString(string, name = "string") {
   return string;
 }
 
+function validateNumber(number, name = "number") {
+  if (!number) {
+    throw `Error: Did not supply ${name}`;
+  }
+  if (typeof number !== "number" || Number.isNaN(number)) {
+    throw `Error: ${name} is type [${typeof number}], not number`;
+  }
+  return number;
+}
+
 function validateDate(date, name = "date") {
   date = validateString(date, name);
   if (!date.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}/)) {
