@@ -22,20 +22,45 @@ async function getPokedexByName(pokedexName) {
   return data;
 }
 
+
+/*
+Given a generation called gen, find:
+pokedexesForGen = getAllPokedexesForGeneration(gen); --> calls getGameGeneration(gen)
+let pokemonInGen = [];
+for (pokedex of pokedexesForGen) {
+  pokemonInGen.push(getAllPokemonByPokedex(pokedex));
+}
+pokemonInGen.flat()
+// Set gen_suffix by gen
+gen = 7
+gen_suffix = ... e.g. `$(gen===9 ? '' : 'paldea|')$(gen===7 ? '' : '|alola')$(gen === 8 ? '' : '|galar|hisui')`
+suffixRegex = new RegExp(`.*-($(gen_suffix)))
+pokemonInGen.filter((e) => !e.name.match(suffixRegex))
+}
+*/
+
+async function getAllPokemonByGeneration(generationName) { // generationName should be a number 1-9
+  generationName = validate.validateString(generationName, "generationName");
+  pokedexesForGen = getAllPokedexesForGeneration(generationName); // gets all pokedexes for that generation
+  let pokemonInGen = [];
+  for (pokedex of pokedexesForGen) { // gets all pokemon in that generation, including regional varieties that aren't in gen
+    pokemonInGen.push(getAllPokemonByPokedex(pokedex));
+  }
+  pokemonInGen = pokemonInGen.flat();
+  let gen_suffix = `$(gen===9 ? '' : 'paldea|')$(gen===7 ? '' : 'alola|')$(gen === 8 ? '' : 'galar|hisui')`;
+  let suffixRegex = new RegExp(`.*-(${gen_suffix})`);
+  pokemonInGen.filter((e) => !e.name.match(suffixRegex)); // filters out regional varieties that aren't in generation
+  return pokemonInGen;
+}
+
 async function getAllPokemonByPokedex(pokedexName) {
   let pokedex = getPokedexByName(pokedexName);
   let pokemonList = [];
 
-  for (pokemon of pokedex.pokemon_entries) {
-    pokemonList.push(pokemon); // only adds the object with entry_num and poke_species (name & url). do we want full pokemon entry?
-    checkPokemon = await resolveQuery(pokemon.pokemon_species.url);
-    // or pokemonList.push(checkPokemon) OR we wait for next step before adding
-    for (variety of checkPokemon.varieties) {
-      if(variety.pokemon.name !== "") { // regex specific pokemon varieties that are legal
-        pokemonList.push(await resolveQuery(variety.pokemon.url)); // specific variety for that pokedex
-      }
-    }
+  for (pokemon of pokedex.pokemon_entries) { // pushes all species varieties to pokemonList
+    pokemonList.push(await getAllPokemonFromSpecies(pokemon.pokemon_species.name));
   }
+  pokemonList.flat();
   return pokemonList;
 
 
@@ -58,22 +83,21 @@ async function getPokemon(pokemonName) {
 
 }
 
-async function getPokemonSpecies(pokemonName) {
-  pokemonName = validate.validateString(pokemonName, "pokemonName");
-  const endpoint = `${API_URI}/pokemon-species/${encodeURIComponent(pokemonName)}`;
+async function getAllPokemonFromSpecies(speciesName) { // given a pokemon species (i.e. "arcanine"), returns all pokemon entries for each species
+  speciesName = validate.validateString(speciesName, "speciesName");
+  const endpoint = `${API_URI}/pokemon-species/${encodeURIComponent(speciesName)}`;
 
-  let data = await resolveQuery(endpoint);
+  let species = await resolveQuery(endpoint);
 
-  /* 
-  Get species of said pokemon
-  Check if varieties array is > 1
-  If > 1, check name of each suffix
-  Ignore if mega or gmax, do something if regional suffix (i.e. hisui)
-  */
+  let speciesArray = [];
 
+  for (variety of species.varieties) {
+    if(variety.is_default || variety.pokemon.name.match(/.*-(hisui|galar|alola|paldea)/)) {
+      speciesArray.push(resolveQuery(variety.pokemon.url));
+    }
+  }
 
-  return data;
-
+  return speciesArray;
 }
 
 async function getGameGeneration(generationName) {
@@ -91,7 +115,7 @@ async function getAllPokedexesForGeneration(generationName) {
   let generationData = await getGameGeneration(generationName);
   let pokedexList = [];
 
-  for (let game of generationData.version_groups) { // for each game in the generation
+  for (let game of generationData.version_groups) { // for each game in the generation, returns pokedexes
     let gameURL = await resolveQuery(game.url);
     for (let pokedex of gameURL.pokedexes) {
      pokedexList.push(await resolveQuery(pokedex.url));
