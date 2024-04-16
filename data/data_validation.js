@@ -1,3 +1,9 @@
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import { ObjectId } from "mongodb";
+dayjs.extend(customParseFormat);
+
+
 function validateString(string, name = "string") {
   if (!string) {
     throw `Error: Did not supply ${name}`;
@@ -24,9 +30,7 @@ function validateNumber(number, name = "number") {
 
 function validateDate(date, name = "date") {
   date = validateString(date, name);
-  if (!date.match(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}/)) {
-    throw `Error: ${date} is not in mm/dd/yyyy format`;
-  }
+
   const _day = dayjs(date, "MM/DD/YYYY", true);
   if (!_day.isValid()) {
     throw `Error: ${date} is invalid`;

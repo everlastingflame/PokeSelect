@@ -1,18 +1,22 @@
+import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import validation from "../data/data_validation.js";
 
+const cost_factor = 12;
+
 // TODO: Finish implementing createNewUser()
-async function createUser(username, password, email, dob) {
+async function createNewUser(username, password, email, dob) {
   username = validation.validateUsername(username);
   password = validation.validatePassword(password);
   email = validation.validateEmail(email);
   dob = validation.validateDate(dob, "Date of Birth");
 
-  // TODO: Hash password with bcrypt
-  let password_hash = password;
+  let password_hash = bcrypt.hash(password, cost_factor);
+  console.log(password_hash);
 
-  // TODO: Get age from date of birth
+  dob = dayjs(dob, "MM/DD/YYYY", true);
+  age = dayjs().diff(dob, year);
 
   let newUser = {
     username: username,
@@ -78,4 +82,4 @@ async function addTeamToUser(user_id, team_id) {
   return updatedUser;
 }
 
-export default { createUser, getUserByName, getUserById, addTeamToUser };
+export default { createNewUser: createNewUser, getUserByName, getUserById, addTeamToUser };
