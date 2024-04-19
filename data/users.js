@@ -12,7 +12,7 @@ async function createNewUser(username, password, email, dob) {
   email = validation.validateEmail(email);
   dob = validation.validateDate(dob, "Date of Birth");
 
-  let password_hash = bcrypt.hash(password, cost_factor);
+  let password_hash = await bcrypt.hash(password, cost_factor);
   console.log(password_hash);
 
   dob = dayjs(dob, "MM/DD/YYYY", true);

@@ -20,6 +20,8 @@
   "homepage": "https://github.com/everlastingflame/PokeSelect#readme",
   "dependencies": {
     "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
+    "dayjs": "^1.11.10",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "mongodb": "^6.5.0",
