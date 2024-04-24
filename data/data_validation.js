@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import { ObjectId } from "mongodb";
+dayjs.extend(customParseFormat);
 
 
 function validateNonEmptyString(string, name = "string") {

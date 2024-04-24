@@ -37,11 +37,9 @@ const getUser = async (userid) => {
     const user = await userCollection.findOne({
       _id: new ObjectId(userid)
     });
-    if (userid === null) {
+    if (user === null) {
       throw `Error: No user with username ${username}`;
     }
-    console.log("Hit");
-    console.log(user);
     return user.username;
   };
 
