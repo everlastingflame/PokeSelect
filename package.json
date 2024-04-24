@@ -5,7 +5,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test-pokeapi": "node data/test_pokeapi.js",
+    "test-pokeapi": "node tests/test_pokeapi.js",
+    "test-users": "node tests/test_users.js",
     "start": "node app.js"
   },
   "repository": {
@@ -20,6 +21,8 @@
   "homepage": "https://github.com/everlastingflame/PokeSelect#readme",
   "dependencies": {
     "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
+    "dayjs": "^1.11.10",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "mongodb": "^6.5.0",

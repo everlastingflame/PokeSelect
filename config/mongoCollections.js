@@ -13,7 +13,13 @@ const getCollectionFn = (collection) => {
   };
 };
 
-export const users = getCollectionFn("users");
+let _users;
+if (process.env.NODE_ENV === "testing") {
+  _users = getCollectionFn("test_users");
+} else {
+  _users = getCollectionFn("users");
+}
+export const users = _users;
 export const teams = getCollectionFn("team");
 export const drafts = getCollectionFn("draft");
 export const tournaments = getCollectionFn("tournament");

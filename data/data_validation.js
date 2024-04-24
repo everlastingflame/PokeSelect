@@ -62,7 +62,7 @@ function validateId(id, name = "ObjectId") {
     if (id.length === 0) {
       throw `Error: string ${name} cannot be empty or just spaces`;
     }
-    id = ObjectId(id);
+    id = new ObjectId(id);
   }
   if (!ObjectId.isValid(id)) throw "Error: Invalid ObjectId";
   return id;

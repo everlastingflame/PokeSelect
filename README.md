@@ -1,3 +1,3 @@
 # PokeSelect
 
-## Todd Bechtel, Alexander Ha, Charles Booth, Matthew Turner
+## Todd Bechtel, Charles Booth, Matthew Turner
