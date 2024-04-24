@@ -24,7 +24,7 @@ async function createNewUser(username, password, email, dob) {
     email: email,
     dob: dob,
     teams: [],
-    age: age,
+    age: age
   };
 
   const userCollection = await users();
