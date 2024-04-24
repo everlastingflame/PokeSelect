@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import dayjs from "dayjs";
 import { ObjectId } from "mongodb";
 
