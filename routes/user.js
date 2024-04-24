@@ -36,7 +36,7 @@ router.get('/users/:id', async (req, res) => {
 });
 
 router
-.route('/signup')
+.route('/register')
 .get((req, res) => {
     res.render('signUpForm');
 })
