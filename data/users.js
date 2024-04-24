@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
+import dayjs from "dayjs";
 import { ObjectId } from "mongodb";
+
 import { users } from "../config/mongoCollections.js";
 import validation from "../data/data_validation.js";
 
@@ -12,14 +14,14 @@ async function createNewUser(username, password, email, dob) {
   email = validation.validateEmail(email);
   dob = validation.validateDate(dob, "Date of Birth");
 
+
   const userCollection = await users();
   let user = await userCollection.findOne({
-    username: { $eq: username.toLowerCase() },
+    username: username,
   });
   if (user) {
     throw `Error: The username ${username} is already in use`;
   }
-
 
   let password_hash = await bcrypt.hash(password, cost_factor);
 
@@ -89,4 +91,4 @@ async function addTeamToUser(user_id, team_id) {
   return updatedUser;
 }
 
-export default { createNewUser: createNewUser, getUserByName, getUserById, addTeamToUser };
+export default { createNewUser, getUserByName, getUserById, addTeamToUser };
