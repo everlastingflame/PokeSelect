@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import dayjs from "dayjs";
 import { ObjectId } from "mongodb";
 
@@ -91,4 +91,31 @@ async function addTeamToUser(user_id, team_id) {
   return updatedUser;
 }
 
-export default { createNewUser, getUserByName, getUserById, addTeamToUser };
+export const loginUser = async (username, password) => {
+  //try catching here to obfuscate error 
+  try{ 
+    username = validation.validateUsername(username);
+    password = validation.validatePassword(password);
+    dob  = validation.validateDate(dob, "Date of Birth");
+  } catch (e) {
+    throw 'Either the username or password is invalid';
+  }
+
+  const userCollection = await users();
+  const user = await userCollection.findOne({
+    username: username,
+  });
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw 'Either the username or password is invalid';
+  }
+
+  let _id = user._id;
+  let username = user.username;
+  let role = user.role;
+  let themePreference = user.themePreference;
+  
+  return {_id, username, firstName, lastName, favoriteQuote, role, themePreference};
+};
+
+export default { createNewUser, getUserByName, getUserById, addTeamToUser, loginUser };

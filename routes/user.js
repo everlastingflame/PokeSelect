@@ -1,6 +1,6 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
-import userFuncs from "../data/users.js"
+import { dbData } from "../data/index.js"
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
 router.get('/users', async (req, res) => {
     try {
-        const users = await userFuncs.getAll();
+        const users = await dbData.users.getAll();
         res.json(users);
     } catch (e) {
         res.status(500).send(e.message);
@@ -24,7 +24,7 @@ router.get('/users', async (req, res) => {
 
 router.get('/users/:id', async (req, res) => {
     try {
-        const user = await userFuncs.getUser(req.params.id);
+        const user = await dbData.users.getUser(req.params.id);
         if (!user) {
             res.status(404).send('User not found');
             return;
@@ -44,9 +44,9 @@ router
     try{
         let user = req.body;
         console.log(user);
-        data_validation.validateNonEmptyString(user.username, "username");
-        data_validation.validateNonEmptyString(user.password, "password");
-        data_validation.validateNonEmptyString(user.email, "email");
+        data_validation.validateString(user.username, "username");
+        data_validation.validateString(user.password, "password");
+        data_validation.validateString(user.email, "email");
         data_validation.validateDate(user.dob, "dob");
     }
     catch(e){
@@ -55,7 +55,7 @@ router
     }
     try {
         let user = req.body;
-        const newUser = await userFuncs.createNewUser(user.username, user.password, user.email, user.dob);
+        const newUser = await dbData.users.createNewUser(user.username, user.password, user.email, user.dob);
         res.render('userhome', {newUser: user.username});
     } catch (e) {
         console.log(e);
@@ -69,25 +69,26 @@ router
     res.render('userlogon');
 })
 .post(async (req, res) => {
+    const {username, password} = req.body;
     try{
+        console.log(user.username, user.password);
         let user = req.body;
-        data_validation.validateNonEmptyString(user.name, "name");
-        data_validation.validateNonEmptyString(user.password, "password");
+        data_validation.validateString(user.username, "username");
+        data_validation.validateString(user.password, "password");
     }
     catch(e){
-        res.status(400).send(`Invalid input, ${e}`); 
+        res.status(400).render('userlogon', {error:  `Invalid input, ${e}`}); 
         return;
     }
     try{
         let user = req.body;
-        const existingUser = await userFuncs.getUser(user.username);
+        const existingUser = await dbData.users.getUser(user.username);
         if (!existingUser || existingUser.password !== user.password) {
-            res.status(401).send('Invalid user or password');
+            res.status(401).render('userlogon', {error: 'Invalid user or password'});
             return;
         }
         res.render('userhome', {user: existingUser.name});  
     } catch (e) {
-        console.log(e);
         res.status(500).send(e.message);
     }
 });
