@@ -15,6 +15,9 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   next();
 };
 
+const staticDir = express.static('public');
+app.use('/public', staticDir);
+
 
 app.use(express.json());
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
