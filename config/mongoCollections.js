@@ -1,4 +1,4 @@
-import { dbConnection } from './mongoConnection.js';
+import { dbConnection } from "./mongoConnection.js";
 
 const getCollectionFn = (collection) => {
   let _col = undefined;
@@ -13,7 +13,13 @@ const getCollectionFn = (collection) => {
   };
 };
 
-export const users = getCollectionFn('users');
-export const team = getCollectionFn('team');
-export const draft = getCollectionFn('draft');
-export const tournament = getCollectionFn('tournament');
+let _users;
+if (process.env.NODE_ENV === "testing") {
+  _users = getCollectionFn("test_users");
+} else {
+  _users = getCollectionFn("users");
+}
+export const users = _users;
+export const teams = getCollectionFn("team");
+export const drafts = getCollectionFn("draft");
+export const tournaments = getCollectionFn("tournament");

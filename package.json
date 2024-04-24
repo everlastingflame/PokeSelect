@@ -5,7 +5,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "test-pokeapi": "node data/test_pokeapi.js",
+    "test-pokeapi": "node tests/test_pokeapi.js",
+    "test-users": "node tests/test_users.js",
     "start": "node app.js"
   },
   "repository": {

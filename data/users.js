@@ -1,54 +1,94 @@
-import {users} from '../config/mongoCollections.js';
-import data_validation from '../data/data_validation.js';
+import bcrypt from "bcrypt";
+import dayjs from "dayjs";
 import { ObjectId } from "mongodb";
 
-const createNewUser = async (username, password, email, dob) => {
-    username = data_validation.validateString(username, "username");
-    password = data_validation.validateString(password, "password");
-    email = data_validation.validateString(email, "email");
-    dob = data_validation.validateDate(dob, "dob");
+import { users } from "../config/mongoCollections.js";
+import validation from "../data/data_validation.js";
 
-    // TODO: Hash password with bcrypt
-    let password_hash = password;
+const cost_factor = 12;
 
-    let newUser = {
-        username: username,
-        password_hash: password_hash,
-        email: email,
-        dob: dob,
-        teams: []
-    }
+// TODO: Finish implementing createNewUser()
+async function createNewUser(username, password, email, dob) {
+  username = validation.validateUsername(username);
+  password = validation.validatePassword(password);
+  email = validation.validateEmail(email);
+  dob = validation.validateDate(dob, "Date of Birth");
 
-    const userCollection = await users();
-    const insertInfo = await userCollection.insertOne(newUser);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-      throw "Error: Could not add user";
-    }
-  
-    const newId = insertInfo.insertedId.toString();
-    const user = await getUser(newId);
-    return user;
+
+  const userCollection = await users();
+  let user = await userCollection.findOne({
+    username: username,
+  });
+  if (user) {
+    throw `Error: The username ${username} is already in use`;
+  }
+
+  let password_hash = await bcrypt.hash(password, cost_factor);
+
+  dob = dayjs(dob, "MM/DD/YYYY", true);
+  let age = dayjs().diff(dob, "year");
+
+  let newUser = {
+    username: username,
+    password_hash: password_hash,
+    email: email,
+    dob: dob,
+    teams: [],
+    age: age,
+  };
+
+  const insertInfo = await userCollection.insertOne(newUser);
+  if (!insertInfo.acknowledged || !insertInfo.insertedId) {
+    throw `Error: Failed to add user "${username}"`;
+  }
+
+  const newId = insertInfo.insertedId.toString();
+  user = await getUserById(newId);
+  return user;
 }
 
-// TODO: Create functions to get user by name and get user by _id
-const getUser = async (userid) => {
-    userid = data_validation.validateString(userid, "userid");
-    const userCollection = await users();
-    const user = await userCollection.findOne({
-      _id: new ObjectId(userid)
-    });
-    if (user === null) {
-      throw `Error: No user with username ${username}`;
-    }
-    return user.username;
-  };
+async function getUserById(userId) {
+  userId = validation.validateId(userId);
 
+  const userCollection = await users();
+  const user = await userCollection.findOne({
+    _id: userId,
+  });
+  if (user === null) {
+    throw `Error: No user exists with id of ${userId}`;
+  }
+  return user;
+}
 
-  const getAll = async () => {
-    const userCollection = await users();
-    const userList = await userCollection.find({}).toArray();
-    return userList;
-  };
-// TODO: Create addTeam function (add team ObjectId to teams array)
+async function getUserByName(username) {
+  username = validation.validateUsername(username);
 
-export default {createNewUser, getUser, getAll}
+  const userCollection = await users();
+  const user = await userCollection.findOne({
+    name: username,
+  });
+  if (user === null) {
+    throw `Error: No user exists with username "${username}"`;
+  }
+  return user;
+}
+
+// Adds team_id ObjectId to the user with id user_id
+async function addTeamToUser(user_id, team_id) {
+  user_id = validation.validateId(user_id);
+  team_id = validation.validateId(team_id);
+
+  const userCollection = await users();
+  const updatedUser = await userCollection.findOneAndUpdate(
+    { _id: team_id },
+    { $push: { teams: team_id } },
+    { returnDocument: "after" }
+  );
+
+  if (!updatedUser) {
+    throw `Error: Failed to add team to user with id "${user_id}"`;
+  }
+  return updatedUser;
+}
+
+export default { createNewUser, getUserByName, getUserById, addTeamToUser };
