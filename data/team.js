@@ -41,4 +41,19 @@ const getTeam = async(teamId) => {
     return team;
 }
 
+const addPokemonToTeam = async (teamId, pokemonDrafted) => {
+  let team = getTeam(teamId);
+  if(team.points_remaining < pokemonDrafted.point_val) throw "You do not have enough points to draft this Pokemon";
+  // have to add more checks regarding min pokemon
+
+  pokemonDrafted.is_drafted = true;
+  team.points_remaining = team.points_remaining - pokemonDrafted.point_val;
+  team.selections.push(pokemonDrafted);
+  return pokemonDrafted;
+}
+
+const reportMatch = async (teamId, result) => {
+  // adds win to team if they won match, add loss otherwise
+}
+
 export {createNewTeam, getTeam}
