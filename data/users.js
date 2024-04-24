@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
+import dayjs from "dayjs";
 import { ObjectId } from "mongodb";
+
 import { users } from "../config/mongoCollections.js";
 import validation from "../data/data_validation.js";
 
@@ -12,11 +14,19 @@ async function createNewUser(username, password, email, dob) {
   email = validation.validateEmail(email);
   dob = validation.validateDate(dob, "Date of Birth");
 
-  let password_hash = bcrypt.hash(password, cost_factor);
-  console.log(password_hash);
+
+  const userCollection = await users();
+  let user = await userCollection.findOne({
+    username: username,
+  });
+  if (user) {
+    throw `Error: The username ${username} is already in use`;
+  }
+
+  let password_hash = await bcrypt.hash(password, cost_factor);
 
   dob = dayjs(dob, "MM/DD/YYYY", true);
-  age = dayjs().diff(dob, year);
+  let age = dayjs().diff(dob, "year");
 
   let newUser = {
     username: username,
@@ -27,14 +37,13 @@ async function createNewUser(username, password, email, dob) {
     age: age,
   };
 
-  const userCollection = await users();
   const insertInfo = await userCollection.insertOne(newUser);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
     throw `Error: Failed to add user "${username}"`;
   }
 
   const newId = insertInfo.insertedId.toString();
-  const user = await get(newId);
+  user = await getUserById(newId);
   return user;
 }
 
@@ -82,4 +91,4 @@ async function addTeamToUser(user_id, team_id) {
   return updatedUser;
 }
 
-export default { createNewUser: createNewUser, getUserByName, getUserById, addTeamToUser };
+export default { createNewUser, getUserByName, getUserById, addTeamToUser };

@@ -1,4 +1,4 @@
-import apiData from "./pokeapi.js";
+import apiData from "../data/pokeapi.js";
 
 // Query valid Pokedex GET request
 try {
@@ -29,3 +29,5 @@ process.stdout.write(" ↳ ");
 console.time("cached");
 let cached = await apiData.getPokedexByName("hoenn");
 console.timeEnd("cached");
+
+process.exit();
