@@ -44,9 +44,9 @@ router
     try{
         let user = req.body;
         console.log(user);
-        data_validation.validateString(user.username, "username");
-        data_validation.validateString(user.password, "password");
-        data_validation.validateString(user.email, "email");
+        data_validation.validateUsername(user.username, "username");
+        data_validation.validatePassword(user.password, "password");
+        data_validation.validateEmail(user.email, "email");
         data_validation.validateDate(user.dob, "dob");
     }
     catch(e){

@@ -83,6 +83,8 @@ function validateUsername(username, name = "username") {
 function validatePassword(password, name = "password") {
   password = validateString(password, name);
 
+  // TODO: Implement other validation for password requirements (i.e. length)
+
   return password;
 }
 
