@@ -1,18 +1,18 @@
 import {draft, users} from '../config/mongoCollections.js';
-import {getUser} from "./users.js";
+import userfunctions from "./users.js";
 import {getTeam, addPokemonToTeam} from "./team.js";
-import {data_validation, validateNumber, validateString, validateId} from './data_validation.js';
+import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
-import {getAllPokemonByGeneration} from "./pokeapi.js";
+import pokeapi from "./pokeapi.js";
 
 const createNewDraft = async (generationName, draft_master, point_budget, team_size, tera_num_captains) => {
-    generationName = validateString(generationName, "generationName");
-    draft_master = validateString(draft_master, "draftMaster");
-    point_budget = validateNumber(point_budget);
-    team_size = validateNumber(team_size);
-    tera_num_captains = validateNumber(tera_num_captains);
+    generationName = validation.validateString(generationName, "generationName");
+    draft_master = validation.validateString(draft_master, "draftMaster");
+    point_budget = validation.validateNumber(point_budget);
+    team_size = validation.validateNumber(team_size);
+    tera_num_captains = validation.validateNumber(tera_num_captains);
 
-    let old_pkmn_list = await getAllPokemonByGeneration(generationName);
+    let old_pkmn_list = await pokeapi.getAllPokemonByGeneration(generationName);
     let pkmn_list;
     for (let pokemon of pkmn_list) {
       let types = [];
@@ -73,7 +73,7 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
 }
 
 const getDraft = async(draftId) => {
-  draftId = validateId(draftId);
+  draftId = validation.validateId(draftId);
   
     const draftCollection = await draft();
     const draft = await draftCollection.findOne({
@@ -97,7 +97,7 @@ const editPokemonList = async (pkmn_list, banned_pkmn) => {
 
 const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, draftId) => {
   let draft = await getDraft(draftId);
-  let user = await getUser(user_id);
+  let user = await userfunctions.getUserById(user_id);
 
   if (!draft.user_ids.includes(user_id)) throw "The user_id provided is not in this draft";
   if (!user.teams.includes(team_id)) throw "The user does not have a team with the team_id provided";
