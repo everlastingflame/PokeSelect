@@ -12,6 +12,7 @@ async function createNewUser(username, password, email, dob) {
   username = validation.validateUsername(username);
   password = validation.validatePassword(password);
   email = validation.validateEmail(email);
+  console.log(dob);
   dob = validation.validateDate(dob, "Date of Birth");
 
 
@@ -34,7 +35,7 @@ async function createNewUser(username, password, email, dob) {
     email: email,
     dob: dob,
     teams: [],
-    age: age,
+    age: age
   };
 
   const insertInfo = await userCollection.insertOne(newUser);
@@ -65,7 +66,7 @@ async function getUserByName(username) {
 
   const userCollection = await users();
   const user = await userCollection.findOne({
-    name: username,
+    username: username,
   });
   if (user === null) {
     throw `Error: No user exists with username "${username}"`;
@@ -111,7 +112,6 @@ export const loginUser = async (username, password) => {
   }
 
   let _id = user._id;
-  let username = user.username;
   let role = user.role;
   let themePreference = user.themePreference;
   

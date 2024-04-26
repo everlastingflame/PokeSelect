@@ -31,7 +31,7 @@ function validateNumber(number, name = "number") {
 function validateDate(date, name = "date") {
   date = validateString(date, name);
 
-  const _day = dayjs(date, "MM/DD/YYYY", true);
+  const _day = dayjs(date, "YYYY-MM-DD", true); //updated because registerform likes using year month day for some reason
   if (!_day.isValid()) {
     throw `Error: ${date} is invalid`;
   }
@@ -101,4 +101,5 @@ export default {
   validateUsername,
   validatePassword,
   validateEmail,
+  validateNumber
 };

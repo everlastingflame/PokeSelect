@@ -41,26 +41,23 @@ router
     res.render('signUpForm');
 })
 .post(async (req, res) => {
+    let user = req.body;
     try{
-        let user = req.body;
         console.log(user);
         data_validation.validateUsername(user.username, "username");
         data_validation.validatePassword(user.password, "password");
         data_validation.validateEmail(user.email, "email");
+        console.log(user.dob);
         data_validation.validateDate(user.dob, "dob");
-        console.log('hello');
     }
     catch(e){
-        res.status(400).send(`Invalid input, ${e.message}`); 
-        return;
+        res.status(400).render('signUpForm', {error: e}); 
     }
     try {
-        let user = req.body;
         const newUser = await dbData.users.createNewUser(user.username, user.password, user.email, user.dob);
         res.render('userhome', {newUser: user.username});
     } catch (e) {
-        console.log(e);
-        res.status(500).send(e.message);
+        res.status(400).render('signUpForm', {error: e});
     }
 });
 
@@ -72,26 +69,14 @@ router
 .post(async (req, res) => {
     const {username, password} = req.body;
     try{
-        console.log(user.username, user.password);
-        let user = req.body;
-        data_validation.validateString(user.username, "username");
-        data_validation.validateString(user.password, "password");
-    }
-    catch(e){
-        res.status(400).render('userlogon', {error:  `Invalid input, ${e}`}); 
+        const user = await dbData.users.loginUser(username, password);
+        res.render('userhome', {user: user});
+
+    }catch(e){
+        res.status(400).render('userlogon', {error: e}); 
         return;
     }
-    try{
-        let user = req.body;
-        const existingUser = await dbData.users.getUser(user.username);
-        if (!existingUser || existingUser.password !== user.password) {
-            res.status(401).render('userlogon', {error: 'Invalid user or password'});
-            return;
-        }
-        res.render('userhome', {user: existingUser.name});  
-    } catch (e) {
-        res.status(500).send(e.message);
-    }
+
 });
 
 export default router;
