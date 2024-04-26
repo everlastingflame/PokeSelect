@@ -12,9 +12,13 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
     team_size = validation.validateNumber(team_size);
     tera_num_captains = validation.validateNumber(tera_num_captains);
 
+    if(point_budget < 6) throw "Point budget must be at least 6 so a team of 6 Pokemon can be drafted";
+    if(team_size < 6) throw "Team size must be at least 6";
+    if(tera_num_captains < 0 || tera_num_captains > team_size) throw "The number of tera captains can't be a negative number or greater than the team size";
+
     let old_pkmn_list = await pokeapi.getAllPokemonByGeneration(generationName);
     let pkmn_list;
-    for (let pokemon of pkmn_list) {
+    for (let pokemon of old_pkmn_list) {
       let types = [];
       let abilities = [];
       let stats = {};
@@ -28,18 +32,16 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
         stats[stat.stat.name] = stat.base_stat;
       }
       pkmn_list.push({
-        pkmn_name: pokemon.name,
+        name: pokemon.name,
         pkmn_id: pokemon.id,
         point_val: 1,
         is_drafted: false,
+        is_tera_eligible: true,
         types: types,
         abilities: abilities,
         stats: stats
       })
     }
-    if(point_budget < 6) throw "Point budget must be at least 6 so a team of 6 Pokemon can be drafted";
-    if(team_size < 6) throw "Team size must be at least 6";
-    if(tera_num_captains < 0 || tera_num_captains > team_size) throw "The number of tera captains can't be a negative number or greater than the team size";
 
     let usersCollection = await users();
     const user = await usersCollection.findOne({username: draft_master});
@@ -85,11 +87,14 @@ const getDraft = async(draftId) => {
     return draft;
 }
 
-const editPokemonList = async (pkmn_list, banned_pkmn) => {
-  // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
+const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
+  // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
   for (pokemon of pkmn_list) {
-    if(banned_pkmn.includes(pokemon.name)) {
+    if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
       pokemon.point_val = -1;
+    }
+    if(tera_banned_pkmn.includes(pokemon.name)) {
+      pokemon.is_tera_eligible = false;
     }
   }
   return pkmn_list;
@@ -111,4 +116,4 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   throw "Pokemon selected cannot be drafted";
 }
 
-export {createNewDraft, getDraft}
+export {createNewDraft, getDraft, editPokemonList}
