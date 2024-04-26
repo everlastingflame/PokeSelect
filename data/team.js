@@ -1,9 +1,10 @@
 import {teams} from '../config/mongoCollections.js';
 import {data_validation} from './data_validation.js';
 import { ObjectId } from "mongodb";
+import {getTournament} from "./tournaments.js";
 
 const createNewTeam = async (user_id, draft_id, points) => {
-    if(!getUserById(user_id)) throw "User ID doesn't exist.";
+    if(!await getUserById(user_id)) throw "User ID doesn't exist.";
     // if(!getDraft(draft_id)) throw "Draft ID doesn't exist.";
 
     let newTeam = {
@@ -52,8 +53,43 @@ const addPokemonToTeam = async (teamId, pokemonDrafted) => {
   return pokemonDrafted;
 }
 
-const reportMatch = async (teamId, result) => {
+const reportMatch = async (tournamentId, tournamentMatch) => {
   // adds win to team if they won match, add loss otherwise
+  let tournament = await getTournament(tournamentId);
+  if(tournament === null) throw "Tournament doesn't exist";
+
+  // check that match is in tournament
+
+  if (!tournament.schedule.includes(tournament)) throw "Match is not in the tournament";
+
+  let team1 = getTeam(tournamentMatch.team_1);
+  let team2 = getTeam(tournamentMatch.team_2);
+
+  if(tournamentMatch.winner === 1) {
+    team1.wins++;
+    team2.losses++;
+  } else {
+    team1.losses++;
+    team2.wins++;
+  }
+  return tournamentMatch;
 }
 
-export default {createNewTeam, getTeam, reportMatch, addPokemonToTeam}
+const selectTeraCaptain = async (teamId, teraPokemon, pkmn_list) => {
+  let team = await getTeam(teamId);
+  if (!team.selections.includes(teraPokemon)) throw "Pokemon is not on your team";
+  if (!team.tera_captain.includes(teraPokemon)) throw "Pokemon is already a tera captain for the team";
+  for (pokemon of pkmn_list) {
+    if (pokemon.name === teraPokemon) {
+      if (pokemon.is_tera_eligible) {
+        team.tera_captain.push(teraPokemon);
+        return teraPokemon.tera_captain;
+      } else {
+        throw "Pokemon is banned from being a tera captain";
+      }
+    }
+  }
+  throw "Pokemon is not eligible to be drafted";
+}
+
+export default {createNewTeam, getTeam, reportMatch, addPokemonToTeam, selectTeraCaptain}
