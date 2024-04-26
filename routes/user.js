@@ -48,6 +48,7 @@ router
         data_validation.validatePassword(user.password, "password");
         data_validation.validateEmail(user.email, "email");
         data_validation.validateDate(user.dob, "dob");
+        console.log('hello');
     }
     catch(e){
         res.status(400).send(`Invalid input, ${e.message}`); 
