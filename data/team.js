@@ -1,4 +1,4 @@
-import {team} from '../config/mongoCollections.js';
+import {teams} from '../config/mongoCollections.js';
 import {data_validation} from './data_validation.js';
 import { ObjectId } from "mongodb";
 
@@ -17,7 +17,7 @@ const createNewTeam = async (user_id, draft_id, points) => {
     };
 
 
-    const teamCollection = await team();
+    const teamCollection = await teams();
     const insertInfo = await teamCollection.insertOne(newTeam);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
       throw "Error: Could not add user";
@@ -31,7 +31,7 @@ const createNewTeam = async (user_id, draft_id, points) => {
 const getTeam = async(teamId) => {
     teamId = helpers.validateId(teamId);
   
-    const teamCollection = await team();
+    const teamCollection = await teams();
     const team = await teamCollection.findOne({
       _id: new ObjectId(teamId),
     });
@@ -41,4 +41,19 @@ const getTeam = async(teamId) => {
     return team;
 }
 
-export {createNewTeam, getTeam}
+const addPokemonToTeam = async (teamId, pokemonDrafted) => {
+  let team = getTeam(teamId);
+  if(team.points_remaining < pokemonDrafted.point_val) throw "You do not have enough points to draft this Pokemon";
+  // have to add more checks regarding min pokemon
+
+  pokemonDrafted.is_drafted = true;
+  team.points_remaining = team.points_remaining - pokemonDrafted.point_val;
+  team.selections.push(pokemonDrafted);
+  return pokemonDrafted;
+}
+
+const reportMatch = async (teamId, result) => {
+  // adds win to team if they won match, add loss otherwise
+}
+
+export default {createNewTeam, getTeam, reportMatch, addPokemonToTeam}

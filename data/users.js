@@ -34,7 +34,7 @@ async function createNewUser(username, password, email, dob) {
     email: email,
     dob: dob,
     teams: [],
-    age: age,
+    age: age
   };
 
   const insertInfo = await userCollection.insertOne(newUser);
