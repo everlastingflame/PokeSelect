@@ -1,6 +1,6 @@
 import {draft, users} from '../config/mongoCollections.js';
 import userfunctions from "./users.js";
-import {getTeam, addPokemonToTeam} from "./team.js";
+import {getTeam, createNewTeam, addPokemonToTeam} from "./team.js";
 import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
 import pokeapi from "./pokeapi.js";
@@ -89,6 +89,10 @@ const getDraft = async(draftId) => {
 
 const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
+  if(pkmn_list === null) throw "No Pokemon list provided";
+  if(banned_pkmn === null) throw "No banned Pokemon list provided";
+  if(tera_banned_pkmn === null) throw "No tera banned Pokemon list provided";
+
   for (pokemon of pkmn_list) {
     if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
       pokemon.point_val = -1;
@@ -101,8 +105,17 @@ const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
 }
 
 const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, draftId) => {
+  draftId = validation.validateId(draftId);
+  user_id = validation.validateId(user_id);
+  team_id = validation.validateId(team_id);
+  draftedPokemon = validation.validateString(draftedPokemon, "draftedPokemon");
+  if(pkmn_list === null) throw "No Pokemon list provided";
+
   let draft = await getDraft(draftId);
   let user = await userfunctions.getUserById(user_id);
+
+  if(draft === null) throw "Draft ID doesn't exist";
+  if(user === null) throw "User ID doesn't exist";
 
   if (!draft.user_ids.includes(user_id)) throw "The user_id provided is not in this draft";
   if (!user.teams.includes(team_id)) throw "The user does not have a team with the team_id provided";
@@ -110,10 +123,47 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
     if(pokemon.name === draftedPokemon.name && !pokemon.is_drafted) {
       let team = await addPokemonToTeam(team_id, draftPokemonToTeam);
       pokemon = draftedPokemon;
+      draft.pick_number++;
       return team;
     }
   }
   throw "Pokemon selected cannot be drafted";
 }
 
-export {createNewDraft, getDraft, editPokemonList}
+// function to add users and teams to draft
+const addUserToDraft = async (draft_id, user_id) => {
+  if(!draft_id || !ObjectId.isValid(draft_id)) throw "Valid draft ID must be provided";
+  if(!user_id || !ObjectId.isValid(user_id)) throw "Valid user ID must be provided";
+
+  let draft = await getDraft(draft_id);
+  let user = await userfunctions.getUserById(user_id);
+
+  if(draft.user_ids.includes(user_id)) throw "This user is already in the draft";
+  draft.user_ids.push(user_id);
+
+  let newTeam = await createNewTeam(user_id, draft_id, draft.point_budget);
+  user.teams.push(newTeam._id)
+  draft.team_ids.push(newTeam._id);
+  return draft;
+}
+
+// finds the user's team in a given draft if it exists
+const findUserTeamInDraft = async (user_id, draft_id) => {
+  if(!draft_id || !ObjectId.isValid(draft_id)) throw "Valid draft ID must be provided";
+  if(!user_id || !ObjectId.isValid(user_id)) throw "Valid user ID must be provided";
+
+  let draft = await getDraft(draft_id);
+  let user = await userfunctions.getUserById(user_id);
+  if(draft === null) throw "Draft ID doesn't exist";
+  if(user === null) throw "User ID doesn't exist";
+
+  if(!draft.user_ids.includes(user_id)) throw "This user is not in this draft";
+  for (team of draft.team_ids) {
+    if (user.teams.includes(team._id)) {
+      return team;
+    }
+  }
+  throw "User does not have a team in this draft";
+}
+
+export {createNewDraft, getDraft, editPokemonList, addUserToDraft, findUserTeamInDraft}
