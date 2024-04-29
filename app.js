@@ -3,9 +3,61 @@ import express from 'express';
 const app = express();
 import exphbs from 'express-handlebars';
 import configRoutes from './routes/index.js';
+import session from "express-session";
 import {dbConnection, closeConnection} from './config/mongoConnection.js';
 
 // const db = await dbConnection();
+
+app.use(session({
+  name: "AuthenticationState",
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}))
+
+app.use("/login", async (req, res, next) => {
+  if(req.method === "GET") {
+      if(req.session && req.session.cookie && req.session.user) {
+        return res.redirect("/users");
+      } else {
+        app.get("/login");
+      }
+  }
+  next();
+})
+
+app.use("/register", async (req, res, next) => {
+  if(req.method === "GET") {
+      if(req.session && req.session.cookie && req.session.user) {
+        return res.redirect("/users");
+      } else {
+        app.get("/register");
+      }
+  }
+  next();
+})
+
+app.use("/user", async (req, res, next) => {
+  if(req.method === "GET") {
+      if(req.session && req.session.cookie && req.session.user) {
+          return next();
+      } else {
+          return res.redirect("/login");
+      }
+  }
+  next();
+})
+
+app.use("/logout", async (req, res, next) => {
+  if(req.method === "GET") {
+      if(req.session && req.session.cookie && req.session.user) {
+          return next();
+      } else {
+          return res.redirect("/login");
+      }
+  }
+  next();
+})
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
