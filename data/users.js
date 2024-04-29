@@ -111,7 +111,6 @@ export const loginUser = async (username, password) => {
   }
 
   let _id = user._id;
-  let username = user.username;
   let role = user.role;
   let themePreference = user.themePreference;
   
