@@ -6,8 +6,12 @@
         <div class="row justify-content-center">
             <nav class="col-12 col-md-8 col-lg-6">
                 <ul class="nav justify-content-center">
+                    {{#if isLoggedIn}}
+                    <li class="nav-item"><a href="/user" class="nav-link">Profile</a></li>
+                    {{else}}
                     <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
                     <li class="nav-item"><a href="/register" class="nav-link">Sign Up</a></li>
+                    {{/if}}
                 </ul>
             </nav>
         </div>
