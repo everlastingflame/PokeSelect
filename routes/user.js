@@ -43,11 +43,9 @@ router
 .post(async (req, res) => {
     let user = req.body;
     try{
-        console.log(user);
         data_validation.validateUsername(user.username, "username");
         data_validation.validatePassword(user.password, "password");
         data_validation.validateEmail(user.email, "email");
-        console.log(user.dob);
         data_validation.validateDate(user.dob, "dob");
     }
     catch(e){
@@ -68,13 +66,11 @@ router
 })
 .post(async (req, res) => {
     const {username, password} = req.body;
-    console.log("hello");
     try{
         const user = await dbData.users.loginUser(username, password);
         res.render('userhome', {user: user});
 
     }catch(e){
-        console.log(e);
         res.status(400).render('userlogon', {error: e}); 
         return;
     }

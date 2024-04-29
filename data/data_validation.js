@@ -77,7 +77,7 @@ function validateUsername(username, name = "username") {
   if (!username.match(/^[a-zA-Z0-9._-]{3,32}$/)) {
     throw `Error: ${name} can only contain characters a-z, A-Z, 0-9, or underscores (_)`;
   }
-  return username;
+  return username.toLowerCase();
 }
 
 function validatePassword(password, name = "password") {
@@ -91,7 +91,7 @@ function validatePassword(password, name = "password") {
 function validateEmail(email, name = "email") {
   email = validateString(email, name);
 
-  return email;
+  return email.toLowerCase();
 }
 
 export default {
