@@ -74,6 +74,16 @@ const checkEmail = (email) => {
     return email;
 }
 
+function validateNumber(number, name = "number") {
+    if (!number) {
+      throw `Error: Did not supply ${name}`;
+    }
+    if (typeof number !== "number" || Number.isNaN(number)) {
+      throw `Error: ${name} is type [${typeof number}], not number`;
+    }
+    return number;
+  }
+
 
 function validateDate(date, name = "date") {
   date = checkString(date);
@@ -120,12 +130,11 @@ if (loginForm) {
     });
 }
 
-dob.max = new Date().toISOString().split("T")[0];
-
 
 let registerForm = document.getElementById('signup-form');
 
 if(registerForm){
+    dob.max = new Date().toISOString().split("T")[0];
     registerForm.addEventListener('submit', function(event) {
         event.preventDefault();
         let username = document.getElementById('username').value;
@@ -153,6 +162,47 @@ if(registerForm){
         }
         if(formIsValid){
             registerForm.submit();
+        }
+    });
+}
+
+let draftForm = document.getElementById('draftForm');
+
+function teraCheck(gen) {
+    if(gen.value === "gen9") {
+        document.getElementById("teraDiv").style.display = "block";
+    } else {
+        document.getElementById("teraDiv").style.display = "none";
+    }
+}
+
+if(draftForm) {
+    draftForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        let generation = document.getElementById('generation').value;
+        let pointBudget = document.getElementById('pointBudget').value;
+        let teamSize = document.getElementById('teamSize').value;
+        let teraCaptain = 0;
+
+        if(generation === "gen9") {
+            teraCaptain = document.getElementById('teraCaptain').value;
+        }
+
+        let formIsValid = true;
+
+        try {
+            generation = checkString(generation);
+            pointBudget = checkNumber(pointBudget);
+            if(pointBudget < 6) throw "Point budget must be at least 6 points";
+            teamSize = checkNumber(teamSize);
+            if(teamSize < 6) throw "Team size must be at least 6 Pokemon";
+            teraCaptain = checkNumber(teraCaptain);
+            if(teraCaptain < 0) throw "Number of tera captains must be 0 or a positive number";
+        } catch (error) {
+           // do something
+        }
+        if(formIsValid){
+            draftForm.submit();
         }
     });
 }

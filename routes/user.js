@@ -1,6 +1,7 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
 import { dbData } from "../data/index.js"
+import xss from "xss";
 
 const router = express.Router();
 
@@ -44,10 +45,10 @@ router
 .post(async (req, res) => {
     let user = req.body;
     try{
-        data_validation.validateUsername(user.username, "username");
-        data_validation.validatePassword(user.password, "password");
-        data_validation.validateEmail(user.email, "email");
-        data_validation.validateDate(user.dob, "dob");
+        data_validation.validateUsername(xss(user.username), "username");
+        data_validation.validatePassword(xss(user.password), "password");
+        data_validation.validateEmail(xss(user.email), "email");
+        data_validation.validateDate(xss(user.dob), "dob");
     }
     catch(e){
         res.status(400).render('signUpForm', {error: e}); 
@@ -75,7 +76,7 @@ router
 .post(async (req, res) => {
     const {username, password} = req.body;
     try{
-        const user = await dbData.users.loginUser(username, password);
+        const user = await dbData.users.loginUser(xss(username), xss(password));
         req.session.user = user;
         res.redirect('/user/'+user.username);
 

@@ -28,6 +28,7 @@
     "express-handlebars": "^7.1.2",
     "express-session": "^1.18.0",
     "mongodb": "^6.5.0",
-    "node-cache": "^5.1.2"
+    "node-cache": "^5.1.2",
+    "xss": "^1.0.15"
   }
 }

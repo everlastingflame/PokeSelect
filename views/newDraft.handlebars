@@ -1,0 +1,40 @@
+<div>
+    <header>
+        <h1>New Pokemon Draft</h1>
+    </header>
+
+    <form id="draftForm" action="/draft/new" method="POST">
+        <div class="mb-3">
+            <label for="generation" class="form-label">Select Generation</label>
+            <select name="generation" id="generation" onchange="teraCheck(this);" required>
+                <option value="">Pick a generation</option>
+                <option value="gen1">Gen 1</option>
+                <option value="gen2">Gen 2</option>
+                <option value="gen3">Gen 3</option>
+                <option value="gen4">Gen 4</option>
+                <option value="gen5">Gen 5</option>
+                <option value="gen6">Gen 6</option>
+                <option value="gen7">Gen 7</option>
+                <option value="gen8">Gen 8</option>
+                <option value="gen9">Gen 9</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="pointBudget" class="form-label">Point Budget</label>
+            <input type="number" id="pointBudget" name="pointBudget" min="6" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="teamSize" class="form-label">Team Size</label>
+            <input type="number" id="teamSize" name="teamSize" min="6" class="form-control" required>
+        </div>
+
+        <div class="mb-3" id="teraDiv">
+            <label for="teraCaptain" class="form-label">Number of Tera Captains</label>
+            <input type="number" id="teraCaptain" name="teraCaptain" min="0" class="form-control">
+        </div>
+
+        <button type="submit" class="createDraft">Create Draft</button>
+    </form>
+</div>
