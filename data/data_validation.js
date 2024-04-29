@@ -94,11 +94,6 @@ function validateEmail(email, name = "email") {
   return email;
 }
 
-function validateNumber(number, name = "number") {
-  if(typeof number !== "number" || !Number.isInteger(number)) throw `Error: ${name} must be a number`;
-  return number
-}
-
 export default {
   validateString,
   validateDate,
