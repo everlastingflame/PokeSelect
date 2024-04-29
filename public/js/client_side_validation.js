@@ -74,6 +74,27 @@ const checkEmail = (email) => {
     return email;
 }
 
+
+function validateDate(date, name = "date") {
+  date = checkString(date);
+
+  const _day = dayjs(date, "YYYY-MM-DD"); //updated because registerform likes using year month day for some reason
+  if (!_day.isValid()) {
+    throw `Error: ${date} is invalid`;
+  }
+  if (_day.isAfter(dayjs(), "day")) {
+    throw `Error: ${date} cannot be in the future`;
+  }
+  if (dayjs().diff(_day, "year") < 13) {
+    throw `Error: ${date} user must be at least 13 years old`;
+  }
+  if (dayjs().diff(_day, "year") > 100) {
+    throw `Error: ${date} date of birth is too old`;
+  }
+
+  return date;
+}
+
 const loginForm = document.getElementById('signin-form');
 
 if (loginForm) {
@@ -99,6 +120,8 @@ if (loginForm) {
     });
 }
 
+dob.max = new Date().toISOString().split("T")[0];
+
 
 let registerForm = document.getElementById('signup-form');
 
@@ -110,12 +133,16 @@ if(registerForm){
         let confirmPassword = document.getElementById('confirmPassword').value;
         let email = document.getElementById('email').value;
         let formIsValid = true;
+        let dob = document.getElementById('dob').value;
+
+        console.log(dob);
 
         try {
             username = checkUsername(username);
             password = checkPassword(password);
             confirmPassword = checkPassword(confirmPassword);
             email = checkEmail(email);
+            dob = validateDate(dob, "dob");
 
             if(password !== confirmPassword){
                 throw 'Passwords do not match';

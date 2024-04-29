@@ -21,7 +21,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="date" id="dob" name="dob" class="form-control" required>
+                    <input type="date" min="1925-01-01" id="dob" name="dob" class="form-control" required>
                 </div>
                     {{#if error}}
                         <div id="error_output" class="alert alert-danger" role="alert">
@@ -38,5 +38,6 @@
             </form>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
 

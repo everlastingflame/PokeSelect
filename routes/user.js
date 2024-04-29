@@ -68,11 +68,13 @@ router
 })
 .post(async (req, res) => {
     const {username, password} = req.body;
+    console.log("hello");
     try{
         const user = await dbData.users.loginUser(username, password);
         res.render('userhome', {user: user});
 
     }catch(e){
+        console.log(e);
         res.status(400).render('userlogon', {error: e}); 
         return;
     }
