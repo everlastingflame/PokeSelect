@@ -89,9 +89,16 @@ const getDraft = async(draftId) => {
 
 const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
-  if(pkmn_list === null) throw "No Pokemon list provided";
-  if(banned_pkmn === null) throw "No banned Pokemon list provided";
-  if(tera_banned_pkmn === null) throw "No tera banned Pokemon list provided";
+  if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
+  for (pokemon of pkmn_list) {
+    if(typeof pokemon !== "object") throw "All array elements must be objects";
+  }
+
+  if(typeof banned_pkmn !== "object" || !Array.isArray(banned_pkmn)) throw "No banned Pokemon list provided";
+  banned_pkmn.map((e) => validation.validateString(e, "banned Pokemon"));
+
+  if(typeof tera_banned_pkmn !== "object" || !Array.isArray(tera_banned_pkmn)) throw "No tera banned Pokemon list provided";
+  tera_banned_pkmn.map((e) => validation.validateString(e, "tera banned Pokemon"));
 
   for (pokemon of pkmn_list) {
     if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
@@ -109,7 +116,10 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   user_id = validation.validateId(user_id);
   team_id = validation.validateId(team_id);
   draftedPokemon = validation.validateString(draftedPokemon, "draftedPokemon");
-  if(pkmn_list === null) throw "No Pokemon list provided";
+  if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
+  for (pokemon of pkmn_list) {
+    if(typeof pokemon !== "object") throw "All array elements must be objects";
+  }
 
   let draft = await getDraft(draftId);
   let user = await userfunctions.getUserById(user_id);

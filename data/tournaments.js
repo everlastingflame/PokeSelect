@@ -46,7 +46,7 @@ const getTournament = async(tournamentId) => {
     tournamentId = validation.validateId(tournamentId);
 
     const tournamentCollection = await tournaments();
-    const tournament = await draftCollection.findOne({
+    const tournament = await tournamentCollection.findOne({
         _id: new ObjectId(tournamentId),
     });
     if (tournament === null) {

@@ -1,11 +1,16 @@
 import {teams} from '../config/mongoCollections.js';
-import {data_validation} from './data_validation.js';
+import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
 import {getTournament} from "./tournaments.js";
 
 const createNewTeam = async (user_id, draft_id, points) => {
-    if(!await getUserById(user_id)) throw "User ID doesn't exist.";
-    // if(!getDraft(draft_id)) throw "Draft ID doesn't exist.";
+    user_id = validation.validateId(user_id, "userId");
+    draft_id = validation.validateId(draft_id, "draftId");
+    points = validation.validateNumber(points, "points");
+
+    if(points < 6) throw "Point budget must be at least 6.";
+    await getUserById(user_id);
+    await getDraft(draft_id);
 
     let newTeam = {
         user_id: user_id,
@@ -21,7 +26,7 @@ const createNewTeam = async (user_id, draft_id, points) => {
     const teamCollection = await teams();
     const insertInfo = await teamCollection.insertOne(newTeam);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-      throw "Error: Could not add user";
+      throw "Error: Could not add team";
     }
   
     const newId = insertInfo.insertedId.toString();
@@ -30,20 +35,22 @@ const createNewTeam = async (user_id, draft_id, points) => {
 }
 
 const getTeam = async(teamId) => {
-    teamId = helpers.validateId(teamId);
+    teamId = validation.validateId(teamId, "teamId");
   
     const teamCollection = await teams();
     const team = await teamCollection.findOne({
       _id: new ObjectId(teamId),
     });
     if (team === null) {
-      throw `Error: No user with id of ${userId}`;
+      throw `Error: No team with id of ${teamId}`;
     }
     return team;
 }
 
 const addPokemonToTeam = async (teamId, pokemonDrafted) => {
-  let team = getTeam(teamId);
+  teamId = validation.validateId(teamId, "teamId");
+  pokemonDrafted = validation.validateString(pokemonDrafted, "pokemonDrafted");
+  let team = await getTeam(teamId);
   if(team.points_remaining < pokemonDrafted.point_val) throw "You do not have enough points to draft this Pokemon";
   // have to add more checks regarding min pokemon
 
@@ -54,6 +61,9 @@ const addPokemonToTeam = async (teamId, pokemonDrafted) => {
 }
 
 const reportMatch = async (tournamentId, tournamentMatch) => {
+  tournamentId = validation.validateId(tournamentId, "tournamentId");
+  if(typeof tournamentMatch !== "object") throw "Tournament match must be an object";
+
   // adds win to team if they won match, add loss otherwise
   let tournament = await getTournament(tournamentId);
   if(tournament === null) throw "Tournament doesn't exist";
@@ -62,8 +72,8 @@ const reportMatch = async (tournamentId, tournamentMatch) => {
 
   if (!tournament.schedule.includes(tournament)) throw "Match is not in the tournament";
 
-  let team1 = getTeam(tournamentMatch.team_1);
-  let team2 = getTeam(tournamentMatch.team_2);
+  let team1 = await getTeam(tournamentMatch.team_1);
+  let team2 = await getTeam(tournamentMatch.team_2);
 
   if(tournamentMatch.winner === 1) {
     team1.wins++;
@@ -76,6 +86,13 @@ const reportMatch = async (tournamentId, tournamentMatch) => {
 }
 
 const selectTeraCaptain = async (teamId, teraPokemon, pkmn_list) => {
+  teamId = validation.validateId(teamId, "teamId");
+  teraPokemon = validation.validateString(teraPokemon, "teraPokemon");
+  if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
+  for (pokemon of pkmn_list) {
+    if(typeof pokemon !== "object") throw "All array elements must be objects";
+  }
+
   let team = await getTeam(teamId);
   if (!team.selections.includes(teraPokemon)) throw "Pokemon is not on your team";
   if (!team.tera_captain.includes(teraPokemon)) throw "Pokemon is already a tera captain for the team";
