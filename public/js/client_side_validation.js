@@ -135,8 +135,6 @@ if(registerForm){
         let formIsValid = true;
         let dob = document.getElementById('dob').value;
 
-        console.log(dob);
-
         try {
             username = checkUsername(username);
             password = checkPassword(password);
@@ -158,5 +156,3 @@ if(registerForm){
         }
     });
 }
-
-console.log("working");

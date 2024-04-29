@@ -77,7 +77,7 @@ router
     try{
         const user = await dbData.users.loginUser(username, password);
         req.session.user = user;
-        res.redirect('/user/'+encodeURIComponent(user.username));
+        res.redirect('/user/'+user.username);
 
     }catch(e){
         res.status(400).render('userlogon', {error: e}); 

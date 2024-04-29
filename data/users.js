@@ -13,7 +13,6 @@ async function createNewUser(username, password, email, dob) {
   password = validation.validatePassword(password);
   email = validation.validateEmail(email);
   dob = validation.validateDate(dob, "Date of Birth");
-  console.log(dob);
 
   const userCollection = await users();
   let user = await userCollection.findOne({
@@ -111,7 +110,6 @@ export const loginUser = async (username, password) => {
   const user = await userCollection.findOne({
     username: username,
   });
-  console.log(user);
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     throw "password is invalid";
   }

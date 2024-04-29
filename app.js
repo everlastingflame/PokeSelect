@@ -42,7 +42,6 @@ app.use("/register", async (req, res, next) => {
 app.use("/user", async (req, res, next) => {
   if (req.method === "GET") {
     if (req.session && req.session.user) {
-      console.log(req.path);
       if (req.path === "/") {
         return res.redirect("/user/" + req.session.user.username);
       }
