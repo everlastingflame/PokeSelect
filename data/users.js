@@ -15,7 +15,6 @@ async function createNewUser(username, password, email, dob) {
   dob = validation.validateDate(dob, "Date of Birth");
   console.log(dob);
 
-
   const userCollection = await users();
   let user = await userCollection.findOne({
     username: username,
@@ -42,7 +41,7 @@ async function createNewUser(username, password, email, dob) {
     email: email,
     dob: dob,
     teams: [],
-    age: age
+    age: age,
   };
 
   const insertInfo = await userCollection.insertOne(newUser);
@@ -100,12 +99,12 @@ async function addTeamToUser(user_id, team_id) {
 }
 
 export const loginUser = async (username, password) => {
-  //try catching here to obfuscate error 
-  try{ 
+  //try catching here to obfuscate error
+  try {
     username = validation.validateUsername(username);
     password = validation.validatePassword(password);
   } catch (e) {
-    throw 'Either the username or password is invalid';
+    throw "Either the username or password is invalid";
   }
 
   const userCollection = await users();
@@ -114,12 +113,18 @@ export const loginUser = async (username, password) => {
   });
   console.log(user);
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-    throw 'password is invalid';
+    throw "password is invalid";
   }
 
   let _id = user._id;
-  
-  return {_id, username};
+
+  return { id: _id, username: username };
 };
 
-export default { createNewUser, getUserByName, getUserById, addTeamToUser, loginUser };
+export default {
+  createNewUser,
+  getUserByName,
+  getUserById,
+  addTeamToUser,
+  loginUser,
+};
