@@ -13,6 +13,7 @@ async function createNewUser(username, password, email, dob) {
   password = validation.validatePassword(password);
   email = validation.validateEmail(email);
   dob = validation.validateDate(dob, "Date of Birth");
+  console.log(dob);
 
 
   const userCollection = await users();
@@ -23,9 +24,16 @@ async function createNewUser(username, password, email, dob) {
     throw `Error: The username ${username} is already in use`;
   }
 
+  let existingEmail = await userCollection.findOne({
+    email: email,
+  });
+  if (existingEmail) {
+    throw `Error: The email ${email} is already in use`;
+  }
+
   let password_hash = await bcrypt.hash(password, cost_factor);
 
-  dob = dayjs(dob, "MM/DD/YYYY", true);
+  dob = dayjs(dob, "YYYY-MM-DD", true);
   let age = dayjs().diff(dob, "year");
 
   let newUser = {
@@ -96,7 +104,6 @@ export const loginUser = async (username, password) => {
   try{ 
     username = validation.validateUsername(username);
     password = validation.validatePassword(password);
-    dob  = validation.validateDate(dob, "Date of Birth");
   } catch (e) {
     throw 'Either the username or password is invalid';
   }
@@ -105,16 +112,14 @@ export const loginUser = async (username, password) => {
   const user = await userCollection.findOne({
     username: username,
   });
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw 'Either the username or password is invalid';
+  console.log(user);
+  if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+    throw 'password is invalid';
   }
 
   let _id = user._id;
-  let role = user.role;
-  let themePreference = user.themePreference;
   
-  return {_id, username, firstName, lastName, favoriteQuote, role, themePreference};
+  return {_id, username};
 };
 
 export default { createNewUser, getUserByName, getUserById, addTeamToUser, loginUser };
