@@ -17,7 +17,7 @@ app.use(session({
 
 app.use("/login", async (req, res, next) => {
   if(req.method === "GET") {
-      if(req.session && req.session.cookie && req.session.user) {
+      if(req.session && req.session.user) {
         return res.redirect("/users");
       } else {
         app.get("/login");
@@ -28,7 +28,7 @@ app.use("/login", async (req, res, next) => {
 
 app.use("/register", async (req, res, next) => {
   if(req.method === "GET") {
-      if(req.session && req.session.cookie && req.session.user) {
+      if(req.session && req.session.user) {
         return res.redirect("/users");
       } else {
         app.get("/register");
@@ -39,7 +39,7 @@ app.use("/register", async (req, res, next) => {
 
 app.use("/user", async (req, res, next) => {
   if(req.method === "GET") {
-      if(req.session && req.session.cookie && req.session.user) {
+      if(req.session && req.session.user) {
           return next();
       } else {
           return res.redirect("/login");
@@ -50,7 +50,7 @@ app.use("/user", async (req, res, next) => {
 
 app.use("/logout", async (req, res, next) => {
   if(req.method === "GET") {
-      if(req.session && req.session.cookie && req.session.user) {
+      if(req.session && req.session.user) {
           return next();
       } else {
           return res.redirect("/login");
