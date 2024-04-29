@@ -2,6 +2,7 @@ import {tournaments} from '../config/mongoCollections.js';
 import { getDraft } from './draft.js';
 
 const createNewTournament = async (draft_id) => {
+    draft_id = validation.validateId(draft_id);
     let draft = await getDraft(draft_id);
     if(draft === null) throw "Draft ID doesn't exist.";
 
@@ -30,7 +31,6 @@ const createNewTournament = async (draft_id) => {
         schedule: matches
     };
 
-
     const tournamentCollection = await tournaments();
     const insertInfo = await tournamentCollection.insertOne(newTournament);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
@@ -55,6 +55,6 @@ const getTournament = async(tournamentId) => {
     return tournament;
 }
 
-
+// function to detect when match is reported on client side
 
 export default {createNewTournament, getTournament};
