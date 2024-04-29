@@ -54,6 +54,7 @@ async function getAllPokemonByGeneration(generationName) { // generationName sho
 }
 
 async function getAllPokemonByPokedex(pokedexName) {
+  pokedexName = validate.validateString(pokedexName, "pokedexName");
   let pokedex = getPokedexByName(pokedexName);
   let pokemonList = [];
 
@@ -146,4 +147,4 @@ async function resolveQuery(url) {
 
 }
 
-export default { getPokedexByName, getPokemon, getAllPokedexesForGeneration, getAllPokemonByPokedex, getGameGeneration };
+export default { getPokedexByName, getAllPokemonByGeneration, getPokemon, getAllPokedexesForGeneration, getAllPokemonByPokedex, getGameGeneration };
