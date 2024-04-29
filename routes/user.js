@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        res.render('landingPage');
+        let isLoggedIn = req.session.user ? true : false;
+        res.render('landingPage', {isLoggedIn: isLoggedIn});
     } catch (e) {
         res.status(500).send(e.message);
     }
@@ -53,11 +54,18 @@ router
     }
     try {
         const newUser = await dbData.users.createNewUser(user.username, user.password, user.email, user.dob);
-        res.render('userhome', {newUser: user.username});
+        res.redirect('/login')
     } catch (e) {
         res.status(400).render('signUpForm', {error: e});
     }
 });
+
+router.route('/user/:name')
+.get(async (req, res) => {
+    let user = req.session.user;
+    let profile_user = await dbData.users.getUserByName(req.params.name);
+    res.render('userhome', {newUser: profile_user._id});
+})
 
 router
 .route('/login')
@@ -68,12 +76,14 @@ router
     const {username, password} = req.body;
     try{
         const user = await dbData.users.loginUser(username, password);
-        res.render('userhome', {user: user});
+        req.session.user = user;
+        res.redirect('/user/'+user.username);
 
     }catch(e){
         res.status(400).render('userlogon', {error: e}); 
         return;
     }
+
 
 });
 

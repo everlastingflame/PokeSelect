@@ -26,6 +26,7 @@
     "dayjs": "^1.11.11",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
+    "express-session": "^1.18.0",
     "mongodb": "^6.5.0",
     "node-cache": "^5.1.2"
   }

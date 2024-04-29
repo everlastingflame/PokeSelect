@@ -4,7 +4,7 @@ const constructorMethod = (app) => {
   app.use('/', pokeRoutes);
   app.use('/', users);
   app.use('*', (req, res) => {
-    return res.status(404).render("Error", {title: 'Error', notFound: true});
+    return res.status(404).render("error", {title: 'Error', notFound: true});
   });
 };
 
