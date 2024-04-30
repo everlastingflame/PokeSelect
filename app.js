@@ -5,6 +5,9 @@ import exphbs from "express-handlebars";
 import configRoutes from "./routes/index.js";
 import session from "express-session";
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // const db = await dbConnection();
 
