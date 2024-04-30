@@ -74,7 +74,7 @@ const checkEmail = (email) => {
     return email;
 }
 
-function validateNumber(number, name = "number") {
+function checkNumber(number, name = "number") {
     if (!number) {
       throw `Error: Did not supply ${name}`;
     }
@@ -184,22 +184,26 @@ if(draftForm) {
         let teamSize = document.getElementById('teamSize').value;
         let teraCaptain = 0;
 
-        if(generation === "gen9") {
-            teraCaptain = document.getElementById('teraCaptain').value;
-        }
-
         let formIsValid = true;
 
         try {
+            generation = generation.slice(-1);
             generation = checkString(generation);
-            pointBudget = checkNumber(pointBudget);
+            pointBudget = checkNumber(parseInt(pointBudget));
             if(pointBudget < 6) throw "Point budget must be at least 6 points";
-            teamSize = checkNumber(teamSize);
+            teamSize = checkNumber(parseInt(teamSize));
             if(teamSize < 6) throw "Team size must be at least 6 Pokemon";
-            teraCaptain = checkNumber(teraCaptain);
+            if(generation === "gen9") {
+                teraCaptain = document.getElementById('teraCaptain').value;
+                teraCaptain = checkNumber(parseInt(teraCaptain));
             if(teraCaptain < 0) throw "Number of tera captains must be 0 or a positive number";
+            }
         } catch (error) {
-           // do something
+            /* const errorDiv = document.getElementById('error_output');
+            errorDiv.style = "display: block";
+            errorDiv.innerHTML = error;
+            formIsValid = false; */
+            console.log(error);
         }
         if(formIsValid){
             draftForm.submit();
