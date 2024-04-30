@@ -45,10 +45,10 @@ router
 .post(async (req, res) => {
     let user = req.body;
     try{
-        data_validation.validateUsername(xss(user.username), "username");
-        data_validation.validatePassword(xss(user.password), "password");
-        data_validation.validateEmail(xss(user.email), "email");
-        data_validation.validateDate(xss(user.dob), "dob");
+        user.username = data_validation.validateUsername(xss(user.username), "username");
+        user.password = data_validation.validatePassword(xss(user.password), "password");
+        user.email = data_validation.validateEmail(xss(user.email), "email");
+        user.dob = data_validation.validateDate(xss(user.dob), "dob");
     }
     catch(e){
         res.status(400).render('signUpForm', {error: e}); 

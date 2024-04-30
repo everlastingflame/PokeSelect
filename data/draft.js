@@ -1,6 +1,6 @@
-import {draft, users} from '../config/mongoCollections.js';
+import {drafts, users} from '../config/mongoCollections.js';
 import userfunctions from "./users.js";
-import {getTeam, createNewTeam, addPokemonToTeam} from "./team.js";
+import team from "./team.js";
 import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
 import pokeapi from "./pokeapi.js";
@@ -63,21 +63,21 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
     };
 
 
-    const draftCollection = await draft();
+    const draftCollection = await drafts();
     const insertInfo = await draftCollection.insertOne(newDraft);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
       throw "Error: Could not add draft";
     }
   
     const newId = insertInfo.insertedId.toString();
-    const draft = await getTeam(newId);
+    const draft = await getDraft(newId);
     return draft;
 }
 
 const getDraft = async(draftId) => {
   draftId = validation.validateId(draftId);
   
-    const draftCollection = await draft();
+    const draftCollection = await drafts();
     const draft = await draftCollection.findOne({
       _id: new ObjectId(draftId),
     });
@@ -131,7 +131,7 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   if (!user.teams.includes(team_id)) throw "The user does not have a team with the team_id provided";
   for (let pokemon of pkmn_list) {
     if(pokemon.name === draftedPokemon.name && !pokemon.is_drafted) {
-      let team = await addPokemonToTeam(team_id, draftPokemonToTeam);
+      let team = await team.addPokemonToTeam(team_id, draftPokemonToTeam);
       pokemon = draftedPokemon;
       draft.pick_number++;
       return team;
@@ -151,7 +151,7 @@ const addUserToDraft = async (draft_id, user_id) => {
   if(draft.user_ids.includes(user_id)) throw "This user is already in the draft";
   draft.user_ids.push(user_id);
 
-  let newTeam = await createNewTeam(user_id, draft_id, draft.point_budget);
+  let newTeam = await team.createNewTeam(user_id, draft_id, draft.point_budget);
   user.teams.push(newTeam._id)
   draft.team_ids.push(newTeam._id);
   return draft;

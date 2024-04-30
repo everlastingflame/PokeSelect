@@ -28,6 +28,7 @@ const createNewTournament = async (draft_id) => {
     let newTournament = {
         user_ids: draft.user_ids,
         team_ids: draft.team_ids,
+        draft_id: draft_id,
         schedule: matches
     };
 
