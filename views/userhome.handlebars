@@ -1,6 +1,41 @@
-<div>
-    <header>
-        <p>Welcome, {{newUser}}</p>
-    </header>
+{{!< userProfiles}}
+<body>
+
+<div class="blurred-background"></div>
+<div class="container">
+
+<nav class="navbar navbar-expand-lg navbar-light header">
+    <a class="navbar-brand mx-auto" href="#">
+        <img src="/public/images/PokeSelect.png" class="pokeselect-logo" alt="PokeSelect">
+    </a>
+</nav>
+  
+  <div class="card card-main-content" style="width: 828px; height: 470px;">
+    <div class="card-body">
+        <div class="row">
+            <div class="col text-center">
+              <h1>Welcome to PokeSelect, {{newUser}}!</h1>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col text-center">
+              <button class="btn draftButtons" onclick="showDrafts()">Your drafts  </button>
+              <button class="btn draftButtons" onclick="showCreate()">Create draft </button>
+              <button class="btn draftButtons" onclick="showInvite()">Invites </button>
+              <form action="/logout" class="inline-form">
+                <button type="submit" class="btn draftButtons">Logout</button>
+              </form>
+            </div>
+        </div>
+        <div class="card card-drafts" style="width: 100%; height: 320px;">
+            <div class="card-body">
+                <p id="DraftText" class="card-text" style="display: block;"> Drafts shown here.
+                </p>
+                <p id="CreateDraft" class="card-text" style="display: none;">Draft creation form shown here</p>
+                <p id="Invites" class="card-text" style="display: none;">Invites shown here</p>
+            </div>
+    </div>
+  </div>
 </div>
 
+</body>

@@ -64,7 +64,7 @@ router.route('/user/:name')
 .get(async (req, res) => {
     let user = req.session.user;
     let profile_user = await dbData.users.getUserByName(req.params.name);
-    res.render('userhome', {newUser: profile_user._id});
+    res.render('userhome', {layout: 'userProfiles', newUser: profile_user.username});
 })
 
 router
@@ -83,8 +83,14 @@ router
         res.status(400).render('userlogon', {error: e}); 
         return;
     }
-
-
 });
+
+router
+.route('/logout')
+.get((req, res) => { 
+    req.session.destroy();
+    res.redirect('/');
+});
+
 
 export default router;
