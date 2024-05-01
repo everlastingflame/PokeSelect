@@ -41,28 +41,31 @@ pokemonInGen.filter((e) => !e.name.match(suffixRegex))
 
 async function getAllPokemonByGeneration(generationName) { // generationName should be a number 1-9
   generationName = validate.validateString(generationName, "generationName");
-  pokedexesForGen = getAllPokedexesForGeneration(generationName); // gets all pokedexes for that generation
-  let pokemonInGen = [];
-  for (pokedex of pokedexesForGen) { // gets all pokemon in that generation, including regional varieties that aren't in gen
-    pokemonInGen.push(getAllPokemonByPokedex(pokedex));
+  let pokedexesForGen = await getAllPokedexesForGeneration(generationName); // gets all pokedexes for that generation
+  let pokemonInGen = new Map();
+  for (const pokedex of pokedexesForGen) { // gets all pokemon in that generation, including regional varieties that aren't in gen
+    await getAllPokemonByPokedex(pokedex, pokemonInGen);
   }
-  pokemonInGen = pokemonInGen.flat();
-  let gen_suffix = `$(gen===9 ? '' : 'paldea|')$(gen===7 ? '' : 'alola|')$(gen === 8 ? '' : 'galar|hisui')`;
+  let gen = parseInt(generationName);
+
+  let gen_suffix = `${gen===9 ? '' : 'paldea|'}${gen===7 ? '' : 'alola|'}${gen === 8 ? '' : 'galar|hisui'}`;
   let suffixRegex = new RegExp(`.*-(${gen_suffix})`);
-  pokemonInGen.filter((e) => !e.name.match(suffixRegex)); // filters out regional varieties that aren't in generation
+  pokemonInGen = [...pokemonInGen].filter(([k, _v]) => !k.match(suffixRegex)).map(([_k, v]) => v); // filters out regional varieties that aren't in generation
+
   return pokemonInGen;
 }
 
-async function getAllPokemonByPokedex(pokedexName) {
-  pokedexName = validate.validateString(pokedexName, "pokedexName");
-  let pokedex = getPokedexByName(pokedexName);
-  let pokemonList = [];
+async function getAllPokemonByPokedex(pokedex, pokemonMap) {
+  if(typeof pokedex !== "object") throw "Pokedex must be an object";
 
-  for (pokemon of pokedex.pokemon_entries) { // pushes all species varieties to pokemonList
-    pokemonList.push(await getAllPokemonFromSpecies(pokemon.pokemon_species.name));
+  for (const entry of pokedex.pokemon_entries) { // pushes all species varieties to pokemonList
+    for (const pokemon of await getAllPokemonFromSpecies(entry.pokemon_species.name)) {
+      if(!pokemonMap.get(pokemon.name)) {
+        pokemonMap.set(pokemon.name, pokemon);
+      }
+    }
   }
-  pokemonList.flat();
-  return pokemonList;
+  return pokemonMap;
 
 
   // find way to get all pokemon using pokedex.pokemon_entries.pokemon_species
@@ -92,9 +95,9 @@ async function getAllPokemonFromSpecies(speciesName) { // given a pokemon specie
 
   let speciesArray = [];
 
-  for (variety of species.varieties) {
+  for (const variety of species.varieties) {
     if(variety.is_default || variety.pokemon.name.match(/.*-(hisui|galar|alola|paldea)/)) {
-      speciesArray.push(resolveQuery(variety.pokemon.url));
+      speciesArray.push(await resolveQuery(variety.pokemon.url));
     }
   }
 
@@ -115,11 +118,15 @@ async function getAllPokedexesForGeneration(generationName) {
   generationName = validate.validateString(generationName, "generationName");
   let generationData = await getGameGeneration(generationName);
   let pokedexList = [];
+  let pokedexNames = new Map();
 
   for (let game of generationData.version_groups) { // for each game in the generation, returns pokedexes
     let gameURL = await resolveQuery(game.url);
     for (let pokedex of gameURL.pokedexes) {
-     pokedexList.push(await resolveQuery(pokedex.url));
+     if(!pokedexNames.get(pokedex.name)) {
+      pokedexList.push(await resolveQuery(pokedex.url));
+      pokedexNames.set(pokedex.name, true);
+     }
     }
   }
   return pokedexList;

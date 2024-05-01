@@ -15,3 +15,7 @@ body {
 .form-control {
     box-sizing: border-box; 
 }
+
+#teraDiv {
+    display: none;
+}

@@ -5,6 +5,9 @@ import exphbs from "express-handlebars";
 import configRoutes from "./routes/index.js";
 import session from "express-session";
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // const db = await dbConnection();
 
@@ -63,6 +66,13 @@ app.use("/logout", async (req, res, next) => {
   }
   next();
 });
+
+app.use("/draft", async (req, res, next) => {
+  if (!req.session || !req.session.user) {
+    return res.redirect("/login");
+  }
+  next();
+})
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
