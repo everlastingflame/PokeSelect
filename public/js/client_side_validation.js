@@ -179,12 +179,14 @@ function teraCheck(gen) {
 if(draftForm) {
     draftForm.addEventListener('submit', function(event) {
         event.preventDefault();
+
+        let error_container = document.getElementById('error_container');
+        error_container.classList.add('d-none');
+
         let generation = document.getElementById('generation').value;
         let pointBudget = document.getElementById('pointBudget').value;
         let teamSize = document.getElementById('teamSize').value;
         let teraCaptain = 0;
-
-        let formIsValid = true;
 
         try {
             generation = checkString(generation);
@@ -195,18 +197,17 @@ if(draftForm) {
             if(generation === "gen9") {
                 teraCaptain = document.getElementById('teraCaptain').value;
                 teraCaptain = checkNumber(parseInt(teraCaptain));
-            if(teraCaptain < 0) throw "Number of tera captains must be 0 or a positive number"
-            if(teraCaptain > teamSize) throw "Number of tera captains must be less than or equal to the team size";
+                if(teraCaptain < 0) throw "Number of tera captains must be 0 or a positive number"
+                if(teraCaptain > teamSize) throw "Number of tera captains must be less than or equal to the team size";
             }
+            draftForm.submit();
         } catch (error) {
             /* const errorDiv = document.getElementById('error_output');
             errorDiv.style = "display: block";
             errorDiv.innerHTML = error;
             formIsValid = false; */
-            console.log(error);
-        }
-        if(formIsValid){
-            draftForm.submit();
+            error_container.textContent = error;
+            error_container.classList.remove('d-none');
         }
     });
 }
