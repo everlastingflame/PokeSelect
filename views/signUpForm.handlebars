@@ -24,12 +24,11 @@
                     <input type="date" min="1925-01-01" id="dob" name="dob" class="form-control" required>
                 </div>
                     {{#if error}}
-                        <div id="error_output" class="alert alert-danger" role="alert">
+                        <div id="serverError" class="alert alert-danger" role="alert">
                             {{error}}
                         </div>
                     {{/if}}
                 <div id="error_output" class="alert alert-danger" role="alert" style="display: none;">
-                    {{error}}
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                 <div class="mt-3 text-center">

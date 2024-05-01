@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+html, body {
+    height: 100%;
+    margin: 0; 
+    font-size: 14px;
+    background-image: url('/public/images/pokemon_background.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+    filter: brightness(0.94); 
+}
+
+
+.pokeselect-logo {
+    max-height: 90%;
+    max-width: 80%; 
+    height: auto; 
+    
+}
+
+.container {
+    min-height: 100vh; 
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    backdrop-filter: blur(10px); 
+}
+
+.form-control {
+    box-sizing: border-box; 
+}
+
+.card-main-content {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(187, 214, 255, 0.8); 
+
+  }
+
+.pokeselect-logo {
+    display: block;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-drafts{
+    height:80%;
+    background-color: #FFE992;
+}
+
+.draftButtons {
+    background-color: #FFE992;
+    color: #333; 
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem; 
+    font-size: 1rem; 
+    line-height: 1.5; 
+    display: inline-block; 
+    width: auto; 
+    margin: 0.5rem; 
+    text-align: center; 
+    vertical-align: middle; 
+    cursor: pointer; 
+}
+
+.card-text{
+    height:280px;
+    overflow-y: scroll;
+}
+
+.inline-form {
+    display: inline-block;
+    vertical-align: middle;  /* Aligns vertically */
+}   
+
