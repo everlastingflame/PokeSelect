@@ -1,0 +1,18 @@
+<div>
+    <header>
+        <h1>Invite Users to Draft</h1>
+    </header>
+
+    <form id="inviteForm" action="/draft/invite" method="POST">
+        <div class="mb-3">
+            <label for="invites" class="form-label">Type in a username to invite the user to the draft</label> <br>
+            <input type="text" id="invites" name="invites">
+        </div>
+        <button type="submit" class="inviteUsers">Invite Users</button>
+    </form>
+
+    <br>
+    <form id="finishInvites" action="/draft/start" method="POST">
+        <button type="submit" class="finishInvites">Finish Inviting Users</button>
+    </form>
+</div>

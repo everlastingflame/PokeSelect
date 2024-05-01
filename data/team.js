@@ -1,7 +1,7 @@
 import {teams} from '../config/mongoCollections.js';
 import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
-import {getTournament} from "./tournaments.js";
+import tournament from "./tournaments.js";
 
 const createNewTeam = async (user_id, draft_id, points) => {
     user_id = validation.validateId(user_id, "userId");
@@ -65,7 +65,7 @@ const reportMatch = async (tournamentId, tournamentMatch) => {
   if(typeof tournamentMatch !== "object") throw "Tournament match must be an object";
 
   // adds win to team if they won match, add loss otherwise
-  let tournament = await getTournament(tournamentId);
+  let tournament = await tournament.getTournament(tournamentId);
   if(tournament === null) throw "Tournament doesn't exist";
 
   // check that match is in tournament

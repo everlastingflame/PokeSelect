@@ -74,6 +74,16 @@ const checkEmail = (email) => {
     return email;
 }
 
+function checkNumber(number, name = "number") {
+    if (!number) {
+      throw `Error: Did not supply ${name}`;
+    }
+    if (typeof number !== "number" || Number.isNaN(number)) {
+      throw `Error: ${name} is type [${typeof number}], not number`;
+    }
+    return number;
+  }
+
 
 function validateDate(date, name = "date") {
   date = checkString(date);
@@ -120,12 +130,11 @@ if (loginForm) {
     });
 }
 
-dob.max = new Date().toISOString().split("T")[0];
-
 
 let registerForm = document.getElementById('signup-form');
 
 if(registerForm){
+    dob.max = new Date().toISOString().split("T")[0];
     registerForm.addEventListener('submit', function(event) {
         event.preventDefault();
         let username = document.getElementById('username').value;

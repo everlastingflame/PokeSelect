@@ -1,6 +1,6 @@
-import {draft, users} from '../config/mongoCollections.js';
+import {drafts, users} from '../config/mongoCollections.js';
 import userfunctions from "./users.js";
-import {getTeam, createNewTeam, addPokemonToTeam} from "./team.js";
+import team from "./team.js";
 import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
 import pokeapi from "./pokeapi.js";
@@ -10,14 +10,16 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
     draft_master = validation.validateString(draft_master, "draftMaster");
     point_budget = validation.validateNumber(point_budget);
     team_size = validation.validateNumber(team_size);
-    tera_num_captains = validation.validateNumber(tera_num_captains);
+    if(generationName === "9") {
+      tera_num_captains = validation.validateNumber(tera_num_captains);
+      if(tera_num_captains < 0 || tera_num_captains > team_size) throw "The number of tera captains can't be a negative number or greater than the team size";
+    }
 
     if(point_budget < 6) throw "Point budget must be at least 6 so a team of 6 Pokemon can be drafted";
     if(team_size < 6) throw "Team size must be at least 6";
-    if(tera_num_captains < 0 || tera_num_captains > team_size) throw "The number of tera captains can't be a negative number or greater than the team size";
 
     let old_pkmn_list = await pokeapi.getAllPokemonByGeneration(generationName);
-    let pkmn_list;
+    let pkmn_list = [];
     for (let pokemon of old_pkmn_list) {
       let types = [];
       let abilities = [];
@@ -63,21 +65,21 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
     };
 
 
-    const draftCollection = await draft();
+    const draftCollection = await drafts();
     const insertInfo = await draftCollection.insertOne(newDraft);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
       throw "Error: Could not add draft";
     }
   
     const newId = insertInfo.insertedId.toString();
-    const draft = await getTeam(newId);
+    const draft = await getDraft(newId);
     return draft;
 }
 
 const getDraft = async(draftId) => {
   draftId = validation.validateId(draftId);
   
-    const draftCollection = await draft();
+    const draftCollection = await drafts();
     const draft = await draftCollection.findOne({
       _id: new ObjectId(draftId),
     });
@@ -131,7 +133,7 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   if (!user.teams.includes(team_id)) throw "The user does not have a team with the team_id provided";
   for (let pokemon of pkmn_list) {
     if(pokemon.name === draftedPokemon.name && !pokemon.is_drafted) {
-      let team = await addPokemonToTeam(team_id, draftPokemonToTeam);
+      let team = await team.addPokemonToTeam(team_id, draftPokemonToTeam);
       pokemon = draftedPokemon;
       draft.pick_number++;
       return team;
@@ -140,20 +142,41 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   throw "Pokemon selected cannot be drafted";
 }
 
+const inviteUserToDraft = async (draftId, username) => {
+  draftId = validation.validateId(draftId);
+  username = validation.validateString(username);
+
+  let user = await userfunctions.getUserByName(username)
+  if (user === null) throw "User does not exist";
+  user.invites.push(draftId);
+  return user;
+}
+
 // function to add users and teams to draft
-const addUserToDraft = async (draft_id, user_id) => {
+const checkInviteForUser = async (draft_id, user_id, accept_invite) => {
   if(!draft_id || !ObjectId.isValid(draft_id)) throw "Valid draft ID must be provided";
   if(!user_id || !ObjectId.isValid(user_id)) throw "Valid user ID must be provided";
+  if(typeof accept_invite !== "boolean") throw "Invite must be accepted or declined";
 
   let draft = await getDraft(draft_id);
   let user = await userfunctions.getUserById(user_id);
 
-  if(draft.user_ids.includes(user_id)) throw "This user is already in the draft";
-  draft.user_ids.push(user_id);
+  if(!user.invites.includes(draft._id.toString())) throw "This user was not invited to the draft";
 
-  let newTeam = await createNewTeam(user_id, draft_id, draft.point_budget);
-  user.teams.push(newTeam._id)
-  draft.team_ids.push(newTeam._id);
+  user = await userCollection.findOneAndUpdate(
+    {_id: user_id},
+    {$pull: {invites: draft_id}}
+  );
+
+  if(accept_invite) {
+    if (draft.user_ids.includes(user_id)) throw "This user is already in the draft";
+    draft.user_ids.push(user_id);
+
+    let newTeam = await team.createNewTeam(user_id, draft_id, draft.point_budget);
+    user.teams.push(newTeam._id)
+    draft.team_ids.push(newTeam._id);
+  }
+
   return draft;
 }
 
@@ -176,4 +199,4 @@ const findUserTeamInDraft = async (user_id, draft_id) => {
   throw "User does not have a team in this draft";
 }
 
-export {createNewDraft, getDraft, editPokemonList, addUserToDraft, findUserTeamInDraft}
+export {createNewDraft, getDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, findUserTeamInDraft}
