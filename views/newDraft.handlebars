@@ -3,6 +3,10 @@
         <h1>New Pokemon Draft</h1>
     </header>
 
+    {{#if error}}
+    <p id="serverError" class="alert alert-danger" role="alert">{{error}}</p>
+    {{/if}}
+
     <form id="draftForm" action="/draft/new" method="POST">
         <div class="mb-3">
             <label for="generation" class="form-label">Select Generation</label>

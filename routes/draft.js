@@ -27,7 +27,7 @@ router.get('/new', async (req, res) => {
             if(body.tera_num_captains < 0 || body.tera_num_captains > body.team_size) throw "Number of tera captains must be 0 or a positive number";
         }
     } catch (e) {
-        return res.status(400).send(e.message);
+        return res.status(400).render("newDraft", {error: e});
     }
 
     try {
