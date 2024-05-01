@@ -50,7 +50,8 @@ async function getAllPokemonByGeneration(generationName) { // generationName sho
 
   let gen_suffix = `${gen===9 ? '' : 'paldea|'}${gen===7 ? '' : 'alola|'}${gen === 8 ? '' : 'galar|hisui'}`;
   let suffixRegex = new RegExp(`.*-(${gen_suffix})`);
-  pokemonInGen = [...pokemonInGen].filter((e) => !e.keys().match(suffixRegex)); // filters out regional varieties that aren't in generation
+  pokemonInGen = [...pokemonInGen].filter(([k, _v]) => !k.match(suffixRegex)).map(([_k, v]) => v); // filters out regional varieties that aren't in generation
+
   return pokemonInGen;
 }
 
