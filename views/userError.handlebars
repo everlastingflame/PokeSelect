@@ -1,4 +1,5 @@
 {{!< userProfiles}}
+{{!< userProfiles}}
 <body>
 
 <div class="blurred-background"></div>
@@ -14,25 +15,26 @@
     <div class="card-body">
         <div class="row">
             <div class="col text-center">
-              <h1>{{newUser}}'s profile</h1>
+              <h1>Oops!</h1>
             </div>
         </div>
-        <div class="row mb-4">
+                <div class="row mb-4">
             <div class="col text-center">
-              <button class="btn draftButtons" onclick="showDrafts()">{{newUser}}'s teams  </button>
+              <form action="/user" class="inline-form">
+                <button type="submit" class="btn draftButtons">User home</button>
+              </form>
               <form action="/logout" class="inline-form">
                 <button type="submit" class="btn draftButtons">Logout</button>
               </form>
             </div>
         </div>
-            <div class="card card-drafts" style="width: 100%; height: 320px;">
+        <div class="card card-drafts" style="width: 100%; height: 320px;">
             <div class="card-body">
                 <p id="DraftText" class="card-text" style="display: block;"> 
-                  {{userTeams}}
+                  {{error}}
                 </p>
             </div>
-            </div>  
-    </div>
+        </div>
   </div>
 </div>
 

@@ -110,6 +110,7 @@ export const loginUser = async (username, password) => {
   const user = await userCollection.findOne({
     username: username,
   });
+  
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     throw "password is invalid";
   }
