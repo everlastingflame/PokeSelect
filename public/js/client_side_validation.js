@@ -187,7 +187,6 @@ if(draftForm) {
         let formIsValid = true;
 
         try {
-            generation = generation.slice(-1);
             generation = checkString(generation);
             pointBudget = checkNumber(parseInt(pointBudget));
             if(pointBudget < 6) throw "Point budget must be at least 6 points";
@@ -196,7 +195,7 @@ if(draftForm) {
             if(generation === "gen9") {
                 teraCaptain = document.getElementById('teraCaptain').value;
                 teraCaptain = checkNumber(parseInt(teraCaptain));
-            if(teraCaptain < 0) throw "Number of tera captains must be 0 or a positive number";
+            if(teraCaptain < 0 || teraCaptain > teamSize) throw "Number of tera captains must be 0 or a positive number";
             }
         } catch (error) {
             /* const errorDiv = document.getElementById('error_output');
