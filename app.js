@@ -67,6 +67,13 @@ app.use("/logout", async (req, res, next) => {
   next();
 });
 
+app.use("/draft", async (req, res, next) => {
+  if (!req.session || !req.session.user) {
+    return res.redirect("/login");
+  }
+  next();
+})
+
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
     req.method = req.body._method;

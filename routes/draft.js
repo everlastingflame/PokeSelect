@@ -5,6 +5,11 @@ import { createNewDraft } from "../data/draft.js";
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+    console.log("GET '/draft' route");
+    res.status(200).json({});
+})
+
 router.get('/new', async (req, res) => {
     try {
         res.render('newDraft');
@@ -12,7 +17,8 @@ router.get('/new', async (req, res) => {
         res.status(500).send(e.message);
     }
 })
-.post(async (req, res) => {
+.post("/new", async (req, res) => {
+    console.log("POST /draft/new' route")
     try {
         if(!req.body) throw "Need to provide information to create draft";
         let body = req.body;
@@ -34,7 +40,7 @@ router.get('/new', async (req, res) => {
     }
 });
 
-router.get("/draft/:id/invite", async (req, res) => {
+router.get("/:id/invite", async (req, res) => {
     try {
         res.render("inviteUsers");
     } catch (e) {
