@@ -33,7 +33,7 @@ router.get('/new', async (req, res) => {
 
     try {
         let draft = await createNewDraft(body.generation, body.draft_master, body.point_budget, body.team_size, body.tera_num_captains);
-        res.redirect(`/draft/${draft._id.toString()}/invite`)
+        res.redirect(`/draft/${draft._id.toString()}/invite`);
     } catch (e) {
         return res.status(404).render("newDraft", {error: e});
     }
@@ -44,6 +44,20 @@ router.get("/:id/invite", async (req, res) => {
         res.render("inviteUsers");
     } catch (e) {
         res.status(500).send(e.message);
+    }
+})
+
+router.get("/start", async (req, res) => {
+    try {
+        res.render("draftBoard");
+    } catch (e) {
+        res.status(500).render("draftBoard", {error: e});
+    }
+}).post("/start", async (req, res) => {
+    try {
+        res.redirect(`/draft/${draft._id.toString()}/start`);
+    } catch (e) {
+        res.status(500).render("draftBoard", {error: e});
     }
 })
 

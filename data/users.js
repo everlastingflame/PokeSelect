@@ -40,6 +40,7 @@ async function createNewUser(username, password, email, dob) {
     email: email,
     dob: dob,
     teams: [],
+    invites: [],
     age: age,
   };
 

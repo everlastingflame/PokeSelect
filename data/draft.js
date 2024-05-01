@@ -142,20 +142,41 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   throw "Pokemon selected cannot be drafted";
 }
 
+const inviteUserToDraft = async (draftId, username) => {
+  draftId = validation.validateId(draftId);
+  username = validation.validateString(username);
+
+  let user = await userfunctions.getUserByName(username)
+  if (user === null) throw "User does not exist";
+  user.invites.push(draftId);
+  return user;
+}
+
 // function to add users and teams to draft
-const addUserToDraft = async (draft_id, user_id) => {
+const checkInviteForUser = async (draft_id, user_id, accept_invite) => {
   if(!draft_id || !ObjectId.isValid(draft_id)) throw "Valid draft ID must be provided";
   if(!user_id || !ObjectId.isValid(user_id)) throw "Valid user ID must be provided";
+  if(typeof accept_invite !== "boolean") throw "Invite must be accepted or declined";
 
   let draft = await getDraft(draft_id);
   let user = await userfunctions.getUserById(user_id);
 
-  if(draft.user_ids.includes(user_id)) throw "This user is already in the draft";
-  draft.user_ids.push(user_id);
+  if(!user.invites.includes(draft._id.toString())) throw "This user was not invited to the draft";
 
-  let newTeam = await team.createNewTeam(user_id, draft_id, draft.point_budget);
-  user.teams.push(newTeam._id)
-  draft.team_ids.push(newTeam._id);
+  user = await userCollection.findOneAndUpdate(
+    {_id: user_id},
+    {$pull: {invites: draft_id}}
+  );
+
+  if(accept_invite) {
+    if (draft.user_ids.includes(user_id)) throw "This user is already in the draft";
+    draft.user_ids.push(user_id);
+
+    let newTeam = await team.createNewTeam(user_id, draft_id, draft.point_budget);
+    user.teams.push(newTeam._id)
+    draft.team_ids.push(newTeam._id);
+  }
+
   return draft;
 }
 
@@ -178,4 +199,4 @@ const findUserTeamInDraft = async (user_id, draft_id) => {
   throw "User does not have a team in this draft";
 }
 
-export {createNewDraft, getDraft, editPokemonList, addUserToDraft, findUserTeamInDraft}
+export {createNewDraft, getDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, findUserTeamInDraft}
