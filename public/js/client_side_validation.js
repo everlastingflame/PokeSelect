@@ -195,7 +195,8 @@ if(draftForm) {
             if(generation === "gen9") {
                 teraCaptain = document.getElementById('teraCaptain').value;
                 teraCaptain = checkNumber(parseInt(teraCaptain));
-            if(teraCaptain < 0 || teraCaptain > teamSize) throw "Number of tera captains must be 0 or a positive number";
+            if(teraCaptain < 0) throw "Number of tera captains must be 0 or a positive number"
+            if(teraCaptain > teamSize) throw "Number of tera captains must be less than or equal to the team size";
             }
         } catch (error) {
             /* const errorDiv = document.getElementById('error_output');

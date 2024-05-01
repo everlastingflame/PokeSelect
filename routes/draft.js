@@ -24,7 +24,8 @@ router.get('/new', async (req, res) => {
         body.team_size = data_validation.validateNumber(parseInt(xss(body.teamSize)), "team_size");
         if (body.generation === "9") {
             body.tera_num_captains = data_validation.validateNumber(parseInt(xss(body.teraCaptain)), "teraCaptain");
-            if(body.tera_num_captains < 0 || body.tera_num_captains > body.team_size) throw "Number of tera captains must be 0 or a positive number";
+            if(body.tera_num_captains < 0) throw "Number of tera captains must be 0 or a positive number";
+            if(body.tera_num_captains > body.team_size) throw "Number of tera captains must be less than or equal to the team size";
         }
     } catch (e) {
         return res.status(400).render("newDraft", {error: e});
@@ -32,10 +33,9 @@ router.get('/new', async (req, res) => {
 
     try {
         let draft = await createNewDraft(body.generation, body.draft_master, body.point_budget, body.team_size, body.tera_num_captains);
-        console.log("hey there")
         res.redirect(`/draft/${draft._id.toString()}/invite`)
     } catch (e) {
-        return res.status(404).send(e.message);
+        return res.status(404).render("newDraft", {error: e});
     }
 });
 

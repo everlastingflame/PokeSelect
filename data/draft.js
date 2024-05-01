@@ -10,14 +10,16 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
     draft_master = validation.validateString(draft_master, "draftMaster");
     point_budget = validation.validateNumber(point_budget);
     team_size = validation.validateNumber(team_size);
-    tera_num_captains = validation.validateNumber(tera_num_captains);
+    if(generationName === "9") {
+      tera_num_captains = validation.validateNumber(tera_num_captains);
+      if(tera_num_captains < 0 || tera_num_captains > team_size) throw "The number of tera captains can't be a negative number or greater than the team size";
+    }
 
     if(point_budget < 6) throw "Point budget must be at least 6 so a team of 6 Pokemon can be drafted";
     if(team_size < 6) throw "Team size must be at least 6";
-    if(tera_num_captains < 0 || tera_num_captains > team_size) throw "The number of tera captains can't be a negative number or greater than the team size";
 
     let old_pkmn_list = await pokeapi.getAllPokemonByGeneration(generationName);
-    let pkmn_list;
+    let pkmn_list = [];
     for (let pokemon of old_pkmn_list) {
       let types = [];
       let abilities = [];
