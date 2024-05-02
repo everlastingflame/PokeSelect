@@ -94,9 +94,7 @@ router.get("/:id/settings", async (req, res) => {
         if (draft.gen_num === 9) {
             let teraBanned = data_validation.validateString(xss(body.teraBanned));
             teraBannedArray = teraBanned.split(",");
-            for(let pkmn of teraBannedArray) {
-                pkmn = data_validation.validateString(pkmn);
-            }
+            teraBannedArray = teraBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
         }
         draft.pkmn_list = await editPokemonList(draft.pkmn_list, pkmnBannedArray, teraBannedArray);
         draft.tera_banlist = teraBannedArray;
