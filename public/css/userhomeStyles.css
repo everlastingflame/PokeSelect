@@ -49,6 +49,7 @@ html, body {
 .card-drafts{
     height:80%;
     background-color: #FFE992;
+    overflow-y: scroll;
 }
 
 .draftButtons {
