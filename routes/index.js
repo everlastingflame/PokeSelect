@@ -6,7 +6,7 @@ const constructorMethod = (app) => {
   app.use('/', users);
   app.use('/draft', draft);
   app.use('*', (req, res) => {
-    return res.status(404).render("error", {title: 'Error', notFound: true});
+    return res.status(404).render("userError", {title: 'Error', notFound: true});
   });
 };
 

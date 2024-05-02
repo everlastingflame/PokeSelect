@@ -1,7 +1,7 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
 import { dbData } from "../data/index.js"
-import { createNewDraft } from "../data/draft.js";
+import { createNewDraft, inviteUserToDraft } from "../data/draft.js";
 import xss from "xss";
 
 const router = express.Router();
@@ -45,6 +45,21 @@ router.get("/:id/invite", async (req, res) => {
     } catch (e) {
         res.status(500).send(e.message);
     }
+}).post("/:id/invite", async (req, res) => {
+    if(!req.body) return res.status(400).send("Need to invite a player to the draft");
+    let body = req.body;
+    try {
+        body.invites = data_validation.validateString(xss(body.invites), "invite");
+    } catch (e) {
+        return res.status(400).render("inviteUsers", {error: e});
+    }
+
+    try {
+        await inviteUserToDraft(req.params.id, body.invites);
+        res.status(200).redirect(`/draft/${req.params.id}/invite`);
+    } catch (e) {
+        return res.status(404).render("inviteUsers", {error: e});
+    }
 })
 
 router.get("/start", async (req, res) => {
@@ -55,7 +70,21 @@ router.get("/start", async (req, res) => {
     }
 }).post("/start", async (req, res) => {
     try {
-        res.redirect(`/draft/${draft._id.toString()}/start`);
+        res.redirect("/draft/start");
+    } catch (e) {
+        res.status(500).render("draftBoard", {error: e});
+    }
+})
+
+router.get("/:id/start", async (req, res) => {
+    try {
+        res.render("draftBoard");
+    } catch (e) {
+        res.status(500).render("draftBoard", {error: e});
+    }
+}).post("/:id/start", async (req, res) => {
+    try {
+        res.redirect(`/draft/${req.params.id}/start`);
     } catch (e) {
         res.status(500).render("draftBoard", {error: e});
     }
