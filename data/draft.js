@@ -97,7 +97,7 @@ const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   }
 
   if(typeof banned_pkmn !== "object" || !Array.isArray(banned_pkmn)) throw "No banned Pokemon list provided";
-  banned_pkmn.map((e) => validation.validateString(e, "banned Pokemon"));
+  banned_pkmn = banned_pkmn.map((e) => validation.validateString(e, "banned Pokemon"));
 
   if(typeof tera_banned_pkmn !== "object" || !Array.isArray(tera_banned_pkmn)) throw "No tera banned Pokemon list provided";
   tera_banned_pkmn.map((e) => validation.validateString(e, "tera banned Pokemon"));

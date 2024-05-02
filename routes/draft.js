@@ -87,9 +87,7 @@ router.get("/:id/settings", async (req, res) => {
         let draft = await getDraft(req.params.id);
         let pokemonBanned = data_validation.validateString(xss(body.pokemonBanned));
         let pkmnBannedArray = pokemonBanned.split(",");
-        for(let pkmn of pkmnBannedArray) {
-            pkmn = data_validation.validateString(pkmn);
-        }
+        pkmnBannedArray = pkmnBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
 
         let teraBannedArray = [];
 
@@ -118,7 +116,7 @@ router.get("/:id", async (req, res) => {
     } catch (e) {
         res.status(500).render("draftBoard", {error: e});
     }
-}).post("/:id/start", async (req, res) => {
+}).post("/:id", async (req, res) => {
     try {
         res.redirect(`/draft/${req.params.id}/start`);
     } catch (e) {
