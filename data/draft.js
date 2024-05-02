@@ -161,11 +161,7 @@ const inviteUserToDraft = async (draftId, username) => {
   draftId = validation.validateId(draftId);
   username = validation.validateString(username);
 
-  const userCollection = await users();
-  const user = await userCollection.findOne(
-    {"username": username}
-  );
-  if (user === null) throw "User does not exist";
+  const user = userfunctions.getUserByName(username);
 
   if(user.invites.includes(draftId.toString())) throw "This user has already been invited to the draft";
 
