@@ -160,7 +160,7 @@ async function resolveQuery(url) {
     url: url,
   });
   if (cachedValue && cachedValue.expiryDate > new Date()) {
-    return cachedValue;
+    return cachedValue.response;
   }
   if (cachedValue) {
     mCachel.deleteOne({
