@@ -92,7 +92,7 @@ const getDraft = async(draftId) => {
 const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
   if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
-  for (pokemon of pkmn_list) {
+  for (let pokemon of pkmn_list) {
     if(typeof pokemon !== "object") throw "All array elements must be objects";
   }
 
@@ -102,11 +102,9 @@ const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   if(typeof tera_banned_pkmn !== "object" || !Array.isArray(tera_banned_pkmn)) throw "No tera banned Pokemon list provided";
   tera_banned_pkmn.map((e) => validation.validateString(e, "tera banned Pokemon"));
 
-  for (pokemon of pkmn_list) {
+  for (let pokemon of pkmn_list) {
     if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
       pokemon.point_val = -1;
-    } else {
-      pokemon.point_val = 0; //call some value
     }
     if(tera_banned_pkmn.includes(pokemon.name)) {
       pokemon.is_tera_eligible = false;
