@@ -3,7 +3,8 @@
         <h1>Invite Users to Draft</h1>
     </header>
 
-    <form id="inviteForm" action="/draft/invite" method="POST">
+    <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
+    <form id="inviteForm" action="" method="POST"> <!-- ajax -->
         <div class="mb-3">
             <label for="invites" class="form-label">Type in a username to invite the user to the draft</label> <br>
             <input type="text" id="invites" name="invites">
@@ -12,7 +13,8 @@
     </form>
 
     <br>
-    <form id="finishInvites" action="/draft/start" method="POST">
+    <form id="finishInvites" action="" method="POST">
         <button type="submit" class="finishInvites">Finish Inviting Users</button>
     </form>
+    <script src="../../public/js/inviteUsers.js"></script>
 </div>

@@ -92,17 +92,17 @@ const getDraft = async(draftId) => {
 const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
   if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
-  for (pokemon of pkmn_list) {
+  for (let pokemon of pkmn_list) {
     if(typeof pokemon !== "object") throw "All array elements must be objects";
   }
 
   if(typeof banned_pkmn !== "object" || !Array.isArray(banned_pkmn)) throw "No banned Pokemon list provided";
-  banned_pkmn.map((e) => validation.validateString(e, "banned Pokemon"));
+  banned_pkmn = banned_pkmn.map((e) => validation.validateString(e, "banned Pokemon"));
 
   if(typeof tera_banned_pkmn !== "object" || !Array.isArray(tera_banned_pkmn)) throw "No tera banned Pokemon list provided";
-  tera_banned_pkmn.map((e) => validation.validateString(e, "tera banned Pokemon"));
+  tera_banned_pkmn = tera_banned_pkmn.map((e) => validation.validateString(e, "tera banned Pokemon"));
 
-  for (pokemon of pkmn_list) {
+  for (let pokemon of pkmn_list) {
     if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
       pokemon.point_val = -1;
     }
@@ -111,6 +111,21 @@ const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
     }
   }
   return pkmn_list;
+}
+
+const editPokemonValue = async (pkmn_list, pokemon, value) => {
+  if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
+  pokemon = validation.validateString(pokemon, "Pokemon");
+  value = validation.validateNumber(number, "point value");
+  if(value < 0) throw "Point value must be 0 or a positive number";
+
+  for(pkmn of pkmn_list) {
+    if(pkmn.name === pokemon) {
+      pkmn.point_val = val;
+      return pkmn;
+    }
+  }
+  throw "Pokemon is not in the Pokemon list";
 }
 
 const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, draftId) => {
@@ -146,9 +161,14 @@ const inviteUserToDraft = async (draftId, username) => {
   draftId = validation.validateId(draftId);
   username = validation.validateString(username);
 
-  let user = await userfunctions.getUserByName(username)
-  if (user === null) throw "User does not exist";
-  user.invites.push(draftId);
+  const user = userfunctions.getUserByName(username);
+
+  if(user.invites.includes(draftId.toString())) throw "This user has already been invited to the draft";
+
+  await userCollection.updateOne(
+    {"username": username}, {$push: {invites: draftId.toString()}}
+  )
+
   return user;
 }
 
@@ -163,6 +183,7 @@ const checkInviteForUser = async (draft_id, user_id, accept_invite) => {
 
   if(!user.invites.includes(draft._id.toString())) throw "This user was not invited to the draft";
 
+  const userCollection = await users();
   user = await userCollection.findOneAndUpdate(
     {_id: user_id},
     {$pull: {invites: draft_id}}
