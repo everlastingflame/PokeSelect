@@ -23,3 +23,4 @@ export const users = _users;
 export const teams = getCollectionFn("team");
 export const drafts = getCollectionFn("draft");
 export const tournaments = getCollectionFn("tournament");
+export const mongoCache = getCollectionFn("_cache");
