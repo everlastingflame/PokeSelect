@@ -16,6 +16,33 @@ function showInvite(){
     document.getElementById("Invites").style.display = "block";
 }
 
+function showLogout(){
+
+}
+
+const checkString = (str) => {
+    if (typeof str !== 'string') {
+        throw 'is not a string';
+    }
+    if (str.trim() === '') {
+        throw 'is an empty string';
+    }
+    if(!str){
+        throw 'is undefined';
+    }
+    return str;
+}
+
+function checkNumber(number, name = "number") {
+    if (!number) {
+      throw `Error: Did not supply ${name}`;
+    }
+    if (typeof number !== "number" || Number.isNaN(number)) {
+      throw `Error: ${name} is type [${typeof number}], not number`;
+    }
+    return number;
+  }
+
 let draftForm = document.getElementById('draftForm');
 
 function teraCheck(gen) {

@@ -1,3 +1,4 @@
+import { mongoCache } from "../config/mongoCollections.js";
 import axios from "axios";
 import NodeCache from "node-cache";
 import validate from "./data_validation.js";
@@ -10,6 +11,7 @@ import validate from "./data_validation.js";
  */
 
 const API_URI = "https://pokeapi.co/api/v2";
+const mCache = await mongoCache();
 const cache = new NodeCache();
 
 async function getPokedexByName(pokedexName) {
@@ -21,7 +23,6 @@ async function getPokedexByName(pokedexName) {
 
   return data;
 }
-
 
 /*
 Given a generation called gen, find:
@@ -39,34 +40,42 @@ pokemonInGen.filter((e) => !e.name.match(suffixRegex))
 }
 */
 
-async function getAllPokemonByGeneration(generationName) { // generationName should be a number 1-9
+async function getAllPokemonByGeneration(generationName) {
+  // generationName should be a number 1-9
   generationName = validate.validateString(generationName, "generationName");
   let pokedexesForGen = await getAllPokedexesForGeneration(generationName); // gets all pokedexes for that generation
   let pokemonInGen = new Map();
-  for (const pokedex of pokedexesForGen) { // gets all pokemon in that generation, including regional varieties that aren't in gen
+  for (const pokedex of pokedexesForGen) {
+    // gets all pokemon in that generation, including regional varieties that aren't in gen
     await getAllPokemonByPokedex(pokedex, pokemonInGen);
   }
   let gen = parseInt(generationName);
 
-  let gen_suffix = `${gen===9 ? '' : 'paldea|'}${gen===7 ? '' : 'alola|'}${gen === 8 ? '' : 'galar|hisui'}`;
+  let gen_suffix = `${gen === 9 ? "" : "paldea|"}${gen === 7 ? "" : "alola|"}${
+    gen === 8 ? "" : "galar|hisui"
+  }`;
   let suffixRegex = new RegExp(`.*-(${gen_suffix})`);
-  pokemonInGen = [...pokemonInGen].filter(([k, _v]) => !k.match(suffixRegex)).map(([_k, v]) => v); // filters out regional varieties that aren't in generation
+  pokemonInGen = [...pokemonInGen]
+    .filter(([k, _v]) => !k.match(suffixRegex))
+    .map(([_k, v]) => v); // filters out regional varieties that aren't in generation
 
   return pokemonInGen;
 }
 
 async function getAllPokemonByPokedex(pokedex, pokemonMap) {
-  if(typeof pokedex !== "object") throw "Pokedex must be an object";
+  if (typeof pokedex !== "object") throw "Pokedex must be an object";
 
-  for (const entry of pokedex.pokemon_entries) { // pushes all species varieties to pokemonList
-    for (const pokemon of await getAllPokemonFromSpecies(entry.pokemon_species.name)) {
-      if(!pokemonMap.get(pokemon.name)) {
+  for (const entry of pokedex.pokemon_entries) {
+    // pushes all species varieties to pokemonList
+    for (const pokemon of await getAllPokemonFromSpecies(
+      entry.pokemon_species.name
+    )) {
+      if (!pokemonMap.get(pokemon.name)) {
         pokemonMap.set(pokemon.name, pokemon);
       }
     }
   }
   return pokemonMap;
-
 
   // find way to get all pokemon using pokedex.pokemon_entries.pokemon_species
   /**
@@ -84,19 +93,24 @@ async function getPokemon(pokemonName) {
   let data = await resolveQuery(endpoint);
 
   return data;
-
 }
 
-async function getAllPokemonFromSpecies(speciesName) { // given a pokemon species (i.e. "arcanine"), returns all pokemon entries for each species
+async function getAllPokemonFromSpecies(speciesName) {
+  // given a pokemon species (i.e. "arcanine"), returns all pokemon entries for each species
   speciesName = validate.validateString(speciesName, "speciesName");
-  const endpoint = `${API_URI}/pokemon-species/${encodeURIComponent(speciesName)}`;
+  const endpoint = `${API_URI}/pokemon-species/${encodeURIComponent(
+    speciesName
+  )}`;
 
   let species = await resolveQuery(endpoint);
 
   let speciesArray = [];
 
   for (const variety of species.varieties) {
-    if(variety.is_default || variety.pokemon.name.match(/.*-(hisui|galar|alola|paldea)/)) {
+    if (
+      variety.is_default ||
+      variety.pokemon.name.match(/.*-(hisui|galar|alola|paldea)/)
+    ) {
       speciesArray.push(await resolveQuery(variety.pokemon.url));
     }
   }
@@ -106,12 +120,13 @@ async function getAllPokemonFromSpecies(speciesName) { // given a pokemon specie
 
 async function getGameGeneration(generationName) {
   generationName = validate.validateString(generationName, "generationName");
-  const endpoint = `${API_URI}/generation/${encodeURIComponent(generationName)}`;
+  const endpoint = `${API_URI}/generation/${encodeURIComponent(
+    generationName
+  )}`;
 
   let data = await resolveQuery(endpoint);
 
   return data;
-
 }
 
 async function getAllPokedexesForGeneration(generationName) {
@@ -120,17 +135,17 @@ async function getAllPokedexesForGeneration(generationName) {
   let pokedexList = [];
   let pokedexNames = new Map();
 
-  for (let game of generationData.version_groups) { // for each game in the generation, returns pokedexes
+  for (let game of generationData.version_groups) {
+    // for each game in the generation, returns pokedexes
     let gameURL = await resolveQuery(game.url);
     for (let pokedex of gameURL.pokedexes) {
-     if(!pokedexNames.get(pokedex.name)) {
-      pokedexList.push(await resolveQuery(pokedex.url));
-      pokedexNames.set(pokedex.name, true);
-     }
+      if (!pokedexNames.get(pokedex.name)) {
+        pokedexList.push(await resolveQuery(pokedex.url));
+        pokedexNames.set(pokedex.name, true);
+      }
     }
   }
   return pokedexList;
-
 }
 
 async function resolveQuery(url) {
@@ -140,6 +155,19 @@ async function resolveQuery(url) {
     return cachedValue;
   }
 
+  // Check for persistent cached value in mongo
+  cachedValue = await mCache.findOne({
+    url: url,
+  });
+  if (cachedValue && cachedValue.expiryDate > new Date()) {
+    return cachedValue.response;
+  }
+  if (cachedValue) {
+    mCachel.deleteOne({
+      url: url,
+    });
+  }
+
   // Otherwise, request the result from PokeAPI with a 20 second timeout
   try {
     let { data } = await axios.get(url, { timeout: 20 * 1000 });
@@ -147,11 +175,24 @@ async function resolveQuery(url) {
     // If successful, cache the result for 1 hour
     cache.set(url, data, 1000 * 60 * 60);
 
+    // Also store the result in mongo
+    mCache.insertOne({
+      url: url,
+      expiryDate: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7),
+      response: data,
+    });
+
     return data;
   } catch (e) {
     throw `${e.name}: ${e.message}`;
   }
-
 }
 
-export default { getPokedexByName, getAllPokemonByGeneration, getPokemon, getAllPokedexesForGeneration, getAllPokemonByPokedex, getGameGeneration };
+export default {
+  getPokedexByName,
+  getAllPokemonByGeneration,
+  getPokemon,
+  getAllPokedexesForGeneration,
+  getAllPokemonByPokedex,
+  getGameGeneration,
+};
