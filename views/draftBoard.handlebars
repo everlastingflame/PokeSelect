@@ -12,11 +12,11 @@
               <button class="btn draftButtons">Cancel draft </button>
               <button class="btn draftButtons" type="submit">Submit</button>
       <form id="draftForm" action="" method="POST">
-        <div class="card card-drafts" style="width: 100%; height: 320px;">
+        <div class="card card-drafts" style="width: 100%; height: 60%;">
             <div class="card-body">
               <!-- Repeat these lines in the handlebars as we iterate over the pokemon list-->
               {{#each pokeObject}}
-              <container name="Pokemon1">
+            <div name={{this.name}}>
               <div class="row">
                 <div class="col">
                   <img src={{this.image}} alt="Pokemon Image" class="pokemonImage" style="width: 40px; height: 40px;">
@@ -31,14 +31,16 @@
                   <input type="checkbox" id=`{{this.name}}-banCheckbox` name=`${{this.name}}-banCheckbox`>
                   <label for="banCheckbox">Ban</label>
                 </div>
-                <!-- -- if statement -->
+
+                {{#if this.isTera}}
                 <div class="col">
                   <input type="checkbox" id=`{{this.name}}-Teraban` name=`{{this.name}}-Teraban`>
                   <label for="teraBanCheckbox">Tera Ban</label>
                 </div>
-                <!-- -- if statement -->
+                {{/if}}
+
               </div>
-            </container>
+            </div>
             {{/each}}
               <!-- Repeat the above row for each pokemon -->
             </div>
@@ -51,5 +53,5 @@
   </div>
 </div>
 
-<script src="../../public/js/draftBoard.js"></script>
+<script src"public\js\draftBoard.js"></script>
 </body>

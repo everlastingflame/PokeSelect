@@ -90,10 +90,10 @@ router.get("/:id/settings", async (req, res) => {
             let image = await pokemonApi.getPokemon(pokemon.name);
             pokeObject.push({
             name: pokemon.name,
-            image: image.sprites.front_default
+            image: image.sprites.front_default,
+            isTera: isTera
             });
         }
-        console.log(pokeObject);
 
         res.render("draftBoard", {layout: 'userProfiles', pokeObject: pokeObject});
     } catch (e) {
