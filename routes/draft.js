@@ -2,6 +2,7 @@ import data_validation from "../data/data_validation.js"
 import express from 'express';
 import { dbData } from "../data/index.js"
 import { createNewDraft, editPokemonList, inviteUserToDraft, getDraft } from "../data/draft.js";
+import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
 import {drafts} from "../config/mongoCollections.js";
 
@@ -76,9 +77,27 @@ router.post("/:id/inviteuser", async (req, res) => {
 
 router.get("/:id/settings", async (req, res) => {
     try {
-        res.render("draftBoard");
+        let draftDetails = await getDraft(req.params.id);
+        let pokemonList = draftDetails.pkmn_list;
+        let isTera = false;
+        if(draftDetails.gen_num === 9) {
+            isTera = true;
+        }
+
+        let pokeObject = [];
+
+        for (const pokemon of pokemonList) {
+            let image = await pokemonApi.getPokemon(pokemon.name);
+            pokeObject.push({
+            name: pokemon.name,
+            image: image.sprites.front_default
+            });
+        }
+        console.log(pokeObject);
+
+        res.render("draftBoard", {layout: 'userProfiles', pokeObject: pokeObject});
     } catch (e) {
-        res.status(500).render("draftBoard", {error: e});
+        res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 }).post("/:id/settings", async (req, res) => {
     if(!req.body) return res.status(400).send("Need to invite a player to the draft");
@@ -104,7 +123,7 @@ router.get("/:id/settings", async (req, res) => {
         
         res.redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
-        res.status(500).render("draftBoard", {error: e});
+        res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 })
 
@@ -112,13 +131,13 @@ router.get("/:id", async (req, res) => {
     try {
         res.render("draftPhase");
     } catch (e) {
-        res.status(500).render("draftBoard", {error: e});
+        res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 }).post("/:id", async (req, res) => {
     try {
         res.redirect(`/draft/${req.params.id}/start`);
     } catch (e) {
-        res.status(500).render("draftBoard", {error: e});
+        res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 })
 
