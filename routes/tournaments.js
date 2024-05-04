@@ -1,7 +1,7 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
 import xss from "xss";
-import {getTournament} from "../data/tournaments.js";
+import tournaments from "../data/tournaments.js";
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
         body.team1 = data_validation.validateString(xss(body.team1), "Team 1");
         body.team2 = data_validation.validateString(xss(body.team2), "Team 2");
         body.winner = data_validation.validateNumber(xss(body.winner), "Winner");
-        let tournament = await getTournament(req.params.id); // check if req.params.id is tournamentID
+        let tournament = await tournaments.getTournament(req.params.id); // check if req.params.id is tournamentID
 
         if(!tournament.user_ids.include(body.team1) || !tournament.user_ids.include(body.team2)) throw "A team in the match is not in the tournament";
         let schedule = tournament.schedule;
