@@ -48,15 +48,6 @@ router.get("/:id/invite", async (req, res) => {
         res.status(500).send(e.message);
     }
 }).post("/:id/invite", async (req, res) => {
-    try {
-        res.redirect(`/draft/${req.params.id}`);
-    } catch (e) {
-        res.status(500).render("inviteUsers", {error: e});
-    }
-})
-
-
-router.post("/:id/inviteuser", async (req, res) => {
     if(!req.body) return res.status(400).send("Need to invite a player to the draft");
     let body = req.body;
     try {

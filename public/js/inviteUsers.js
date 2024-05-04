@@ -22,3 +22,15 @@ if(inviteForm) {
         }
     });
 }
+
+let draftFinal = document.getElementById('finishInvites');
+if(draftFinal) {
+    draftFinal.addEventListener('submit', function(event) {
+        let path = window.location.pathname;
+        path = path.substring(0, path.length - 7);
+        draftFinal.action = path;
+        draftFinal.submit();
+    })
+}
+
+

@@ -168,10 +168,11 @@ const inviteUserToDraft = async (draftId, username) => {
   draftId = validation.validateId(draftId);
   username = validation.validateString(username);
 
-  const user = userfunctions.getUserByName(username);
+  const user = await userfunctions.getUserByName(username);
 
   if(user.invites.includes(draftId.toString())) throw "This user has already been invited to the draft";
 
+  let userCollection = await users();
   await userCollection.updateOne(
     {"username": username}, {$push: {invites: draftId.toString()}}
   )
