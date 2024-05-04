@@ -36,7 +36,7 @@ html, body {
     margin-left: auto;
     margin-right: auto;
     background-color: rgba(187, 214, 255, 0.8); 
-
+    max-height:36vh;
   }
 
 .pokeselect-logo {
@@ -50,6 +50,7 @@ html, body {
     height:80%;
     background-color: #FFE992;
     overflow-y: scroll;
+    max-height: 28vh;
 }
 
 .draftButtons {
@@ -70,7 +71,7 @@ html, body {
 
 .card-text{
     height:280px;
-    overflow-y: scroll;
+    overflow-y: visible;
 }
 
 .inline-form {
