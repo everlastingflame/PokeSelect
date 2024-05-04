@@ -1,5 +1,5 @@
 const ws = new WebSocket(
-  "ws://" + window.location.hostname + ":3000/6635cfd789f468fc9ee37d09/init-ws"
+  "ws://" + window.location.host + window.location.pathname
 );
 
 ws.addEventListener("open", () => {

@@ -6,7 +6,7 @@ const constructorMethod = (app) => {
   app.use('/', pokeRoutes);
   app.use('/', users);
   app.use('/draft', draft);
-  app.use('/ws', express.Router().get("/", async(req, res) => {
+  app.use('/draft/:id/ws', express.Router().get("/", async(req, res) => {
     res.render("ws-test")
   }))
   app.use('*', (req, res) => {

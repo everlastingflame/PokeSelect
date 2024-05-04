@@ -3,7 +3,7 @@ import { getDraft } from "./data/draft.js";
 const draft_groups = {};
 
 function initWebsockets(app) {
-  app.ws("/:id/init-ws", async (ws, req) => {
+  app.ws("/draft/:id/ws", async (ws, req) => {
     const draft_id = req.params.id
     if (!draft_groups[draft_id]) {
       draft_groups[draft_id] = [ws]
