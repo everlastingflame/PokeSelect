@@ -49,9 +49,10 @@ const getTeam = async(teamId) => {
 
 const addPokemonToTeam = async (teamId, pokemonDrafted) => {
   teamId = validation.validateId(teamId, "teamId");
-  pokemonDrafted = validation.validateString(pokemonDrafted, "pokemonDrafted");
+  if(typeof pokemonDrafted !== "object") throw "Drafted Pokemon must be an object";
   let team = await getTeam(teamId);
   if(team.points_remaining < pokemonDrafted.point_val) throw "You do not have enough points to draft this Pokemon";
+  if(pokemonDrafted.point_val < 0) throw "Pokemon point value must be 0 or a positive number";
   // have to add more checks regarding min pokemon
 
   pokemonDrafted.is_drafted = true;
@@ -85,28 +86,25 @@ const reportMatch = async (tournamentId, tournamentMatch) => {
   return tournamentMatch;
 }
 
-const selectTeraCaptain = async (teamId, teraPokemon, pkmn_list) => {
+const selectTeraCaptain = async (teamId, teraPokemon, tera_num_captains) => {
   teamId = validation.validateId(teamId, "teamId");
   teraPokemon = validation.validateString(teraPokemon, "teraPokemon");
-  if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
-  for (pokemon of pkmn_list) {
-    if(typeof pokemon !== "object") throw "All array elements must be objects";
-  }
 
   let team = await getTeam(teamId);
   if (!team.selections.includes(teraPokemon)) throw "Pokemon is not on your team";
   if (!team.tera_captain.includes(teraPokemon)) throw "Pokemon is already a tera captain for the team";
-  for (pokemon of pkmn_list) {
+  if (team.tera_captain.length >= tera_num_captains) throw "Team already has maximum number of tera captains";
+  for (let pokemon of team.selections) {
     if (pokemon.name === teraPokemon) {
       if (pokemon.is_tera_eligible) {
-        team.tera_captain.push(teraPokemon);
+        team.tera_captain.push(pokemon);
         return teraPokemon.tera_captain;
       } else {
         throw "Pokemon is banned from being a tera captain";
       }
     }
   }
-  throw "Pokemon is not eligible to be drafted";
+  throw "Pokemon is not eligible to be a tera captain";
 }
 
 export default {createNewTeam, getTeam, reportMatch, addPokemonToTeam, selectTeraCaptain}
