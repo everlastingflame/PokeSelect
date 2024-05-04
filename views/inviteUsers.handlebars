@@ -1,20 +1,44 @@
-<div>
-    <header>
-        <h1>Invite Users to Draft</h1>
-    </header>
-
-    <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
-    <form id="inviteForm" action="" method="POST"> <!-- ajax -->
-        <div class="mb-3">
-            <label for="invites" class="form-label">Type in a username to invite the user to the draft</label> <br>
-            <input type="text" id="invites" name="invites">
+  <body>
+    <div class="blurred-background"></div>
+    <div class="container">
+      <div class="card card-main-content" style="width: 828px">
+        <div class="card-body">
+          <div class="row">
+            <div class="col text-center">
+              <h1>Invite users</h1>
+            </div>
+          </div>
+          <div class="card card-drafts" style="width: 100%">
+            <div class="card-body">
+              <!--Pass in the ID with render-->
+              <form id="inviteForm" action="/:id/invite" method="POST">
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input
+                    type="username"
+                    class="form-control"
+                    id="Username"
+                    name="Username"
+                    placeholder="Enter username"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">Invite</button>
+              </form>
+              <div id="error_container" class="card-text" style="display: none">
+                {{#if error}}
+                <p id="serverError" class="alert alert-danger" role="alert">
+                {{error}}
+                </p>
+                {{/if}}
+                <div
+                  id="error_container"
+                  class="d-none alert alert-danger"
+                  role="alert"
+                ></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <button type="submit" class="inviteUsers">Invite Users</button>
-    </form>
-
-    <br>
-    <form id="finishInvites" action="" method="POST">
-        <button type="submit" class="finishInvites">Finish Inviting Users</button>
-    </form>
-    <script src="../../public/js/inviteUsers.js"></script>
-</div>
+      </div>
+    </div>
+  </body>
