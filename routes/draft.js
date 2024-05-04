@@ -111,7 +111,8 @@ router.get("/:id/settings", async (req, res) => {
         for(let pokemon of body) {
             pokemon.name = data_validation.validateString(xss(pokemon.name));
             pokemon.pointValue = data_validation.validateString(xss(pokemon.pointValue));
-            if(parseInt(pokemon.pointValue) > 1) {
+            if(parseInt(pokemon.pointValue) < 0) throw "Point values must be 0 or a positive number";
+            if(parseInt(pokemon.pointValue) != 1) {
                 editPokemonValue(draft.pkmn_list, pokemon.name, parseInt(pokemon.pointValue));
             }
             if (typeof pokemon.isBanned != "boolean") throw "Pokemon ban must be a boolean value"

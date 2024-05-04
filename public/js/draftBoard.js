@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     let pokemonElements = card.querySelectorAll('div[class*="row"]'); 
                     pokemonElements.forEach(function(element) {
                         let pokeName = element.querySelector('p').textContent.trim();
+                        let pointVal = element.querySelector('input[type="number"]').value;
+                        if(pointVal < 0) throw "Point values must be 0 or a positive number";
                         let pokemon = {
                             name: pokeName,
-                            pointValue: element.querySelector('input[type="number"]').value,
+                            pointValue: pointVal,
                             isBanned: element.querySelector(`input[name="${pokeName}-banCheckbox"]`).checked,
                             isTeraBanned: element.querySelector(`input[name="${pokeName}-teraBan"]`) != null ? element.querySelector(`input[name="${pokeName}-teraBan"]`).checked : false
                         };
