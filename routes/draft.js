@@ -95,11 +95,12 @@ router.get("/:id/settings", async (req, res) => {
             });
         }
 
-        res.render("draftBoard", {layout: 'userProfiles', pokeObject: pokeObject});
+        res.render("draftBoard", {layout: 'userProfiles', pokeObject: pokeObject, draftId: req.params.id});
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 }).post("/:id/settings", async (req, res) => {
+
     if(!req.body) return res.status(400).send("Need to invite a player to the draft");
     let body = req.body;
     try {
