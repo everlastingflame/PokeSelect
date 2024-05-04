@@ -96,7 +96,7 @@ router.get("/:id/settings", async (req, res) => {
             teraBannedArray = teraBanned.split(",");
             teraBannedArray = teraBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
         }
-        draft.pkmn_list = await editPokemonList(draft.pkmn_list, pkmnBannedArray, teraBannedArray);
+        draft.pkmn_list = await editPokemonList(req.params.id, draft.pkmn_list, pkmnBannedArray, teraBannedArray);
         draft.tera_banlist = teraBannedArray;
 
         let draftCollection = await drafts();

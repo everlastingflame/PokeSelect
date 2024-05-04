@@ -89,7 +89,7 @@ const getDraft = async(draftId) => {
     return draft;
 }
 
-const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
+const editPokemonList = async (draft_id, pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
   if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
   for (let pokemon of pkmn_list) {
@@ -105,11 +105,19 @@ const editPokemonList = async (pkmn_list, banned_pkmn, tera_banned_pkmn) => {
   for (let pokemon of pkmn_list) {
     if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
       pokemon.point_val = -1;
+    } else {
+      pokemon.point_val = 0; // update value somehow
+      // editPokemonValue();
     }
     if(tera_banned_pkmn.includes(pokemon.name)) {
       pokemon.is_tera_eligible = false;
     }
   }
+
+  let draftCollection = await drafts();
+  draftCollection.updateOne({_id: 1}, {$push: {pkmn_list: {$each: [{point_val: -1}], $sort: {point_val: -1}}}});
+  draftCollection.updateMany({_id: draft_id}, {$pull: {pkmn_list: {point_val: -1}}});
+
   return pkmn_list;
 }
 
@@ -119,7 +127,7 @@ const editPokemonValue = async (pkmn_list, pokemon, value) => {
   value = validation.validateNumber(number, "point value");
   if(value < 0) throw "Point value must be 0 or a positive number";
 
-  for(pkmn of pkmn_list) {
+  for(let pkmn of pkmn_list) {
     if(pkmn.name === pokemon) {
       pkmn.point_val = val;
       return pkmn;
@@ -134,7 +142,7 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   team_id = validation.validateId(team_id);
   draftedPokemon = validation.validateString(draftedPokemon, "draftedPokemon");
   if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
-  for (pokemon of pkmn_list) {
+  for (let pokemon of pkmn_list) {
     if(typeof pokemon !== "object") throw "All array elements must be objects";
   }
 
@@ -148,8 +156,7 @@ const draftPokemonToTeam = async (user_id, team_id, draftedPokemon, pkmn_list, d
   if (!user.teams.includes(team_id)) throw "The user does not have a team with the team_id provided";
   for (let pokemon of pkmn_list) {
     if(pokemon.name === draftedPokemon.name && !pokemon.is_drafted) {
-      let team = await team.addPokemonToTeam(team_id, draftPokemonToTeam);
-      pokemon = draftedPokemon;
+      let team = await team.addPokemonToTeam(team_id, pokemon);
       draft.pick_number++;
       return team;
     }
@@ -220,4 +227,4 @@ const findUserTeamInDraft = async (user_id, draft_id) => {
   throw "User does not have a team in this draft";
 }
 
-export {createNewDraft, getDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, findUserTeamInDraft}
+export {createNewDraft, getDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, findUserTeamInDraft, draftPokemonToTeam}
