@@ -20,6 +20,11 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
 
     let old_pkmn_list = await pokeapi.getAllPokemonByGeneration(generationName);
     let pkmn_list = [];
+    let gen_num = parseInt(generationName);
+    let tera = false;
+    if(gen_num === 9) {
+      tera = true;
+    }
     for (let pokemon of old_pkmn_list) {
       let types = [];
       let abilities = [];
@@ -38,7 +43,7 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
         pkmn_id: pokemon.id,
         point_val: 1,
         is_drafted: false,
-        is_tera_eligible: true,
+        is_tera_eligible: tera,
         types: types,
         abilities: abilities,
         stats: stats
@@ -48,8 +53,6 @@ const createNewDraft = async (generationName, draft_master, point_budget, team_s
     let usersCollection = await users();
     const user = await usersCollection.findOne({username: draft_master});
     if(user === null) throw "This user cannot be the draft master.";
-
-    let gen_num = parseInt(generationName);
 
     let newDraft = {
         user_ids: [],
@@ -105,9 +108,6 @@ const editPokemonList = async (draft_id, pkmn_list, banned_pkmn, tera_banned_pkm
   for (let pokemon of pkmn_list) {
     if(banned_pkmn.includes(pokemon.name)) { // sets point_val of undraftable pokemon to -1, will use to filter out of draft board
       pokemon.point_val = -1;
-    } else {
-      pokemon.point_val = 0; // update value somehow
-      // editPokemonValue();
     }
     if(tera_banned_pkmn.includes(pokemon.name)) {
       pokemon.is_tera_eligible = false;
@@ -115,8 +115,8 @@ const editPokemonList = async (draft_id, pkmn_list, banned_pkmn, tera_banned_pkm
   }
 
   let draftCollection = await drafts();
-  draftCollection.updateOne({_id: 1}, {$push: {pkmn_list: {$each: [{point_val: -1}], $sort: {point_val: -1}}}});
-  draftCollection.updateMany({_id: draft_id}, {$pull: {pkmn_list: {point_val: -1}}});
+  draftCollection.updateOne({"_id": draft_id}, {$push: {"pkmn_list": {$each: [{"point_val": -1}], $sort: {"point_val": -1}}}});
+  draftCollection.updateMany({"_id": draft_id}, {$pull: {"pkmn_list": {"point_val": -1}}});
 
   return pkmn_list;
 }
@@ -124,12 +124,12 @@ const editPokemonList = async (draft_id, pkmn_list, banned_pkmn, tera_banned_pkm
 const editPokemonValue = async (pkmn_list, pokemon, value) => {
   if(typeof pkmn_list !== "object" || !Array.isArray(pkmn_list)) throw "No Pokemon list provided";
   pokemon = validation.validateString(pokemon, "Pokemon");
-  value = validation.validateNumber(number, "point value");
+  value = validation.validateNumber(value, "point value");
   if(value < 0) throw "Point value must be 0 or a positive number";
 
   for(let pkmn of pkmn_list) {
     if(pkmn.name === pokemon) {
-      pkmn.point_val = val;
+      pkmn.point_val = value;
       return pkmn;
     }
   }
@@ -227,4 +227,4 @@ const findUserTeamInDraft = async (user_id, draft_id) => {
   throw "User does not have a team in this draft";
 }
 
-export {createNewDraft, getDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, findUserTeamInDraft, draftPokemonToTeam}
+export {createNewDraft, getDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, editPokemonValue, findUserTeamInDraft, draftPokemonToTeam}

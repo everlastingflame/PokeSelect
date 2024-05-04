@@ -1,7 +1,7 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
 import { dbData } from "../data/index.js"
-import { createNewDraft, editPokemonList, inviteUserToDraft, getDraft } from "../data/draft.js";
+import { createNewDraft, editPokemonValue, editPokemonList, inviteUserToDraft, getDraft } from "../data/draft.js";
 import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
 import {drafts} from "../config/mongoCollections.js";
@@ -105,22 +105,29 @@ router.get("/:id/settings", async (req, res) => {
     let body = req.body;
     try {
         let draft = await getDraft(req.params.id);
-        let pokemonBanned = data_validation.validateString(xss(body.pokemonBanned));
-        let pkmnBannedArray = pokemonBanned.split(",");
-        pkmnBannedArray = pkmnBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
+        let bannedPokemon = [];
+        let teraBanned = [];
 
-        let teraBannedArray = [];
-
-        if (draft.gen_num === 9) {
-            let teraBanned = data_validation.validateString(xss(body.teraBanned));
-            teraBannedArray = teraBanned.split(",");
-            teraBannedArray = teraBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
+        for(let pokemon of body) {
+            pokemon.name = data_validation.validateString(xss(pokemon.name));
+            pokemon.pointValue = data_validation.validateString(xss(pokemon.pointValue));
+            if(parseInt(pokemon.pointValue) > 1) {
+                editPokemonValue(draft.pkmn_list, pokemon.name, parseInt(pokemon.pointValue));
+            }
+            if (typeof pokemon.isBanned != "boolean") throw "Pokemon ban must be a boolean value"
+            if(pokemon.isBanned) {
+                bannedPokemon.push(pokemon.name);
+            }
+            if(draft.gen_num === 9 && pokemon.isTeraBanned) {
+                teraBanned.push(pokemon.name);
+            }
         }
-        draft.pkmn_list = await editPokemonList(req.params.id, draft.pkmn_list, pkmnBannedArray, teraBannedArray);
-        draft.tera_banlist = teraBannedArray;
+
+        draft.pkmn_list = await editPokemonList(req.params.id, draft.pkmn_list, bannedPokemon, teraBanned);
+        draft.tera_banlist = teraBanned;
 
         let draftCollection = await drafts();
-        draftCollection.replaceOne({_id: draft._id}, draft);
+        draftCollection.replaceOne({"_id": draft._id}, draft);
         
         res.redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {

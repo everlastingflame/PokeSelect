@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 console.log(pokemonData);
-                draftForm.submit();
+                postData('#', pokemonData);
 
             } catch (error) {
                 console.log(error);
@@ -48,5 +48,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
-
+function postData(url, data) {
+    fetch(url, {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
