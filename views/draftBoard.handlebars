@@ -3,14 +3,14 @@
 
   <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
 
-  <div class="card card-main-content" style="width: 828px; height: 470px;">
+  <div class="card card-main-content" style="width: 828px;">
     <div class="card-body">
       <div class="row mb-4">
         <div class="col text-center">
           <button class="btn draftButtons">Cancel draft </button>
           <button class="btn draftButtons" type="submit">Submit</button>
-          <form id="draftForm" action="#h" method="POST">
-            <div class="card card-drafts" style="width: 100%; height: 60%;">
+          <form id="draftForm" action="#" method="POST">
+            <div class="card card-drafts" style="width: 100%;">
               <div class="card-body">
                 <!-- Repeat these lines in the handlebars as we iterate over the pokemon list-->
                 {{#each pokeObject}}
