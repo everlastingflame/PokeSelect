@@ -3,7 +3,7 @@
         <h1>Invite Users to Draft</h1>
     </header>
 
-    <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
+    <div id="error_container" class="d-none alert alert-danger" role="alert">{{#if error}}{{error}}{{/if}}</div>
     <form id="inviteForm" action="#" method="POST"> <!-- ajax -->
         <div class="mb-3">
             <label for="invites" class="form-label">Type in a username to invite the user to the draft</label> <br>

@@ -144,8 +144,8 @@ const editPokemonList = async (
             input: {
               $filter: {
                 input: pkmn_list,
-                as: pkmn,
-                cond: { $ge: ["$$pkmn.point_val", 1] },
+                as: "pkmn",
+                cond: { $ge: ["$$pkmn.point_val", 0] },
               },
             },
             sortBy: { point_val: -1 },
