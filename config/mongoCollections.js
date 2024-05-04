@@ -25,4 +25,4 @@ export const drafts = getCollectionFn("draft");
 export const tournaments = getCollectionFn("tournament");
 export const mongoCache = getCollectionFn("_cache");
 
-await (await drafts()).createIndex({ url: 1 });
+let index = await (await mongoCache()).createIndex({ url: 1 });
