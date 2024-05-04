@@ -1,11 +1,13 @@
 //Here is where you'll set up your server as shown in lecture code
 import express from "express";
-const app = express();
+import expressWs from "express-ws";
+const app = expressWs(express()).app;
 import exphbs from "express-handlebars";
 import configRoutes from "./routes/index.js";
 import session from "express-session";
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
 import dotenv from 'dotenv';
+import { initWebsockets } from "./ws-app.js";
 
 dotenv.config();
 
@@ -74,6 +76,7 @@ app.use("/draft", async (req, res, next) => {
   next();
 })
 
+
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
     req.method = req.body._method;
@@ -88,9 +91,16 @@ app.use("/public", staticDir);
 app.use(express.json());
 app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
+
+// app.ws("/init-ws", async (ws, res) => {
+//   console.log("hi")
+//   ws.on("open", function open() {
+//     console.log(ws);
+//   });
+// });
+initWebsockets(app);
 
 configRoutes(app);
 

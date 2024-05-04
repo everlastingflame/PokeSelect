@@ -1,4 +1,4 @@
-import * as db from "../config/mongoCollections.js";
 import users from "./users.js";
+import team from "./team.js";
 
-export default { db, users };
+export default { users, team };
