@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             name: pokeName,
                             pointValue: element.querySelector('input[type="number"]').value,
                             isBanned: element.querySelector(`input[name="${pokeName}-banCheckbox"]`).checked,
-                            isTeraBanned: element.querySelector(`input[name="${pokeName}-Teraban"]`) != null ? element.querySelector(`input[name="${pokeName}-Teraban"]`).checked : false
+                            isTeraBanned: element.querySelector(`input[name="${pokeName}-teraBan"]`) != null ? element.querySelector(`input[name="${pokeName}-teraBan"]`).checked : false
                         };
                         pokemonData.push(pokemon);
                     });
