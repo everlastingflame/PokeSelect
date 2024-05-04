@@ -101,6 +101,8 @@ router.get("/:id/settings", async (req, res) => {
     }
 }).post("/:id/settings", async (req, res) => {
 
+    console.log(req.body)
+
     if(!req.body) return res.status(400).send("Need to invite a player to the draft");
     let body = req.body;
     try {
