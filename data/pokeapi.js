@@ -150,8 +150,8 @@ async function getAllPokedexesForGeneration(generationName) {
 
 async function resolveQuery(url) {
   // Return query result from node-cache if previously cached
-  let cachedValue = cache.get(url);
-  if (cachedValue) {
+  let cachedValue = await cache.get(url);
+  if (cachedValue)  {
     return cachedValue;
   }
 
@@ -160,6 +160,7 @@ async function resolveQuery(url) {
     url: url,
   });
   if (cachedValue && cachedValue.expiryDate > new Date()) {
+    cache.set(url, cachedValue.response, 1000 * 60 * 60);
     return cachedValue.response;
   }
   if (cachedValue) {
