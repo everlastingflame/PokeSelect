@@ -130,7 +130,8 @@ router.get("/:id/settings", async (req, res) => {
         let draftCollection = await drafts();
         draftCollection.replaceOne({"_id": draft._id}, draft);
         
-        res.redirect(`/draft/${req.params.id}/invite`);
+        res.status(200).send({redirect: `/draft/${req.params.id}/invite`})
+        // res.redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
