@@ -98,8 +98,7 @@ router
         req.session.user = user;
 
         req.session.user.inDraft = false;
-
-        console.log(req.session.user);
+        // console.log(req.session.user);
 
         res.redirect('/user/'+user.username);
 
