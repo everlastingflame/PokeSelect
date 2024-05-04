@@ -1,41 +1,37 @@
 {{!< userProfiles}}
-{{!< userProfiles}}
-<body>
-
 <div class="blurred-background"></div>
 <div class="container">
 
-<nav class="navbar navbar-expand-lg navbar-light header">
+  <nav class="navbar navbar-expand-lg navbar-light header">
     <a class="navbar-brand mx-auto" href="#">
-        <img src="/public/images/PokeSelect.png" class="pokeselect-logo" alt="PokeSelect">
+      <img src="/public/images/PokeSelect.png" class="pokeselect-logo" alt="PokeSelect">
     </a>
-</nav>
-  
-  <div class="card card-main-content" style="width: 828px; height: 470px;">
+  </nav>
+
+  <div class="card card-main-content" style="width: 828px;">
     <div class="card-body">
-        <div class="row">
-            <div class="col text-center">
-              <h1>Oops!</h1>
-            </div>
+      <div class="row">
+        <div class="col text-center">
+          <h1>Oops!</h1>
         </div>
-                <div class="row mb-4">
-            <div class="col text-center">
-              <form action="/user" class="inline-form">
-                <button type="submit" class="btn draftButtons">User home</button>
-              </form>
-              <form action="/logout" class="inline-form">
-                <button type="submit" class="btn draftButtons">Logout</button>
-              </form>
-            </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col text-center">
+          <form action="/user" class="inline-form">
+            <button type="submit" class="btn draftButtons">User home</button>
+          </form>
+          <form action="/logout" class="inline-form">
+            <button type="submit" class="btn draftButtons">Logout</button>
+          </form>
         </div>
-        <div class="card card-drafts" style="width: 100%; height: 320px;">
-            <div class="card-body">
-                <p id="DraftText" class="card-text" style="display: block;"> 
-                  {{error}}
-                </p>
-            </div>
+      </div>
+      <div class="card card-drafts" style="width: 100%;">
+        <div class="card-body">
+          <p id="DraftText" class="card-text" style="display: block;">
+            {{error}}
+          </p>
         </div>
+      </div>
+    </div>
   </div>
 </div>
-
-</body>

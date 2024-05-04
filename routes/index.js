@@ -10,7 +10,7 @@ const constructorMethod = (app) => {
     res.render("ws-test")
   }))
   app.use('*', (req, res) => {
-    return res.status(404).render("userError", {title: 'Error', notFound: true});
+    return res.status(404).render("userError", {layout: 'userProfiles', title: 'Error', notFound: true});
   });
 };
 

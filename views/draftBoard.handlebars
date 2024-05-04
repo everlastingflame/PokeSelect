@@ -1,21 +1,59 @@
-<div>
-    <header>
-        <h1>Draft Board</h1>
-    </header>
+<div class="blurred-background"></div>
+<div class="container">
 
-      <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
-      <form id="draftForm" action="#" method="POST">
-            <div class="mb-3">
-                <label for="pokemonBanned" class="form-label">Banned Pokemon List</label> <br>
-                <textarea id="pokemonBanned" name="pokemonBanned"></textarea>
+  <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
+
+  <div class="card card-main-content" style="width: 828px;">
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col text-center">
+          <form id="draftForm" action="#" method="POST">
+            <div class="card card-drafts" style="width: 100%;">
+              <div class="card-body">
+                <!-- Repeat these lines in the handlebars as we iterate over the pokemon list-->
+                {{#each pokeObject}}
+                <div id={{this.name}}>
+                  <div class="row">
+                    <div class="col">
+                      <img src={{this.image}} alt="Pokemon Image" class="pokemonImage"
+                        style="width: 40px; height: 40px;">
+                    </div>
+                    <div class="col">
+                      <p>{{this.name}}</p>
+                    </div>
+                    <div class="col">
+                      <input type="number" id="{{this.name}}-pointValueInput" name="{{this.name}}-pointValueInput"
+                        value="1">
+                    </div>
+                    <div class="col">
+                      <input type="checkbox" id="{{this.name}}-banCheckbox" name="{{this.name}}-banCheckbox">
+                      <label for="{{this.name}}-banCheckbox">Ban</label>
+                    </div>
+
+                    {{#if this.isTera}}
+                    <div class="col">
+                      <input type="checkbox" id="{{this.name}}-teraBan" name="{{this.name}}-teraBan">
+                      <label for="{{this.name}}-teraBan">Tera Ban</label>
+                    </div>
+                    {{/if}}
+
+                  </div>
+                </div>
+                {{/each}}
+                <!-- Repeat the above row for each pokemon -->
+              </div>
             </div>
+            <button class="btn draftButtons" type="submit">Submit</button>
+            <form id="draftCancel" action="#" method="DELETE">
+              <button class="btn draftButtons">Cancel draft </button>
+            </form>
+          </form>
 
-            <div class="mb-3" id="teraDiv" style="display: none"> <!-- show only when gen9 draft-->
-                <label for="teraBanned" class="form-label">Tera Banned Pokemon List</label>
-                <textarea id="teraBanned" name="teraBanned"></textarea>
-            </div>
+        </div>
+      </div>
 
-            <button type="submit" class="createDraft">Confirm Settings</button>
-        </form>
-        <script src="/public/js/draftBoard.js"></script>
+    </div>
+  </div>
 </div>
+
+<script src="/public/js/draftBoard.js"></script>
