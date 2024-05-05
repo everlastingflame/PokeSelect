@@ -98,3 +98,22 @@ if(draftForm) {
         }
     });
 }
+
+let visibilityForm = document.getElementById("visibilityForm");
+
+if(visibilityForm) {
+    visibilityForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        try {
+            let visibility = document.getElementById('visibility').value;
+            visibility = checkString(visibility);
+            if(visibility != "public" && visibility != "private") throw "Profile visibility must be set to either public or private";
+            visibilityForm.submit();
+        } catch (e) {
+            /* error_container.textContent = error;
+            error_container.classList.remove('d-none'); */
+        }
+    })
+
+}
