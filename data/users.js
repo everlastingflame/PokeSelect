@@ -42,6 +42,7 @@ async function createNewUser(username, password, email, dob) {
     teams: [],
     invites: [],
     age: age,
+    public: false
   };
 
   const insertInfo = await userCollection.insertOne(newUser);
