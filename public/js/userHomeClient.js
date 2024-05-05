@@ -115,5 +115,4 @@ if(visibilityForm) {
             error_container.classList.remove('d-none'); */
         }
     })
-
 }

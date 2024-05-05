@@ -235,37 +235,43 @@ const inviteUserToDraft = async (draftId, username) => {
 
 // function to add users and teams to draft
 const checkInviteForUser = async (draft_id, user_id, accept_invite) => {
-  if (!draft_id || !ObjectId.isValid(draft_id))
-    throw "Valid draft ID must be provided";
-  if (!user_id || !ObjectId.isValid(user_id))
-    throw "Valid user ID must be provided";
+  draft_id = validation.validateId(draft_id);
+  user_id = validation.validateId(user_id);
   if (typeof accept_invite !== "boolean")
     throw "Invite must be accepted or declined";
 
   let draft = await getDraft(draft_id);
   let user = await userfunctions.getUserById(user_id);
 
-  if (!user.invites.includes(draft._id.toString()))
-    throw "This user was not invited to the draft";
+  if (!user.invites.includes(draft._id.toString())) throw "This user was not invited to the draft";
 
   const userCollection = await users();
   user = await userCollection.findOneAndUpdate(
     { _id: user_id },
-    { $pull: { invites: draft_id } }
+    { $pull: { invites: draft_id.toString() } }
   );
 
   if (accept_invite) {
     if (draft.user_ids.includes(user_id))
       throw "This user is already in the draft";
-    draft.user_ids.push(user_id);
 
     let newTeam = await team.createNewTeam(
       user_id,
       draft_id,
       draft.point_budget
     );
-    user.teams.push(newTeam._id);
-    draft.team_ids.push(newTeam._id);
+
+    user = await userCollection.findOneAndUpdate(
+      { _id: user_id },
+      { $push: { teams: newTeam } }
+    );
+
+    const draftCollection = await drafts();
+    await draftCollection.findOneAndUpdate(
+      { _id: draft_id },
+      { $push: { team_ids: newTeam._id, user_ids: user_id } }
+    );
+    return user;
   }
 
   return draft;

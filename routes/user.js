@@ -3,6 +3,7 @@ import express from "express";
 import { dbData } from "../data/index.js";
 import xss from "xss";
 import users from "../data/users.js";
+import {getDraft} from "../data/draft.js";
 
 const router = express.Router();
 
@@ -90,12 +91,22 @@ router.route("/user/:name").get(async (req, res) => {
   }
 
   if (session_user.username === route_user.username) {
+    let inviteNames = [];
+    for(let invite of route_user.invites) {
+        let grabDraft = await getDraft(invite);
+        let user = await users.getUserById(grabDraft.draft_master);
+        let draftInfo = {
+            draftId: invite,
+            username: user.username
+        }
+        inviteNames.push(draftInfo);
+    }
     res.render("userhome", {
       layout: "userProfiles",
       newUser: route_user.username,
       isEmpty: isEmpty,
       userTeams: teamData,
-      invites: route_user.invites,
+      invites: inviteNames,
       visibility: vis,
     });
   } else {

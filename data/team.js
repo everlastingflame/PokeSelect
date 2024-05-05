@@ -2,6 +2,8 @@ import {teams} from '../config/mongoCollections.js';
 import validation from './data_validation.js';
 import { ObjectId } from "mongodb";
 import tournament from "./tournaments.js";
+import users from "./users.js"
+import { getDraft } from './draft.js';
 
 const createNewTeam = async (user_id, draft_id, points) => {
     user_id = validation.validateId(user_id, "userId");
@@ -9,7 +11,7 @@ const createNewTeam = async (user_id, draft_id, points) => {
     points = validation.validateNumber(points, "points");
 
     if(points < 6) throw "Point budget must be at least 6.";
-    await getUserById(user_id);
+    await users.getUserById(user_id);
     await getDraft(draft_id);
 
     let newTeam = {

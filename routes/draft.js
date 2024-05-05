@@ -1,7 +1,7 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
 import { dbData } from "../data/index.js"
-import { createNewDraft, editPokemonValue, editPokemonList, inviteUserToDraft, getDraft } from "../data/draft.js";
+import { createNewDraft, editPokemonValue, editPokemonList, inviteUserToDraft, getDraft, checkInviteForUser } from "../data/draft.js";
 import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
 import {drafts} from "../config/mongoCollections.js";
@@ -128,8 +128,31 @@ router.get("/:id/settings", async (req, res) => {
     }
 })
 
+router.post("/accept", async (req, res) => {
+    let body = req.body;
+    try {
+        body.draftId = data_validation.validateId(body.draftId);
+        await checkInviteForUser(body.draftId, req.session.user.id, true)
+        res.redirect(`/${body.draftId}`);
+    } catch (e) {
+        res.status(500).redirect(`/user/${req.session.user.username}`);
+    }
+})
+
+router.post("/decline", async(req, res) => {
+    let body = req.body;
+    try {
+        body.draftId = data_validation.validateId(body.draftId);
+        checkInviteForUser(body.draftId, req.session.user.id, false)
+        res.redirect(`/${body.draftId}`);
+    } catch (e) {
+        res.status(500).redirect(`/user/${req.session.user.username}`);
+    }
+})
+
 router.get("/:id", async (req, res) => {
     try {
+        req.session.user.inDraft = true;
         res.render("draftPhase");
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
