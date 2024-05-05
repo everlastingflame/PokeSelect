@@ -28,9 +28,14 @@
       </div>
       <div class="card card-drafts" style="width: 100%;">
         <div class="card-body">
-          <p id="DraftText" class="card-text" style="display: block;">
+          {{#if isEmpty}}
+          <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
+          {{else}}
+          <div>
+            {{!-- Render each of the users teams --}}
             {{userTeams}}
-          </p>
+          </div>
+          {{/if}}
           <div id="CreateDraft" class="card-text" style="display: none;">
             {{#if error}}
             <p id="serverError" class="alert alert-danger" role="alert">{{error}}</p>

@@ -71,32 +71,36 @@ router
   });
 
 router.route("/user/:name").get(async (req, res) => {
-  let user = req.session.user;
+  let session_user = req.session.user;
+  let route_user;
   try {
-    let profile_user = await dbData.users.getUserByName(req.params.name);
-
-    let teamData = profile_user.teams;
-
-    if (profile_user.teams.length === 0) {
-      teamData = `${profile_user.username} has no teams.`;
-    }
-
-    if (user.username === profile_user.username) {
-      teamData = "You have no teams";
-      res.render("userhome", {
-        layout: "userProfiles",
-        newUser: profile_user.username,
-        userTeams: teamData,
-      });
-    } else {
-      res.render("userProfile", {
-        layout: "userProfiles",
-        newUser: profile_user.username,
-        userTeams: teamData,
-      });
-    }
+    route_user = await dbData.users.getUserByName(req.params.name);
   } catch (e) {
     res.status(404).render("userError", { layout: "userProfiles", error: e });
+  }
+
+  let teamData = route_user.teams;
+  let isEmpty = teamData.length === 0;
+
+  if (session_user.username === route_user.username) {
+    res.render("userhome", {
+      layout: "userProfiles",
+      newUser: route_user.username,
+      isEmpty: isEmpty,
+      userTeams: teamData,
+    });
+  } else {
+    if (!route_user.public) {
+      teamData = null;
+      isEmpty = true;
+    }
+    res.render("userProfile", {
+      layout: "userProfiles",
+      newUser: route_user.username,
+      isPublic: route_user.public,
+      isEmpty: isEmpty,
+      userTeams: teamData,
+    });
   }
 });
 

@@ -6,7 +6,7 @@
   <div class="card card-main-content" style="width: 828px;">
     <div class="card-body">
       <div class="row mb-4">
-        <div class="col text-center">   
+        <div class="col text-center">
           <form id="draftForm" action="#" method="POST">
             <div class="card card-drafts" style="width: 100%;">
               <div class="card-body">
@@ -37,20 +37,20 @@
                     </div>
                     {{/if}}
 
+                  </div>
+                </div>
+                {{/each}}
+                <!-- Repeat the above row for each pokemon -->
               </div>
             </div>
-            {{/each}}
-              <!-- Repeat the above row for each pokemon -->
-            </div>
-      </div>
-      <button class="btn draftButtons" type="submit">Submit</button>
+            <button class="btn draftButtons" type="submit">Submit</button>
             <form id="draftCancel" action="#" method="DELETE">
               <button class="btn draftButtons">Cancel draft </button>
             </form>
-    </form>
+          </form>
 
-          </div>
-    </div>
+        </div>
+      </div>
 
     </div>
   </div>
