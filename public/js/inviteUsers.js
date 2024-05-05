@@ -4,9 +4,6 @@ if(inviteForm) {
     inviteForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        let error_container = document.getElementById('error_container');
-        error_container.classList.add('d-none');
-
         let invitedPlayer = document.getElementById('Username').value;
 
         try {
@@ -25,7 +22,7 @@ if(inviteForm) {
             errorDiv.innerHTML = error;
             formIsValid = false; */
             error_container.textContent = error;
-            error_container.classList.remove('d-none');
+            error_container.style.display = 'block';
         }
     });
 }
