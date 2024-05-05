@@ -25,7 +25,11 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Invite</button>
               </form>
-              <div id="error_container" class="card-text" style="display: none">
+              <form id="continue" action="/draft" method="GET">
+                <button type="submit" class="btn btn-primary">Continue</button>
+              </form>
+
+
                 {{#if error}}
                 <p id="serverError" class="alert alert-danger" role="alert">
                 {{error}}
@@ -33,10 +37,9 @@
                 {{/if}}
                 <div
                   id="error_container"
-                  class="d-none alert alert-danger"
+                  class="alert alert-danger" style="display: none;"
                   role="alert"
                 ></div>
-              </div>
             </div>
           </div>
         </div>
