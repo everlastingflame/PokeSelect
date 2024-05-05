@@ -86,7 +86,7 @@ router.route("/user/:name").get(async (req, res) => {
   for(let teamId of route_user.teams) {
     let selectTeam = await team.getTeam(teamId._id);
     let teamDraft = await getDraft(selectTeam.draft_id);
-    let draft_master = await getUserById(teamDraft.draft_master);
+    let draft_master = await users.getUserById(teamDraft.draft_master);
 
     let teamObject = {
         draft_master: draft_master.username,

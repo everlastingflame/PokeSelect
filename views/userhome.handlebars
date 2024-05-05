@@ -37,7 +37,7 @@
             <div class="card draft-card">
               <div class="card-body">
                 <h5 class="card-title
-                ">{{this.draft_master}}</h5>
+                ">{{this.draft_master}}'s Draft League</h5>
                 <p class="card-text">Wins: {{this.wins}}</p>
                 <p class="card-text">Losses: {{this.losses}}</p>
                 <p class="card-text">Team Size: {{this.teamSize}}</p>
@@ -47,7 +47,6 @@
                 </div>
               </div>
               {{/each}}
-            {{userTeams}}
           </div>
           {{/if}}
           <div id="CreateDraft" class="card-text" style="display: none;">
@@ -118,6 +117,7 @@
               <div class="mb-3">
                 <label for="visibility" class="form-label">Visibility</label>
                 <select name="visibility" id="visibility" required>
+                  <option value="">Pick a visibility</option>
                   <option value="public">Public</option>
                   <option value="private">Private</option>
                 </select>
