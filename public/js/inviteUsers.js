@@ -7,10 +7,17 @@ if(inviteForm) {
         let error_container = document.getElementById('error_container');
         error_container.classList.add('d-none');
 
-        let invitedPlayer = document.getElementById('invites').value;
+        let invitedPlayer = document.getElementById('Username').value;
 
         try {
-            invitedPlayer = checkString(invitedPlayer);
+            invitedPlayer = checkUsername(invitedPlayer);
+            // let requestConfig = {
+            //     method: "POST",
+            //     url: "#"
+            // }
+            // $.ajax(requestConfig).then(function (responseMessage) {
+            //     if(responseMessage.error) {}
+            // })
             inviteForm.submit();
         } catch (error) {
             /* const errorDiv = document.getElementById('error_output');
