@@ -1,9 +1,7 @@
-import pokeRoutes from './poke.js';
 import users from './user.js';
 import draft from './draft.js';
 import tournaments from './tournaments.js';
 const constructorMethod = (app) => {
-  app.use('/', pokeRoutes);
   app.use('/', users);
   app.use('/draft', draft);
   app.use('/tournament', tournaments);

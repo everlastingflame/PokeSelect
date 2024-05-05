@@ -99,6 +99,24 @@ async function addTeamToUser(user_id, team_id) {
   return updatedUser;
 }
 
+async function updateVisibility(username, visibility) {
+  username = validation.validateString(username);
+  visibility = validation.validateString(visibility);
+
+  const userCollection = await users();
+  
+
+  if(visibility === "public") {
+    userCollection.findOneAndUpdate({username: username}, {$set: {public: true}});
+    return;
+  }
+  if(visibility === "private") {
+    userCollection.findOneAndUpdate({username: username}, {$set: {public: false}});
+    return;
+  }
+  throw "Profile visibility must be set to either public or private";
+}
+
 export const loginUser = async (username, password) => {
   //try catching here to obfuscate error
   try {
@@ -127,5 +145,6 @@ export default {
   getUserByName,
   getUserById,
   addTeamToUser,
+  updateVisibility,
   loginUser,
 };

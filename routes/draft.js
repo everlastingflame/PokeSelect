@@ -51,13 +51,13 @@ router.get("/:id/invite", async (req, res) => {
     if(!req.body) return res.status(400).send("Need to invite a player to the draft");
     let body = req.body;
     try {
-        body.invites = data_validation.validateString(xss(body.invites), "invite");
+        body.Username = data_validation.validateString(xss(body.Username), "invite");
     } catch (e) {
         return res.status(400).render("inviteUsers", {error: e});
     }
 
     try {
-        await inviteUserToDraft(req.params.id, body.invites);
+        await inviteUserToDraft(req.params.id, body.Username);
         res.status(200).redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
         return res.status(404).render("inviteUsers", {error: e});
