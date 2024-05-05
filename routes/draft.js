@@ -53,14 +53,14 @@ router.get("/:id/invite", async (req, res) => {
     try {
         body.Username = data_validation.validateString(xss(body.Username), "invite");
     } catch (e) {
-        return res.status(400).render("inviteUsers", {error: e});
+        return res.status(400).render("inviteUsers", {layout: 'userProfiles', error: e});
     }
 
     try {
         await inviteUserToDraft(req.params.id, body.Username);
         res.status(200).redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
-        return res.status(404).render("inviteUsers", {error: e});
+        return res.status(404).render("inviteUsers", {layout: 'userProfiles', error: e});
     }
 })
 
