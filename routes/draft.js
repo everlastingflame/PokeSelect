@@ -143,7 +143,7 @@ router.post("/decline", async(req, res) => {
     let body = req.body;
     try {
         body.draftId = data_validation.validateId(body.draftId);
-        checkInviteForUser(body.draftId, req.session.user.id, false)
+        await checkInviteForUser(body.draftId, req.session.user.id, false)
         res.redirect(`/${body.draftId}`);
     } catch (e) {
         res.status(500).redirect(`/user/${req.session.user.username}`);
