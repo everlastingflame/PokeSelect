@@ -32,7 +32,21 @@
           <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
           {{else}}
           <div>
+            {{#each userTeams}}
             {{!-- Render each of the users teams --}}
+            <div class="card draft-card">
+              <div class="card-body">
+                <h5 class="card-title
+                ">{{this.draft_master}}</h5>
+                <p class="card-text">Wins: {{this.wins}}</p>
+                <p class="card-text">Losses: {{this.losses}}</p>
+                <p class="card-text">Team Size: {{this.teamSize}}</p>
+                {{#each this.selections}}
+                <p class="card-text">{{this.name}}</p>
+                {{/each}}
+                </div>
+              </div>
+              {{/each}}
             {{userTeams}}
           </div>
           {{/if}}
