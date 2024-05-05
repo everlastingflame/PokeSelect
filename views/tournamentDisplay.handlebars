@@ -1,21 +1,17 @@
 <div>
-    <header>
-        <h1>Tournament Page</h1>
-    </header>
+    <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
+    <form id="draftForm" action="" method="POST">
+        <div class="mb-3">
+            <label for="pokemonBanned" class="form-label">Banned Pokemon List</label> <br>
+            <textarea id="pokemonBanned" name="pokemonBanned"></textarea>
+        </div>
 
-      <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
-      <form id="draftForm" action="" method="POST">
-            <div class="mb-3">
-                <label for="pokemonBanned" class="form-label">Banned Pokemon List</label> <br>
-                <textarea id="pokemonBanned" name="pokemonBanned"></textarea>
-            </div>
+        <div class="mb-3" id="teraDiv" style="d-none"> <!-- show only when gen9 draft-->
+            <label for="teraBanned" class="form-label">Tera Banned Pokemon List</label>
+            <textarea id="teraBanned" name="teraBanned"></textarea>
+        </div>
 
-            <div class="mb-3" id="teraDiv" style="display: none"> <!-- show only when gen9 draft-->
-                <label for="teraBanned" class="form-label">Tera Banned Pokemon List</label>
-                <textarea id="teraBanned" name="teraBanned"></textarea>
-            </div>
-
-            <button type="submit" class="createDraft">Confirm Settings</button>
-        </form>
-        <script src="../../public/js/draftBoard.js"></script>
+        <button type="submit" class="createDraft">Confirm Settings</button>
+    </form>
+    <script src="/public/js/draftBoard.js"></script>
 </div>
