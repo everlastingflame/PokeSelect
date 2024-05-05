@@ -43,7 +43,7 @@ router.get('/new', async (req, res) => {
 
 router.get("/:id/invite", async (req, res) => {
     try {
-        res.render("inviteUsers");
+        res.render("inviteUsers", {layout: 'userProfiles'});
     } catch (e) {
         res.status(500).send(e.message);
     }

@@ -79,3 +79,11 @@ html, body {
     vertical-align: middle;  /* Aligns vertically */
 }   
 
+.card-team-content{
+    height:100%;
+    background-color: #ffffff;
+    overflow-y: scroll;
+    max-height: 40vh;
+    border-radius: 0.25rem;
+}
+
