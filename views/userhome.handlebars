@@ -23,6 +23,7 @@
           <form action="/logout" class="inline-form">
             <button type="submit" class="btn draftButtons">Logout</button>
           </form>
+          <button class="btn draftButtons" onclick="showVisibility()">Visibility </button>
         </div>
       </div>
       <div class="card card-drafts" style="width: 100%;">
@@ -70,7 +71,21 @@
               <button type="submit" class="createDraft">Create Draft</button>
             </form>
           </div>
-          <p id="Invites" class="card-text" style="display: none;"></p>
+          <p id="Invites" class="card-text" style="display: none;">
+            {{invites}}
+          </p>
+          <div id="Visibility" class="card-text" style="display: none;">
+            <h3>Your current visibility is: {{visiblity}}</h3>
+            <form id="visibilityForm" action="/visibility" method="POST">
+              <div class="mb-3">
+                <label for="visibility" class="form-label">Visibility</label>
+                <select name="visibility" id="visibility" required>
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+              <button type="submit" class="createDraft">Change Visibility</button>
+            </form>
         </div>
       </div>
     </div>
