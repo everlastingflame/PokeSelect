@@ -4,6 +4,7 @@ import { dbData } from "../data/index.js";
 import xss from "xss";
 import users from "../data/users.js";
 import {getDraft} from "../data/draft.js";
+import team from "../data/team.js";
 
 const router = express.Router();
 
@@ -81,7 +82,21 @@ router.route("/user/:name").get(async (req, res) => {
     res.status(404).render("userError", { layout: "userProfiles", error: e });
   }
 
-  let teamData = route_user.teams;
+  let teamData = [];
+  for(let teamId of route_user.teams) {
+    let selectTeam = await team.getTeam(teamId._id);
+    let teamDraft = await getDraft(selectTeam.draft_id);
+    let draft_master = await getUserById(teamDraft.draft_master);
+
+    let teamObject = {
+        draft_master: draft_master.username,
+        selections: selectTeam.selections,
+        wins: selectTeam.wins,
+        losses: selectTeam.losses,
+        teamSize: selectTeam.selections.length
+    }
+    teamData.push(teamObject);
+  }
   let isEmpty = teamData.length === 0;
   let vis = "";
   if(route_user.public) {
