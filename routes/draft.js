@@ -227,6 +227,15 @@ router.post("/decline", async (req, res) => {
   }
 });
 
+router.get("/:id/lobby", async (req, res) => {
+    try {
+        req.session.user.inDraft = true;
+        res.render("draftLobby", { layout: "userProfiles", action: `/${req.params.id}/settings`});
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+})
+
 router
   .get("/:id", async (req, res) => {
     try {

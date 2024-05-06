@@ -80,6 +80,13 @@ app.use("/draft", async (req, res, next) => {
   next();
 });
 
+app.use("/tournament", async (req, res, next)=>{
+  if(!req.session || !req.session.user){
+    return res.redirect("/login");
+  }
+  next();
+});
+
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.query && req.query._method) {

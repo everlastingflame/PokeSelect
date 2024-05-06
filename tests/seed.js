@@ -2,7 +2,7 @@ import { dbConnection, closeConnection } from "../config/mongoConnection.js";
 import users from "../data/users.js";
 import tournament from "../data/tournaments.js";
 import team from "../data/team.js";
-import { getDraft, createNewDraft, inviteUserToDraft, checkInviteForUser, draftPokemonToTeam } from "../data/draft.js";
+import { getDraft, createNewDraft, inviteUserToDraft, editPokemonList, checkInviteForUser, draftPokemonToTeam } from "../data/draft.js";
 
 const db = await dbConnection();
 
@@ -93,6 +93,15 @@ let pokeMasterDraft;
 try{
     pokeMasterDraft = await createNewDraft("1", pokeMaster.username, 100, 6, 0);
     console.log("Draft created");
+    // console.log(pokeMasterDraft);
+}catch(e){
+    console.log(e);
+}
+
+try{
+    let pokemasterDraft = getDraft(pokeMasterDraft._id);
+    await editPokemonList(pokeMasterDraft._id, pokeMasterDraft.pkmn_list, [], []);
+    console.log("Edited draft settings");
     // console.log(pokeMasterDraft);
 }catch(e){
     console.log(e);

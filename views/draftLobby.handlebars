@@ -1,0 +1,53 @@
+{{!< userProfiles}}  
+    
+    <div class="blurred-background"></div>
+    <div class="container">
+      <div class="card card-main-content" style="width: 828px">
+        <div class="card-body">
+          <div class="row">
+            <div class="col text-center">
+              <h1>Waiting on users..</h1>
+            </div>
+          </div>
+          <div class="card card-drafts" style="width: 100%">
+            <div class="card-body">
+              <!--Pass in the ID with render-->
+              <div class="row"> 
+                <div class="col text-center">
+                  <h2>Player 1</h2>
+                </div>
+              </div>
+              <!--Button to continue to draft page-->
+              <!--If condition to check if the person is draft master -->
+              <div class="row">
+                <div class="col text-center">
+                  <form id="continue" action="#" method="POST">
+                    <button type="submit" class="btn btn-primary">Start draft</button>
+                  </form>
+                </div>
+                <div class="col text-center">
+                  <form id="draftCancelForm" action="{{action}}">
+                    <button type="submit" class="btn btn-primary">Cancel</button>
+                  </form>
+                </div>
+              </div> 
+              
+
+              <div id="error_container" class="card-text" style="display: none">
+                {{#if error}}
+                <p id="serverError" class="alert alert-danger" role="alert">
+                {{error}}
+                </p>
+                {{/if}}
+                <div
+                  id="error_container"
+                  class="d-none alert alert-danger"
+                  role="alert"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      </div>
+    </div>
+    
