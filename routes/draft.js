@@ -12,7 +12,7 @@ import {
 } from "../data/draft.js";
 import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
-import { drafts, tournament, tournaments } from "../config/mongoCollections.js";
+import { drafts, tournaments } from "../config/mongoCollections.js";
 
 const router = express.Router();
 

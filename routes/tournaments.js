@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .get("/:id", async (req, res) => {
     try {
-      let tournamentObj = await getTournament(req.params.id);
+      let tournamentObj = await tournaments.getTournament(req.params.id);
       let schedule = []
       for (let match of tournamentObj.schedule) {
         let team1 = await users.getUserById(match.team_1);
@@ -27,10 +27,7 @@ router
         }
         schedule.push(matchup);
       }
-
-      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
-      let tournament = await tournaments.getTournament(req.params.id);
-      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page", tournament:tournament});
+      return res.render("tournamentResults", { layout: "userProfiles", title: "Tournament Page", schedule:schedule});
     } catch (e) {
       res.status(500).send(e.message);
     }

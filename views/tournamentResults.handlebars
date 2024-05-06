@@ -1,3 +1,5 @@
+{{!< userProfiles}}
+    
     <div class="blurred-background"></div>
     <div class="container">
       <div class="card card-main-content" style="width: 828px">
@@ -11,22 +13,22 @@
           <form id="tourneyForm" action="#" method="POST">
             <div class="card-body">
             <!--Iterate over all matches-->
-            {{#each match}}
+            {{#each schedule}}
               <div class = "matchId">
                 <div class="col text-center">
-                  <h4>Match 1</h4>
+                  <h4>Match 1 - Winner: {{schedule.matchup.winner}}</h4>
                 </div>
                 <div class = "card-team-content">
                 <div class = "team1">
                   <div class = "row">
                     <div class = "col">
-                      <h3>{{TeamName}}</h3>
+                      <h3>{{schedule.matchup.user1}}</h3>
                     </div>
                 </div>
                 <div class = "team2">
                   <div class = "row">
                     <div class = "col">
-                      <h3>{{TeamName}}</h3>
+                      <h3>{{schedule.matchup.user2}}</h3>
                     </div>
                   </div>
                 </div> 
