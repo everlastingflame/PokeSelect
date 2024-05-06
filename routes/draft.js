@@ -230,9 +230,29 @@ router.post("/decline", async (req, res) => {
 router
   .get("/:id", async (req, res) => {
     try {
-      req.session.user.inDraft = true;
-      // res.render("draftPhase", {layout: 'draftLayout'});
-      res.render("draftPhase", {layout: "draftLayout"});
+        let draftObj = await getDraft(req.params.id);
+        req.session.user.inDraft = true;
+        let mainUser = req.session.user.id;
+        draftObj.user_ids = draftObj.user_ids.filter((userId) => !userId.equals(mainUser));
+        mainUser = req.session.user.username;
+        let users = draftObj.user_ids.forEach(async (id) => await dbData.users.getUserById(id));
+        let pokeObject = [];
+        let pokemonList = draftObj.pkmn_list
+
+        
+      for (const pokemon of pokemonList) {
+        let image = await pokemonApi.getPokemon(pokemon.name);
+        pokeObject.push({
+          name: pokemon.name,
+          image: image.sprites.front_default,
+          pointVal: pokemon.point_val,
+          stats: pokemon.stats,
+          types: pokemon.types,
+          abilities: pokemon.abilities
+        });
+      }  
+
+        res.render("draftPhase", {layout: "draftLayout", draft: draftObj, mainUser: mainUser, users: users, pokeObject: pokeObject});
     } catch (e) {
       res
         .status(500)
