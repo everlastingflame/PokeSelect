@@ -23,12 +23,15 @@
             <form action="/logout" class="inline-form">
               <button type="submit" class="btn draftButtons">Logout</button>
             </form>
+          <form action="/user" class="inline-form">
+            <button type="submit" class="btn draftButtons">Home</button>
+          </form>
           </div>
         </div>
         <div class="card card-drafts" style="width: 100%;">
           <div class="card-body">
             {{#if isEmpty}}
-          <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
+          <p id="DraftText" class="card-text" style="display: block;">{{newUser}}'s teams are private</p>
           {{else}}
           <div id="DraftText">
             {{#each userTeams}}
