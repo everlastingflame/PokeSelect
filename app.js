@@ -78,9 +78,9 @@ app.use("/draft", async (req, res, next) => {
 
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
-  if (req.body && req.body._method) {
-    req.method = req.body._method;
-    delete req.body._method;
+  if (req.query && req.query._method) {
+    req.method = req.query._method;
+    delete req.query._method;
   }
   next();
 };

@@ -50,8 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (draftCancelForm) {
     draftCancelForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      draftCancelForm.submit();
+      window.location.search = "?_method=DELETE";
     });
   }
 });

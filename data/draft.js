@@ -308,6 +308,17 @@ const findUserTeamInDraft = async (user_id, draft_id) => {
   throw "User does not have a team in this draft";
 };
 
+async function deleteDraft(draft_id) {
+  draft_id = validation.validateId(draft_id, "Draft ID");
+
+  let draftCollection = await drafts();
+  const deletionInfo = await draftCollection.deleteOne({_id: draft_id});
+
+  if (!deletionInfo) {
+    throw `Error: Cound not delete draft with id of ${draft_id}`;
+  }
+}
+
 export {
   createNewDraft,
   getDraft,
@@ -317,4 +328,5 @@ export {
   editPokemonValue,
   findUserTeamInDraft,
   draftPokemonToTeam,
+  deleteDraft,
 };
