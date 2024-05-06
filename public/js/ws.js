@@ -1,21 +1,34 @@
 const ws = new WebSocket(
-  "ws://" + window.location.host + window.location.pathname
+  "ws://" + window.location.host + window.location.pathname + "/ws"
 );
 
 ws.addEventListener("open", () => {
-  ws.send(
+  sendUpdate(
     JSON.stringify({
       type: "update",
-      data: "my choice",
+      name: "blastoise",
+      points: 57,
     })
   );
 });
 
-ws.onmessage = (event) => {
-  let msg = JSON.parse(event.data);
+ws.onmessage = parseMsg;
+
+function sendUpdate(selection) {
+  ws.send(selection);
+}
+
+function parseMsg(msg) {
+  msg = JSON.parse(msg.data);
   if (msg.type === "error") {
-    alert(msg.data);
+    $("#error_container").html(msg.data).removeClass("d-none");
+  } else if (msg.type === "newState") {
+    // Process draft update
+    // 1. Remove/gray-out pokemon from list (pokemon name as div's id?)
+    // 2. Add selected pokemon to appropriate team roster
+    // 3. Update points value for team
+    console.log(msg.state)
   } else {
-    console.log(msg.data);
+    console.log(`Unknown message type ${msg.type}.`);
   }
-};
+}

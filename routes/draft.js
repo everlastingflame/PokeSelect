@@ -133,7 +133,7 @@ router.post("/accept", async (req, res) => {
     try {
         body.draftId = data_validation.validateId(body.draftId);
         await checkInviteForUser(body.draftId, req.session.user.id, true)
-        res.redirect(`/${body.draftId}`);
+        res.redirect(`/draft/${body.draftId}`);
     } catch (e) {
         res.status(500).redirect(`/user/${req.session.user.username}`);
     }
@@ -153,6 +153,7 @@ router.post("/decline", async(req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         req.session.user.inDraft = true;
+        // res.render("draftPhase", {layout: 'draftLayout'});
         res.render("draftPhase");
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
