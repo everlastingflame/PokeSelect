@@ -51,13 +51,13 @@ const getTournament = async(tournamentId) => {
     tournamentId = validation.validateId(tournamentId);
 
     const tournamentCollection = await tournaments();
-    const tournament = await tournamentCollection.findOne({
-        _id: tournamentId,
+    const getTourney = await tournamentCollection.findOne({
+        _id: new ObjectId(tournamentId),
     });
-    if (tournament === null) {
+    if (getTourney === null) {
         throw `Error: No draft with id of ${tournamentId}`;
     }
-    return tournament;
+    return getTourney;
 }
 
 // function to detect when match is reported on client side

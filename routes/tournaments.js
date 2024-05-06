@@ -3,13 +3,14 @@ import express from "express";
 import xss from "xss";
 import tournaments from "../data/tournaments.js";
 import users from "../data/users.js";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
 router
   .get("/:id", async (req, res) => {
     try {
-      let tournamentObj = await tournaments.getTournament(req.params.id);
+      let tournamentObj = await tournaments.getTournament( req.params.id);
       let schedule = []
       for (let match of tournamentObj.schedule) {
         let team1 = await users.getUserById(match.team_1);
@@ -29,7 +30,7 @@ router
       }
       return res.render("tournamentResults", { layout: "userProfiles", title: "Tournament Page", schedule:schedule});
     } catch (e) {
-      res.status(500).send(e.message);
+      res.status(500).render("userError", { layout: "userProfiles", error: e });
     }
   })
   .post("/:id", async (req, res) => {
