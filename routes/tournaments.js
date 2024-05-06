@@ -8,7 +8,7 @@ const router = express.Router();
 router
   .get("/:id", async (req, res) => {
     try {
-      res.render("tournamentDisplay", { title: "Tournament Page" });
+      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page" });
     } catch (e) {
       res.status(500).send(e.message);
     }
