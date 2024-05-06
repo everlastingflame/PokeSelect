@@ -75,9 +75,6 @@ const checkEmail = (email) => {
 }
 
 function checkNumber(number, name = "number") {
-    if (!number) {
-      throw `Error: Did not supply ${name}`;
-    }
     if (typeof number !== "number" || Number.isNaN(number)) {
       throw `Error: ${name} is type [${typeof number}], not number`;
     }

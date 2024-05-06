@@ -1,39 +1,50 @@
 {{!< userProfiles}}
 <body>
 
-<div class="blurred-background"></div>
-<div class="container">
+  <div class="blurred-background"></div>
+  <div class="container">
 
-<nav class="navbar navbar-expand-lg navbar-light header">
-    <a class="navbar-brand mx-auto" href="#">
+    <nav class="navbar navbar-expand-lg navbar-light header">
+      <a class="navbar-brand mx-auto" href="#">
         <img src="/public/images/PokeSelect.png" class="pokeselect-logo" alt="PokeSelect">
-    </a>
-</nav>
-  
-  <div class="card card-main-content" style="width: 828px;">
-    <div class="card-body">
+      </a>
+    </nav>
+
+    <div class="card card-main-content" style="width: 828px;">
+      <div class="card-body">
         <div class="row">
-            <div class="col text-center">
-              <h1>{{newUser}}'s profile</h1>
-            </div>
+          <div class="col text-center">
+            <h1>{{newUser}}'s profile</h1>
+          </div>
         </div>
         <div class="row mb-4">
-            <div class="col text-center">
-              <button class="btn draftButtons" onclick="showDrafts()">{{newUser}}'s teams  </button>
-              <form action="/logout" class="inline-form">
-                <button type="submit" class="btn draftButtons">Logout</button>
-              </form>
-            </div>
+          <div class="col text-center">
+            <button class="btn draftButtons" onclick="showDrafts()">{{newUser}}'s teams </button>
+            <form action="/logout" class="inline-form">
+              <button type="submit" class="btn draftButtons">Logout</button>
+            </form>
+          </div>
         </div>
-            <div class="card card-drafts" style="width: 100%;">
-            <div class="card-body">
-                <p id="DraftText" class="card-text" style="display: block;"> 
-                  {{userTeams}}
-                </p>
+        <div class="card card-drafts" style="width: 100%;">
+          <div class="card-body">
+            {{#if isEmpty}}
+            <p id="DraftText" class="card-text" style="display: block;">
+              {{#if isPublic}}
+              {{newUser}} has no teams.
+              {{else}}
+              {{newUser}}'s teams are private.
+              {{/if}}
+            </p>
+            {{else}}
+            <div>
+              {{!-- Render each of the user's teams --}}
+              {{userTeams}}
             </div>
-            </div>  
+            {{/if}}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
   <script src="/public/js/userHomeClient.js"></script>
-</body>
+  </body>

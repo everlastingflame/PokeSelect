@@ -36,7 +36,7 @@ html, body {
     margin-left: auto;
     margin-right: auto;
     background-color: rgba(187, 214, 255, 0.8); 
-    max-height:36vh;
+    max-height: 100vh;
   }
 
 .pokeselect-logo {
@@ -47,10 +47,10 @@ html, body {
 }
 
 .card-drafts{
-    height:80%;
+    height:100%;
     background-color: #FFE992;
     overflow-y: scroll;
-    max-height: 28vh;
+    max-height: 40vh;
 }
 
 .draftButtons {
@@ -78,4 +78,32 @@ html, body {
     display: inline-block;
     vertical-align: middle;  /* Aligns vertically */
 }   
+
+.card-team-content{
+    height:100%;
+    background-color: #ffffff;
+    overflow-y: scroll;
+    max-height: 40vh;
+    border-radius: 0.25rem;
+}
+
+.invite-card{
+    background-color: #ffffff;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem; 
+    font-size: 1rem; 
+    line-height: 1.5; 
+    display: inline-block; 
+    width: 100%; 
+    margin: 0.5rem; 
+    text-align: center; 
+    vertical-align: middle; 
+    cursor: pointer; 
+}
+
+.inviteCard{
+    width: auto;
+    text-align: center;
+}
+
 

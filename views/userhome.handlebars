@@ -23,13 +23,32 @@
           <form action="/logout" class="inline-form">
             <button type="submit" class="btn draftButtons">Logout</button>
           </form>
+          <button class="btn draftButtons" onclick="showVisibility()">Visibility </button>
         </div>
       </div>
       <div class="card card-drafts" style="width: 100%;">
         <div class="card-body">
-          <p id="DraftText" class="card-text" style="display: block;">
-            {{userTeams}}
-          </p>
+          {{#if isEmpty}}
+          <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
+          {{else}}
+          <div>
+            {{#each userTeams}}
+            {{!-- Render each of the users teams --}}
+            <div id="DraftText" class="card draft-card">
+              <div class="card-body">
+                <h5 class="card-title
+                ">{{this.draft_master}}'s Draft League</h5>
+                <p class="card-text">Wins: {{this.wins}}</p>
+                <p class="card-text">Losses: {{this.losses}}</p>
+                <p class="card-text">Team Size: {{this.teamSize}}</p>
+                {{#each this.selections}}
+                <p class="card-text">{{this.name}}</p>
+                {{/each}}
+                </div>
+              </div>
+              {{/each}}
+          </div>
+          {{/if}}
           <div id="CreateDraft" class="card-text" style="display: none;">
             {{#if error}}
             <p id="serverError" class="alert alert-danger" role="alert">{{error}}</p>
@@ -70,7 +89,41 @@
               <button type="submit" class="createDraft">Create Draft</button>
             </form>
           </div>
-          <p id="Invites" class="card-text" style="display: none;"></p>
+          <div id="Invites" class="card-text" style="display: none;">
+            <div class="inviteCard">
+              <h3>Invites</h3>
+              {{#if invites}}
+              {{#each invites}}
+              <div class="invite-card">
+                <p>{{this.username}} has invited you to join their draft</p>
+                <form id="acceptForm" action="/draft/accept" method="POST">
+                  <input type="hidden" name="draftId" value="{{this.draftId}}">
+                  <button type="submit" class="acceptInvite">Accept</button>
+                </form>
+                <form id="declineForm" action="/draft/decline" method="POST">
+                  <input type="hidden" name="draftId" value="{{this.draftId}}">
+                  <button type="submit" class="declineInvite">Decline</button>
+                </form>
+              </div>
+              {{/each}}
+              {{else}}
+              <p>No invites</p>
+              {{/if}}
+            </div>
+          </div>
+          <div id="Visibility" class="card-text" style="display: none;">
+            <h3>Your current visibility is: {{visibility}}</h3>
+            <form id="visibilityForm" action="/visibility" method="POST">
+              <div class="mb-3">
+                <label for="visibility" class="form-label">Visibility</label>
+                <select name="visibility" id="visibility" required>
+                  <option value="">Pick a visibility</option>
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+              <button type="submit" class="changeVisibility">Change Visibility</button>
+            </form>
         </div>
       </div>
     </div>

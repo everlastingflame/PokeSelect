@@ -1,0 +1,205 @@
+@charset "UTF-8";
+
+html, body {
+    height: 100%;
+    margin: 0; 
+    font-size: 16px; 
+    background-image: url('/public/images/pokemon_background.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+    filter: brightness(0.94); 
+}
+
+
+.pokeselect-logo {
+    max-height: 90%;
+    max-width: 80%; 
+    height: auto; 
+    
+}
+
+.container {
+    min-height: 100vh;
+    min-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.form-control {
+    box-sizing: border-box; 
+}
+
+.card-main-content {
+    background-color: rgba(187, 214, 255, 0.8);
+    width: 90%;
+    min-height: 85vh;
+    overflow-y: auto;
+    margin: auto;
+}
+
+.pokeselect-logo {
+    display: block;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-drafts {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start; 
+    background-color: #FFE992;
+    overflow: hidden; 
+    height: 80vh;
+    padding: 20px;
+}
+
+.card-text, .draftButtons {
+    height: auto;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.draftButtons {
+    background-color: #FFE992;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .card-main-content, .draftButtons {
+        width: 100%;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+.pokemon-sprite {
+    width: auto; 
+    height: auto;
+    display: block; 
+}
+
+.pokemon-slot {
+    height: 50px;
+    width: 50px;
+    border: 1px solid #ccc; 
+    margin: 5px;
+    background-color: white; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+
+.pokemon-selections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); 
+    grid-gap: 5px; 
+}
+
+.inline-form {
+    display: inline-block;
+    vertical-align: middle;  
+}   
+
+.scrollable-card-container {
+    width: 3    0%; 
+    max-width: 600px; 
+    height: 70vh;  
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 15px;
+}
+
+.user-card {
+    background-color: rgba(187, 214, 255, 0.8);
+    width: 400px; 
+    margin: 10px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.card-body-scroll {
+    display: flex;
+    position: relative;
+    top: -30px; 
+    left: -40px;
+    overflow-y: auto;
+    height: auto; 
+}
+
+.main-user-container {
+    text-align: center; 
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    margin-bottom: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+    width: 80%; 
+    max-width: 600px; 
+}
+
+.pokemon-selections-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* This will always create 5 columns */
+    grid-gap: 5px;
+}
+
+.main-card {
+    background-color: rgba(187, 214, 255, 0.8);
+    min-height: 55vh;
+    width: 50vw;
+    margin: 10px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.card-main-body {
+    display: flex;           
+    flex-direction: column;  
+    align-items: center;     
+    justify-content: center; 
+    text-align: center;      
+    width: 100%;            
+    margin: 10px;     
+}
+
+.pokemon-list-card {
+    background-color: rgba(255, 255, 255, 0.8); 
+    margin: 20px auto; 
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25); 
+    width: 80%; 
+    overflow-y: auto; 
+    max-height: 300px; }
+
+.row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around; 
+}
+    
+.col {
+    flex: 1; 
+    text-align: center; 
+}

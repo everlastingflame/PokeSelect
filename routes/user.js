@@ -2,6 +2,9 @@ import data_validation from "../data/data_validation.js";
 import express from "express";
 import { dbData } from "../data/index.js";
 import xss from "xss";
+import users from "../data/users.js";
+import {getDraft} from "../data/draft.js";
+import team from "../data/team.js";
 
 const router = express.Router();
 
@@ -64,39 +67,75 @@ router
         user.email,
         user.dob
       );
-      res.redirect("/login", { title: "Login" });
+      res.redirect("/login");
     } catch (e) {
       res.status(400).render("signUpForm", { error: e, title: "Register" });
     }
   });
 
 router.route("/user/:name").get(async (req, res) => {
-  let user = req.session.user;
+  let session_user = req.session.user;
+  let route_user;
   try {
-    let profile_user = await dbData.users.getUserByName(req.params.name);
-
-    let teamData = profile_user.teams;
-
-    if (profile_user.teams.length === 0) {
-      teamData = `${profile_user.username} has no teams.`;
-    }
-
-    if (user.username === profile_user.username) {
-      teamData = "You have no teams";
-      res.render("userhome", {
-        layout: "userProfiles",
-        newUser: profile_user.username,
-        userTeams: teamData,
-      });
-    } else {
-      res.render("userProfile", {
-        layout: "userProfiles",
-        newUser: profile_user.username,
-        userTeams: teamData,
-      });
-    }
+    route_user = await dbData.users.getUserByName(req.params.name);
   } catch (e) {
     res.status(404).render("userError", { layout: "userProfiles", error: e });
+  }
+
+  let teamData = [];
+  for(let teamId of route_user.teams) {
+    let selectTeam = await team.getTeam(teamId._id);
+    let teamDraft = await getDraft(selectTeam.draft_id);
+    let draft_master = await users.getUserById(teamDraft.draft_master);
+
+    let teamObject = {
+        draft_master: draft_master.username,
+        selections: selectTeam.selections,
+        wins: selectTeam.wins,
+        losses: selectTeam.losses,
+        teamSize: selectTeam.selections.length
+    }
+    teamData.push(teamObject);
+  }
+  let isEmpty = teamData.length === 0;
+  let vis = "";
+  if(route_user.public) {
+    vis = "Public";
+  } else {
+    vis = "Private";
+  }
+
+  if (session_user.username === route_user.username) {
+    let inviteNames = [];
+    for(let invite of route_user.invites) {
+        let grabDraft = await getDraft(invite);
+        let user = await users.getUserById(grabDraft.draft_master);
+        let draftInfo = {
+            draftId: invite,
+            username: user.username
+        }
+        inviteNames.push(draftInfo);
+    }
+    res.render("userhome", {
+      layout: "userProfiles",
+      newUser: route_user.username,
+      isEmpty: isEmpty,
+      userTeams: teamData,
+      invites: inviteNames,
+      visibility: vis,
+    });
+  } else {
+    if (!route_user.public) {
+      teamData = null;
+      isEmpty = true;
+    }
+    res.render("userProfile", {
+      layout: "userProfiles",
+      newUser: route_user.username,
+      isPublic: route_user.public,
+      isEmpty: isEmpty,
+      userTeams: teamData,
+    });
   }
 });
 
@@ -125,5 +164,18 @@ router.route("/logout").get((req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
+
+router.route("/visibility").post(async (req, res) => {
+    let user = req.body;
+    try {
+        user.username = data_validation.validateString(req.session.user.username);
+        user.visibility = data_validation.validateString(xss(user.visibility));
+        if(user.visibility != "public" && user.visibility != "private") throw "Profile visibility must be set to either public or private";
+        await users.updateVisibility(user.username, user.visibility);
+        res.redirect(`/user/${user.username}`);
+    } catch (e) {
+        res.status(404).render("userError", { layout: "userProfiles", error: e });
+    }
+})
 
 export default router;

@@ -2,18 +2,28 @@ function showDrafts(){
     document.getElementById("DraftText").style.display = "block";
     document.getElementById("CreateDraft").style.display = "none";
     document.getElementById("Invites").style.display = "none";
+    document.getElementById("Visibility").style.display = "none";
 }
 
 function showCreate(){
     document.getElementById("DraftText").style.display = "none";
     document.getElementById("CreateDraft").style.display = "block";
     document.getElementById("Invites").style.display = "none";
+    document.getElementById("Visibility").style.display = "none";
 }
 
 function showInvite(){
     document.getElementById("DraftText").style.display = "none";
     document.getElementById("CreateDraft").style.display = "none";
     document.getElementById("Invites").style.display = "block";
+    document.getElementById("Visibility").style.display = "none";
+}
+
+function showVisibility(){
+    document.getElementById("DraftText").style.display = "none";
+    document.getElementById("CreateDraft").style.display = "none";
+    document.getElementById("Invites").style.display = "none";
+    document.getElementById("Visibility").style.display = "block";
 }
 
 function showLogout(){
@@ -87,4 +97,22 @@ if(draftForm) {
             error_container.classList.remove('d-none');
         }
     });
+}
+
+let visibilityForm = document.getElementById("visibilityForm");
+
+if(visibilityForm) {
+    visibilityForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        try {
+            let visibility = document.getElementById('visibility').value;
+            visibility = checkString(visibility);
+            if(visibility != "public" && visibility != "private") throw "Profile visibility must be set to either public or private";
+            visibilityForm.submit();
+        } catch (e) {
+            /* error_container.textContent = error;
+            error_container.classList.remove('d-none'); */
+        }
+    })
 }

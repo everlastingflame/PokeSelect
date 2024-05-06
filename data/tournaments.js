@@ -7,7 +7,7 @@ const createNewTournament = async (draft_id) => {
     if(draft === null) throw "Draft ID doesn't exist.";
 
     let numTeams = draft.team_ids.length();
-    if (numTeams % 2 !== 0) throw "Tournament must have an even number of teams";
+    // if (numTeams % 2 !== 0) throw "Tournament must have an even number of teams";
 
     let matches = [];
 

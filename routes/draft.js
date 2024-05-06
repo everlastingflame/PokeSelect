@@ -1,7 +1,7 @@
 import data_validation from "../data/data_validation.js"
 import express from 'express';
 import { dbData } from "../data/index.js"
-import { createNewDraft, editPokemonList, inviteUserToDraft, getDraft } from "../data/draft.js";
+import { createNewDraft, editPokemonValue, editPokemonList, inviteUserToDraft, getDraft, checkInviteForUser } from "../data/draft.js";
 import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
 import {drafts} from "../config/mongoCollections.js";
@@ -43,33 +43,24 @@ router.get('/new', async (req, res) => {
 
 router.get("/:id/invite", async (req, res) => {
     try {
-        res.render("inviteUsers");
+        res.render("inviteUsers", {layout: 'userProfiles'});
     } catch (e) {
         res.status(500).send(e.message);
     }
 }).post("/:id/invite", async (req, res) => {
-    try {
-        res.redirect(`/draft/${req.params.id}`);
-    } catch (e) {
-        res.status(500).render("inviteUsers", {error: e});
-    }
-})
-
-
-router.post("/:id/inviteuser", async (req, res) => {
     if(!req.body) return res.status(400).send("Need to invite a player to the draft");
     let body = req.body;
     try {
-        body.invites = data_validation.validateString(xss(body.invites), "invite");
+        body.Username = data_validation.validateString(xss(body.Username), "invite");
     } catch (e) {
-        return res.status(400).render("inviteUsers", {error: e});
+        return res.status(400).render("inviteUsers", {layout: 'userProfiles', error: e});
     }
 
     try {
-        await inviteUserToDraft(req.params.id, body.invites);
+        await inviteUserToDraft(req.params.id, body.Username);
         res.status(200).redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
-        return res.status(404).render("inviteUsers", {error: e});
+        return res.status(404).render("inviteUsers", {layout: 'userProfiles', error: e});
     }
 })
 
@@ -105,31 +96,63 @@ router.get("/:id/settings", async (req, res) => {
     let body = req.body;
     try {
         let draft = await getDraft(req.params.id);
-        let pokemonBanned = data_validation.validateString(xss(body.pokemonBanned));
-        let pkmnBannedArray = pokemonBanned.split(",");
-        pkmnBannedArray = pkmnBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
+        let bannedPokemon = [];
+        let teraBanned = [];
 
-        let teraBannedArray = [];
-
-        if (draft.gen_num === 9) {
-            let teraBanned = data_validation.validateString(xss(body.teraBanned));
-            teraBannedArray = teraBanned.split(",");
-            teraBannedArray = teraBannedArray.map((e) => data_validation.validateString(e, "banned Pokemon"));
+        for(let pokemon of body) {
+            pokemon.name = data_validation.validateString(xss(pokemon.name));
+            pokemon.pointValue = data_validation.validateString(xss(pokemon.pointValue));
+            if(parseInt(pokemon.pointValue) < 0) throw "Point values must be 0 or a positive number";
+            if(parseInt(pokemon.pointValue) != 1) {
+                editPokemonValue(draft.pkmn_list, pokemon.name, parseInt(pokemon.pointValue));
+            }
+            if (typeof pokemon.isBanned != "boolean") throw "Pokemon ban must be a boolean value"
+            if(pokemon.isBanned) {
+                bannedPokemon.push(pokemon.name);
+            }
+            if(draft.gen_num === 9 && pokemon.isTeraBanned) {
+                teraBanned.push(pokemon.name);
+            }
         }
-        draft.pkmn_list = await editPokemonList(draft.pkmn_list, pkmnBannedArray, teraBannedArray);
-        draft.tera_banlist = teraBannedArray;
+
+        draft.pkmn_list = await editPokemonList(req.params.id, draft.pkmn_list, bannedPokemon, teraBanned);
+        draft.tera_banlist = teraBanned;
 
         let draftCollection = await drafts();
-        draftCollection.replaceOne({_id: draft._id}, draft);
+        draftCollection.replaceOne({"_id": draft._id}, draft);
         
-        res.redirect(`/draft/${req.params.id}/invite`);
+        res.status(200).send({redirect: `/draft/${req.params.id}/invite`})
+        // res.redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 })
 
+router.post("/accept", async (req, res) => {
+    let body = req.body;
+    try {
+        body.draftId = data_validation.validateId(body.draftId);
+        await checkInviteForUser(body.draftId, req.session.user.id, true)
+        res.redirect(`/${body.draftId}`);
+    } catch (e) {
+        res.status(500).redirect(`/user/${req.session.user.username}`);
+    }
+})
+
+router.post("/decline", async(req, res) => {
+    let body = req.body;
+    try {
+        body.draftId = data_validation.validateId(body.draftId);
+        await checkInviteForUser(body.draftId, req.session.user.id, false)
+        res.redirect(`/${body.draftId}`);
+    } catch (e) {
+        res.status(500).redirect(`/user/${req.session.user.username}`);
+    }
+})
+
 router.get("/:id", async (req, res) => {
     try {
+        req.session.user.inDraft = true;
         res.render("draftPhase");
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});

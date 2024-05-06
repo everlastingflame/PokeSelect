@@ -45,17 +45,17 @@ app.use("/register", async (req, res, next) => {
 });
 
 app.use("/user", async (req, res, next) => {
-  if (req.method === "GET") {
-    if (req.session && req.session.user) {
+  if (req.session && req.session.user) {
+    if (req.method === "GET") {
       if (req.path === "/") {
         return res.redirect("/user/" + req.session.user.username);
       }
       return next();
-    } else {
-      return res.redirect("/login");
     }
+    return next();
+  } else {
+    return res.redirect("/login");
   }
-  next();
 });
 
 app.use("/logout", async (req, res, next) => {
@@ -74,7 +74,7 @@ app.use("/draft", async (req, res, next) => {
     return res.redirect("/login");
   }
   next();
-})
+});
 
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
