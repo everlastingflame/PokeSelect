@@ -122,7 +122,6 @@ router.get("/:id/settings", async (req, res) => {
         draftCollection.replaceOne({"_id": draft._id}, draft);
         
         res.status(200).send({redirect: `/draft/${req.params.id}/invite`})
-        // res.redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
@@ -158,19 +157,19 @@ router.get("/:id", async (req, res) => {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 }).post("/:id", async (req, res) => {
-    let forward = true; // should send from page, controls order
-    let pick_number; // should send from page
-    let draft = await getDraft(draftId); // should send from page
-    let round_number = Math.ceil(pick_number / draft.team_ids.length);
-    if (forward && pick_number % draft.team_ids.length === 0) {
-        forward = false;
-    } else if (!forward && pick_number % draft.team_ids.length === 0) {
-        forward = true;
-    }
-
-
-
     try {
+        let pick_number; // should send from page
+        let draft = await getDraft(draftId); // should send from page
+        let num_teams = draft.team_ids.length;
+        let round_number = Math.ceil(pick_number / num_teams);
+
+
+        if(pick_number > (num_teams * draft.team_size)) {
+            draft.state = "complete";
+            return res.redirect(`/user/${req.session.user.username}`);
+        }
+
+
         res.redirect(`/draft/${req.params.id}`);
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'main', error: e});

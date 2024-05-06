@@ -73,6 +73,7 @@ const createNewDraft = async (
     team_size: team_size,
     point_budget: point_budget,
     tera_num_captains: tera_num_captains,
+    state: "settings"
   };
 
   const draftCollection = await drafts();
@@ -139,6 +140,7 @@ const editPokemonList = async (
     { _id: draft_id },
     {
       $set: {
+        state: "invite",
         pkmn_list: {
           $sortArray: {
             input: {
