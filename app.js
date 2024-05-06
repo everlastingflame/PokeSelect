@@ -77,6 +77,9 @@ app.use("/draft", async (req, res, next) => {
   if (!req.session || !req.session.user) {
     return res.redirect("/login");
   }
+  if (req.session.user.inDraft) {
+    return res.redirect(`/draft/${inDraft}`);
+  }
   next();
 });
 
