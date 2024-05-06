@@ -87,10 +87,10 @@ const reportMatch = async (tournamentId, tournamentMatch, result) => {
   for (let match of tournament.schedule) {
     if(match.team_1.equals(tournamentMatch.team_1) && match.team_2.equals(tournamentMatch.team_2) && match.winner === tournamentMatch.winner) {
       const tournamentCollection = await tournaments();
-      /* const team = await tournamentCollection.schedule.findOneAndUpdate(
-        {"team_1": tournamentMatch.team_1, "team_2": tournamentMatch.team_2}, {$set: {"winner": result}});
+      const match = await tournamentCollection.findOneAndUpdate(
+        {"schedule._id": tournamentMatch._id}, {$set: {"schedule.$.winner": result}});
 
-        console.log(team); */
+      console.log(match);
 
       let team1 = await getTeam(tournamentMatch.team_1);
       let team2 = await getTeam(tournamentMatch.team_2);
