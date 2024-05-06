@@ -89,8 +89,8 @@ router
       return res.status(400).send("Need to invite a player to the draft");
     let body = req.body;
     try {
-      body.Username = data_validation.validateString(
-        xss(body.Username),
+      body.username = data_validation.validateString(
+        xss(body.username),
         "invite"
       );
     } catch (e) {
@@ -100,7 +100,7 @@ router
     }
 
     try {
-      await inviteUserToDraft(req.params.id, body.Username);
+      await inviteUserToDraft(req.params.id, body.username);
       res.status(200).redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
       return res
@@ -232,7 +232,7 @@ router
     try {
       req.session.user.inDraft = true;
       // res.render("draftPhase", {layout: 'draftLayout'});
-      res.render("draftPhase");
+      res.render("draftPhase", {layout: "draftLayout"});
     } catch (e) {
       res
         .status(500)

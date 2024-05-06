@@ -4,7 +4,7 @@ if(inviteForm) {
     inviteForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        let invitedPlayer = document.getElementById('Username').value;
+        let invitedPlayer = document.getElementById('username').value;
 
         try {
             invitedPlayer = checkUsername(invitedPlayer);
