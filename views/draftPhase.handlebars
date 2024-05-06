@@ -56,6 +56,7 @@
                           <div class="card-body" style="width: 100">
                             <h5 class="card-title">Choices</h5>
                               <!-- Dynamically filled Pokémon slots will go here -->
+                            <form id="draftChoice">
                               {{#each pokeObject}}
                               <div id="{{this.name}}" class="row"> 
                                 <div class="col popup-tooltip">
@@ -75,11 +76,11 @@
                                   <p class="points">{{this.pointVal}}</p>
                                 </div>
                                   <div class="col">
-                                    <button type="button" class="btn btn-primary">Select {{this.name}}</button>
+                                    <button name="choice"type="submit" value="{{this.name}}" class="btn btn-primary">Select {{this.name}}</button>
                                   </div>
                               </div>
                               {{/each}}
-
+                              </form>
                             </div>
                         </div>
                     </div>
