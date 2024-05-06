@@ -13,6 +13,10 @@ dotenv.config();
 
 // const db = await dbConnection();
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.log("Unhandled Rejection at:", promise, "reason:", reason);
+});
+
 app.use(
   session({
     name: "AuthenticationState",

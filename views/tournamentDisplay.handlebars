@@ -12,6 +12,8 @@
           <form id="tourneyForm" action="#" method="POST">
             <div class="card-body">
             <!--Iterate over all matches-->
+
+            {{#each match}}
               <div class = "matchId">
                 <div class="col text-center">
                   <h4>Match 1</h4>
@@ -40,6 +42,7 @@
                   </div>
                 </div> 
               </div>
+            {{/end match}}
             <!-- end matches here -->
             </div>
             <div class="text-center">

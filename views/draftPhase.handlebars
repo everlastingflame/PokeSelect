@@ -15,21 +15,26 @@
                       <!-- Example otherUserCard1 -->
                       {{#each user}}
                       <div id="{{user.id}}" class="card user-card">
-                        <div class="card-body">
+                        <div id={{userDraftId}} class="card-body">
                           <!--username updated based on username -->
                           <h5 class="username">{{user.username}}</h5>
                           <!--Points remaining will be updated based on how many points left-->
-                          <p class="points">Points remaining: {{draft.point_budget}}</p>
+                          <p class="points">Points remaining: {{draftId.point_budget}}</p>
                           <div class="current-selections">
-                            Current Selections:
+                            Current Selections: {{draftId.selections}}
                           </div>
                           <div class="pokemon-selections-grid">
                             <!--pokemon slots, will be changed based on how many choices are allowed-->
+                            {{#each draftId.selection}}
                             <div class="pokemon-slot">
                                 <!--pokemon image-->
                             </div>
+                            {{/each}}
 
                         <!-- Additional slots -->
+                      </div>
+                      <div class="card-footer">
+                          <p>Currently {{userId}} turn</p>
                       </div>
                       {{/each}}
                       <!-- More user cards can be added here -->
@@ -40,7 +45,7 @@
                         <div id="currentUserId">
                           <h5 class="username">{{mainUser}}</h5>
                           <!--Points remaining will be updated based on how many points left-->
-                          <p class="points">Points remaining: 10</p>
+                          <p class="points">Points remaining: {{draft}}</p>
                           <div class="current-selections">
                             Current Selections:
                           </div>
