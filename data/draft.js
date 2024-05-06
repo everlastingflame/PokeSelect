@@ -106,6 +106,7 @@ const editPokemonList = async (
   banned_pkmn,
   tera_banned_pkmn
 ) => {
+  draft_id = validation.validateId(draft_id, "Draft ID")
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
   if (typeof pkmn_list !== "object" || !Array.isArray(pkmn_list))
     throw "No Pokemon list provided";
@@ -136,9 +137,9 @@ const editPokemonList = async (
   }
 
   let draftCollection = await drafts();
-  draftCollection.updateOne(
+  await draftCollection.updateOne(
     { _id: draft_id },
-    {
+    [{
       $set: {
         state: "invite",
         pkmn_list: {
@@ -147,14 +148,14 @@ const editPokemonList = async (
               $filter: {
                 input: pkmn_list,
                 as: "pkmn",
-                cond: { $ge: ["$$pkmn.point_val", 0] },
+                cond: { $gte: ["$$pkmn.point_val", 0] },
               },
             },
             sortBy: { point_val: -1 },
           },
         },
       },
-    }
+    }]
   );
   // draftCollection.updateMany(
   //   { _id: draft_id },
