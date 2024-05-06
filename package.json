@@ -7,7 +7,8 @@
   "scripts": {
     "test-pokeapi": "node tests/test_pokeapi.js",
     "test-users": "node tests/test_users.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "seed": "node tests/seed.js"
   },
   "repository": {
     "type": "git",
