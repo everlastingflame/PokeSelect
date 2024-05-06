@@ -13,6 +13,8 @@ import {
 import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
 import { drafts, tournaments } from "../config/mongoCollections.js";
+import tournament from "../data/tournaments.js";
+
 
 const router = express.Router();
 
@@ -235,6 +237,9 @@ router.get("/:id/lobby", async (req, res) => {
     } catch (e) {
         res.status(500).send(e.message);
     }
+}).post("/:id/lobby", async (req, res) => {
+    await tournament.createNewTournament(req.params.id);
+    res.redirect(`/${req.params.id}`);
 })
 
 router
@@ -268,7 +273,7 @@ router
       if(draftObj.pick_number >= (draftObj.team_size * draftObj.team_ids.length)) {
         delete req.session.user.inDraft;
         let tournamentCollection = await tournaments();
-        let tournament = tournamentCollection.findOne({ draft_id: req.params.id});
+        let tournament = await tournamentCollection.findOne({ draft_id: req.params.id});
         res.redirect(`/tournament/${tournament._id}`);
       } else {
         res.render("draftPhase", {
