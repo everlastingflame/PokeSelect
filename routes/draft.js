@@ -193,7 +193,9 @@ router
         .render("draftBoard", { layout: "userProfiles", error: e });
     }
   })
-  .delete("/:id/settings", async (req, res) => {
+
+
+router.post("/:id/delete", async (req, res) => {
     let draft_id = req.params.id;
     try {
       await deleteDraft(draft_id);
@@ -203,7 +205,7 @@ router
         .status(500)
         .render("draftBoard", { layout: "userProfiles", error: e });
     }
-  });
+});
 
 router.post("/accept", async (req, res) => {
   let body = req.body;

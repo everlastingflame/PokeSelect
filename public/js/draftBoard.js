@@ -46,13 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  let draftCancelForm = document.getElementById("draftCancel");
-
-  if (draftCancelForm) {
-    draftCancelForm.addEventListener("submit", function (event) {
-      window.location.search = "?_method=DELETE";
-    });
-  }
 });
 
 function postData(url, data) {
