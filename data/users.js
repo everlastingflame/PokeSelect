@@ -132,7 +132,7 @@ export const loginUser = async (username, password) => {
   });
   
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-    throw "password is invalid";
+    throw "Either the username or password is invalid";
   }
 
   let _id = user._id;

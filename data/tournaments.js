@@ -1,12 +1,15 @@
 import {tournaments} from '../config/mongoCollections.js';
 import { getDraft } from './draft.js';
+import { ObjectId } from "mongodb";
+import validation from "./data_validation.js";
+import team from "./team.js";
 
 const createNewTournament = async (draft_id) => {
     draft_id = validation.validateId(draft_id);
     let draft = await getDraft(draft_id);
     if(draft === null) throw "Draft ID doesn't exist.";
 
-    let numTeams = draft.team_ids.length();
+    let numTeams = draft.team_ids.length;
     // if (numTeams % 2 !== 0) throw "Tournament must have an even number of teams";
 
     let matches = [];
@@ -15,6 +18,7 @@ const createNewTournament = async (draft_id) => {
         for (let j = 0; j < numTeams; j++) {
             if(i < j) {
                 matches.push({
+                    _id: new ObjectId(),
                     team_1: draft.team_ids[i],
                     team_2: draft.team_ids[j],
                     winner: 0
@@ -39,7 +43,7 @@ const createNewTournament = async (draft_id) => {
     }
   
     const newId = insertInfo.insertedId.toString();
-    const tournament = await getTeam(newId);
+    const tournament = await getTournament(newId);
     return tournament;
 }
 
@@ -48,7 +52,7 @@ const getTournament = async(tournamentId) => {
 
     const tournamentCollection = await tournaments();
     const tournament = await tournamentCollection.findOne({
-        _id: new ObjectId(tournamentId),
+        _id: tournamentId,
     });
     if (tournament === null) {
         throw `Error: No draft with id of ${tournamentId}`;

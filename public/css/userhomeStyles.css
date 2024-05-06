@@ -70,8 +70,9 @@ html, body {
 }
 
 .card-text{
-    height:280px;
+    height:100%;
     overflow-y: visible;
+
 }
 
 .inline-form {
@@ -106,4 +107,18 @@ html, body {
     text-align: center;
 }
 
+.draft-card{
+    background-color: #ffffff;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem; 
+    font-size: 1rem; 
+    line-height: 1.5; 
+    display: inline-block; 
+    width: 100%; 
+    height: 20vh;
+    margin: 0.5rem; 
+    text-align: center; 
+    vertical-align: middle; 
+    cursor: pointer; 
+}
 

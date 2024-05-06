@@ -2,7 +2,7 @@ import { drafts, users } from "../config/mongoCollections.js";
 import userData from "./users.js";
 import teamData from "./team.js";
 import validation from "./data_validation.js";
-import { ObjectId } from "mongodb";
+import { ObjectId, ReturnDocument } from "mongodb";
 import pokeapi from "./pokeapi.js";
 
 const createNewDraft = async (
@@ -278,7 +278,8 @@ const checkInviteForUser = async (draft_id, user_id, accept_invite) => {
 
     user = await userCollection.findOneAndUpdate(
       { _id: user_id },
-      { $push: { teams: newTeam } }
+      { $push: { teams: newTeam }},
+      { returnNewDocument: true }
     );
 
     const draftCollection = await drafts();

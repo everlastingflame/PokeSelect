@@ -78,11 +78,28 @@ function validateUsername(username, name = "username") {
 }
 
 function validatePassword(password, name = "password") {
-  password = validateString(password, name);
+    password = password.trim();
 
-  // TODO: Implement other validation for password requirements (i.e. length)
+    try{
+        validateString(password);
+    }
+    catch(e){
+        throw(`Password ${e}`);
+    }
 
-  return password;
+    if(password.length < 8){
+        throw('Password is too short');
+    }
+    if(!/\d/.test(password)){
+        throw('Password must contain a number');
+    }
+    if(!/[-!@#$%^&*()_+{}:"<>?=[\],./\\';`~]/.test(password)){
+        throw('Password must contain a special character');
+    }    
+    if(!/[A-Z]/.test(password)){
+        throw('Password must contain an uppercase letter');
+    }
+    return password;
 }
 
 function validateEmail(email, name = "email") {

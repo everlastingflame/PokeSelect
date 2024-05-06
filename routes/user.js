@@ -5,6 +5,7 @@ import xss from "xss";
 import users from "../data/users.js";
 import {getDraft} from "../data/draft.js";
 import team from "../data/team.js";
+import pokemonApi from "../data/pokeapi.js";
 
 const router = express.Router();
 
@@ -66,15 +67,28 @@ router.route("/user/:name").get(async (req, res) => {
     let teamDraft = await getDraft(selectTeam.draft_id);
     let draft_master = await users.getUserById(teamDraft.draft_master);
 
+    let imageList = [];
+    
+    for (const pokemon of selectTeam.selections){
+      let image = await pokemonApi.getPokemon(pokemon.name);
+      image = image.sprites.front_default;
+      imageList.push(image);
+    }
+
+
+
     let teamObject = {
         draft_master: draft_master.username,
         selections: selectTeam.selections,
         wins: selectTeam.wins,
         losses: selectTeam.losses,
-        teamSize: selectTeam.selections.length
+        teamSize: selectTeam.selections.length,
+        images: imageList
     }
     teamData.push(teamObject);
   }
+
+
   let isEmpty = teamData.length === 0;
   let vis = "";
   if(route_user.public) {

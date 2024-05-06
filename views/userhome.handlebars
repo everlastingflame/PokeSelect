@@ -26,7 +26,9 @@
           <button class="btn draftButtons" onclick="showVisibility()">Visibility </button>
         </div>
       </div>
-      <div class="card card-drafts" style="width: 100%;">
+      <div id="DraftText" class="card card-drafts" style="width: 100%;">
+
+
         <div class="card-body">
           {{#if isEmpty}}
           <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
@@ -34,22 +36,34 @@
           <div id="DraftText">
             {{#each userTeams}}
             {{!-- Render each of the users teams --}}
-            <div class="card draft-card">
-              <div class="card-body">
-                <h5 class="card-title
+              <div class="card card-body row">
+                <h5 class="card-title col
                 ">{{this.draft_master}}'s Draft League</h5>
-                <p class="card-text">Wins: {{this.wins}}</p>
-                <p class="card-text">Losses: {{this.losses}}</p>
-                <p class="card-text">Team Size: {{this.teamSize}}</p>
+                <div class="row">
+                <p class="card-text col">Wins: {{this.wins}}</p>
+                <p class="card-text col">Losses: {{this.losses}}</p>
+                <p class="card-text col">Team Size: {{this.teamSize}}</p>
+                </div>
+                <div class="row">
                 {{#each this.selections}}
-                <p class="card-text">{{this.name}}</p>
+                <p class="card-text col">{{this.name}}</p>
                 {{/each}}
+                </div>
+
+                <div class="row">
+                {{#each this.images}}
+                <p class="col">
+                  <img src= "{{this}}" width="48" height="48">
+                </p>
+                {{/each}}
+                </div>
                 </div>
               </div>
               {{/each}}
           </div>
           {{/if}}
         </div>
+        
           <div id="CreateDraft" class="card-text" style="display: none;">
             {{#if error}}
             <p id="serverError" class="alert alert-danger" role="alert">{{error}}</p>
