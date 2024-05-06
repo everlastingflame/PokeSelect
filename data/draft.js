@@ -318,7 +318,7 @@ async function deleteDraft(draft_id) {
   draft_id = validation.validateId(draft_id, "Draft ID");
 
   let draftCollection = await drafts();
-  let draft = getDraft(draft_id);
+  let draft = await getDraft(draft_id);
   const deletionInfo = await draftCollection.deleteOne({_id: draft_id});
 
   if (!deletionInfo) {
