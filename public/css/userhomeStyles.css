@@ -70,8 +70,9 @@ html, body {
 }
 
 .card-text{
-    height:280px;
+    height:100%;
     overflow-y: visible;
+
 }
 
 .inline-form {

@@ -28,31 +28,43 @@
           </form>
           </div>
         </div>
-        <div class="card card-drafts" style="width: 100%;">
-          <div class="card-body">
-            {{#if isEmpty}}
-          <p id="DraftText" class="card-text" style="display: block;">{{newUser}}'s teams are private</p>
+      <div id="DraftText" class="card card-drafts" style="width: 100%;">
+        <div class="card-body">
+          {{#if isEmpty}}
+          <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
           {{else}}
           <div id="DraftText">
             {{#each userTeams}}
             {{!-- Render each of the users teams --}}
-            <div class="card draft-card">
-              <div class="card-body row">
+              <div class="card card-body row">
                 <h5 class="card-title col
                 ">{{this.draft_master}}'s Draft League</h5>
+                <div class="row">
                 <p class="card-text col">Wins: {{this.wins}}</p>
                 <p class="card-text col">Losses: {{this.losses}}</p>
                 <p class="card-text col">Team Size: {{this.teamSize}}</p>
+                </div>
+                <div class="row">
                 {{#each this.selections}}
-                <p class="card-text">{{this.name}}</p>
+                <p class="card-text col">{{this.name}}</p>
                 {{/each}}
+                </div>
+
+                <div class="row">
+                {{#each this.images}}
+                <p class="col">
+                  <img src= "{{this}}" width="48" height="48">
+                </p>
+                {{/each}}
+                </div>
                 </div>
               </div>
               {{/each}}
           </div>
           {{/if}}
-          </div>
         </div>
+      </div>
+
       </div>
     </div>
   </div>
