@@ -18,16 +18,16 @@ function initWebsockets(app) {
         let user_id = req.session.user ? req.session.user.id : "no id";
         let draft = await getDraft(draft_id);
 
-        let next_pick = draft.user_ids[draft.pick_number].toString();
+        let pick_index = draft.pick_number % draft.team_ids.length
+        let next_pick = draft.user_ids[pick_index].toString();
         if (user_id !== next_pick) {
           return sendError(ws, "It is not your turn to pick!");
         }
         
-        let team_id = draft.team_ids[draft.pick_number];
+        let team_id = draft.team_ids[draft.pick_number % draft.team_ids.length];
         try {
-          await draftPokemonToTeam(user_id, team_id, msg.name, draft.pkmn_list, draft_id);
+          await draftPokemonToTeam(user_id, team_id, msg.name, draft_id);
         } catch (e) {
-          console.log(e)
           return sendError(ws, e);
         }
         // Push update info to all connected clients in the draft

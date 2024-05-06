@@ -214,7 +214,7 @@ const draftPokemonToTeam = async (
       let team = await teamData.addPokemonToTeam(team_id, pokemon);
       let draftCollection = await drafts();
 
-      let next_pick = (draft.pick_number + 1) % draft.team_ids.length;
+      let next_pick = draft.pick_number + 1;
       await draftCollection.updateOne(
         { _id: draftId, "pkmn_list.name": draftedPokemon },
         {
