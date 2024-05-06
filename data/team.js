@@ -1,7 +1,7 @@
-import { teams } from "../config/mongoCollections.js";
+import { teams, tournaments } from "../config/mongoCollections.js";
 import validation from "./data_validation.js";
 import { ObjectId } from "mongodb";
-import tournament from "./tournaments.js";
+import tournamentsData from "./tournaments.js";
 import users from "./users.js";
 import { getDraft } from "./draft.js";
 
@@ -73,31 +73,52 @@ const addPokemonToTeam = async (teamId, pokemonDrafted) => {
   return team;
 };
 
-const reportMatch = async (tournamentId, tournamentMatch) => {
+const reportMatch = async (tournamentId, tournamentMatch, result) => {
   tournamentId = validation.validateId(tournamentId, "tournamentId");
   if (typeof tournamentMatch !== "object")
     throw "Tournament match must be an object";
 
   // adds win to team if they won match, add loss otherwise
-  let tournament = await tournament.getTournament(tournamentId);
+  let tournament = await tournamentsData.getTournament(tournamentId);
   if (tournament === null) throw "Tournament doesn't exist";
 
   // check that match is in tournament
 
-  if (!tournament.schedule.includes(tournament))
-    throw "Match is not in the tournament";
+  for (let match of tournament.schedule) {
+    if(match.team_1.equals(tournamentMatch.team_1) && match.team_2.equals(tournamentMatch.team_2) && match.winner === tournamentMatch.winner) {
+      const tournamentCollection = await tournaments();
+      /* const team = await tournamentCollection.schedule.findOneAndUpdate(
+        {"team_1": tournamentMatch.team_1, "team_2": tournamentMatch.team_2}, {$set: {"winner": result}});
 
-  let team1 = await getTeam(tournamentMatch.team_1);
-  let team2 = await getTeam(tournamentMatch.team_2);
+        console.log(team); */
 
-  if (tournamentMatch.winner === 1) {
-    team1.wins++;
-    team2.losses++;
-  } else {
-    team1.losses++;
-    team2.wins++;
+      let team1 = await getTeam(tournamentMatch.team_1);
+      let team2 = await getTeam(tournamentMatch.team_2);
+      let teamCollection = await teams();
+
+      if (tournamentMatch.winner === 1) {
+        await teamCollection.updateOne(
+          { _id: team1._id },
+          {$set: {wins: team1.wins + 1}}
+        )
+        await teamCollection.updateOne(
+          { _id: team2._id },
+          {$set: {losses: team2.losses + 1}}
+        )
+      } else {
+        await teamCollection.updateOne(
+          { _id: team1._id },
+          {$set: {losses: team1.losses + 1}}
+        )
+        await teamCollection.updateOne(
+          { _id: team2._id },
+          {$set: {wins: team2.wins + 1}}
+        )
+      }
+      return tournamentMatch;
+    }
   }
-  return tournamentMatch;
+  throw "Match is not in the tournament";
 };
 
 const selectTeraCaptain = async (teamId, teraPokemon, tera_num_captains) => {
