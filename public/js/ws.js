@@ -27,7 +27,12 @@ function parseMsg(msg) {
     // 1. Remove/gray-out pokemon from list (pokemon name as div's id?)
     // 2. Add selected pokemon to appropriate team roster
     // 3. Update points value for team
-    console.log(msg.state)
+    let user_id = msg.state.user;
+    let team_id = msg.state.team;
+    let name = msg.state.name;
+    let points = msg.state.points_left;
+    let pick = msg.state.pick_no;
+
   } else {
     console.log(`Unknown message type ${msg.type}.`);
   }
