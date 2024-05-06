@@ -17,28 +17,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/users", async (req, res) => {
-  try {
-    const users = await dbData.users.getAll();
-    res.json(users);
-  } catch (e) {
-    res.status(500).send(e.message);
-  }
-});
-
-router.get("/users/:id", async (req, res) => {
-  try {
-    const user = await dbData.users.getUser(req.params.id);
-    if (!user) {
-      res.status(404).send("User not found");
-      return;
-    }
-    res.json(user);
-  } catch (e) {
-    res.status(500).send(e.message);
-  }
-});
-
 router
   .route("/register")
   .get((req, res) => {

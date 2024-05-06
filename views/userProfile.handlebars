@@ -28,19 +28,26 @@
         <div class="card card-drafts" style="width: 100%;">
           <div class="card-body">
             {{#if isEmpty}}
-            <p id="DraftText" class="card-text" style="display: block;">
-              {{#if isPublic}}
-              {{newUser}} has no teams.
-              {{else}}
-              {{newUser}}'s teams are private.
-              {{/if}}
-            </p>
-            {{else}}
-            <div>
-              {{!-- Render each of the user's teams --}}
-              {{userTeams}}
-            </div>
-            {{/if}}
+          <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
+          {{else}}
+          <div id="DraftText">
+            {{#each userTeams}}
+            {{!-- Render each of the users teams --}}
+            <div class="card draft-card">
+              <div class="card-body">
+                <h5 class="card-title
+                ">{{this.draft_master}}'s Draft League</h5>
+                <p class="card-text">Wins: {{this.wins}}</p>
+                <p class="card-text">Losses: {{this.losses}}</p>
+                <p class="card-text">Team Size: {{this.teamSize}}</p>
+                {{#each this.selections}}
+                <p class="card-text">{{this.name}}</p>
+                {{/each}}
+                </div>
+              </div>
+              {{/each}}
+          </div>
+          {{/if}}
           </div>
         </div>
       </div>

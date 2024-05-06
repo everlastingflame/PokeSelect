@@ -1,7 +1,7 @@
 let tournamentForm = document.getElementById("tournamentForm");
 
-if(draftForm) {
-    draftForm.addEventListener('submit', function(event) {
+if(tournamentForm) {
+    tournamentForm.addEventListener('submit', function(event) {
         event.preventDefault();
         try {
             let team1 = document.getElementById('team1').value;

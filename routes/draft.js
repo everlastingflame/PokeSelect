@@ -197,9 +197,9 @@ router
     let draft_id = req.params.id;
     try {
       await deleteDraft(draft_id);
-      return res.redirect(`/user/${req.session.user.username}`);
+      res.redirect(`/usr/${req.session.user.username}`);
     } catch (e) {
-      return res
+      res
         .status(500)
         .render("draftBoard", { layout: "userProfiles", error: e });
     }
