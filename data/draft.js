@@ -182,24 +182,25 @@ const draftPokemonToTeam = async (
   user_id,
   team_id,
   draftedPokemon,
-  pkmn_list,
   draftId
 ) => {
   draftId = validation.validateId(draftId);
   user_id = validation.validateId(user_id);
   team_id = validation.validateId(team_id);
   draftedPokemon = validation.validateString(draftedPokemon, "draftedPokemon");
-  if (typeof pkmn_list !== "object" || !Array.isArray(pkmn_list))
-    throw "No Pokemon list provided";
-  for (let pokemon of pkmn_list) {
-    if (typeof pokemon !== "object") throw "All array elements must be objects";
-  }
 
   let draft = await getDraft(draftId);
   let user = await userfunctions.getUserById(user_id);
 
   if (draft === null) throw "Draft ID doesn't exist";
   if (user === null) throw "User ID doesn't exist";
+
+  let pkmn_list = draft.pkmn_list;
+  if (typeof pkmn_list !== "object" || !Array.isArray(pkmn_list))
+    throw "No Pokemon list provided";
+  for (let pokemon of pkmn_list) {
+    if (typeof pokemon !== "object") throw "All array elements must be objects";
+  }
 
   if (!draft.user_ids.includes(user_id))
     throw "The user_id provided is not in this draft";

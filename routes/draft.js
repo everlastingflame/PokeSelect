@@ -153,15 +153,27 @@ router.post("/decline", async(req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         req.session.user.inDraft = true;
-        res.render("draftPhase");
+        res.render("draftPhase", {layout: "main"});
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 }).post("/:id", async (req, res) => {
+    let forward = true; // should send from page, controls order
+    let pick_number; // should send from page
+    let draft = await getDraft(draftId); // should send from page
+    let round_number = Math.ceil(pick_number / draft.team_ids.length);
+    if (forward && pick_number % draft.team_ids.length === 0) {
+        forward = false;
+    } else if (!forward && pick_number % draft.team_ids.length === 0) {
+        forward = true;
+    }
+
+
+
     try {
-        res.redirect(`/draft/${req.params.id}/start`);
+        res.redirect(`/draft/${req.params.id}`);
     } catch (e) {
-        res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
+        res.status(500).render("draftBoard", {layout: 'main', error: e});
     }
 })
 
