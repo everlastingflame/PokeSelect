@@ -2,13 +2,33 @@ import data_validation from "../data/data_validation.js";
 import express from "express";
 import xss from "xss";
 import tournaments from "../data/tournaments.js";
+import users from "../data/users.js";
 
 const router = express.Router();
 
 router
   .get("/:id", async (req, res) => {
     try {
-      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page" });
+      let tournamentObj = await getTournament(req.params.id);
+      let schedule = []
+      for (let match of tournamentObj.schedule) {
+        let team1 = await users.getUserById(match.team_1);
+        let team2 = await users.getUserById(match.team_2);
+        let winnerUser = "";
+        if(typeof match.winner === "number") {
+          if(match.winner === 0) winnerUser = "TBD";
+          if(match.winner === 0) winnerUser = `${team1}`;
+          if(match.winner === 0) winnerUser = `${team2}`;
+        }
+        let matchup = {
+          user1: team1.username,
+          user2: team2.username,
+          winner: match.winner
+        }
+        schedule.push(matchup);
+      }
+
+      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
     } catch (e) {
       res.status(500).send(e.message);
     }
@@ -38,7 +58,7 @@ router
       }
       throw "Match between two teams is not in tournament";
     } catch (e) {
-      return res.status(400).render("tournamentDisplay", { error: e });
+      return res.status(404).render("tournamentDisplay", { error: e });
     }
   });
 

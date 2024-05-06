@@ -83,7 +83,8 @@ router.route("/user/:name").get(async (req, res) => {
         wins: selectTeam.wins,
         losses: selectTeam.losses,
         teamSize: selectTeam.selections.length,
-        images: imageList
+        images: imageList,
+        draft_id: selectTeam.draft_id
     }
     teamData.push(teamObject);
   }
