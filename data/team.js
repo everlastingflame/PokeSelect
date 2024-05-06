@@ -59,8 +59,13 @@ const addPokemonToTeam = async (teamId, pokemonDrafted) => {
 
   pokemonDrafted.is_drafted = true;
   team.points_remaining = team.points_remaining - pokemonDrafted.point_val;
-  team.selections.push(pokemonDrafted);
-  return pokemonDrafted;
+
+  let teamCollection = await teams();
+  await teamCollection.updateOne(
+    { _id: teamId },
+    { $push: { selections: pokemonDrafted } }
+  );
+  return team;
 }
 
 const reportMatch = async (tournamentId, tournamentMatch) => {
