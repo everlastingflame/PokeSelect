@@ -1,5 +1,6 @@
 import {tournaments} from '../config/mongoCollections.js';
 import { getDraft } from './draft.js';
+import { ObjectId } from "mongodb";
 import validation from "./data_validation.js";
 import team from "./team.js";
 
@@ -17,6 +18,7 @@ const createNewTournament = async (draft_id) => {
         for (let j = 0; j < numTeams; j++) {
             if(i < j) {
                 matches.push({
+                    _id: new ObjectId(),
                     team_1: draft.team_ids[i],
                     team_2: draft.team_ids[j],
                     winner: 0
