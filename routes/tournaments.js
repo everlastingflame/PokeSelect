@@ -8,7 +8,8 @@ const router = express.Router();
 router
   .get("/:id", async (req, res) => {
     try {
-      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page" });
+      let tournament = await tournaments.getTournament(req.params.id);
+      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page", tournament:tournament});
     } catch (e) {
       res.status(500).send(e.message);
     }

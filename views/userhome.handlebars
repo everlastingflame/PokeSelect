@@ -37,8 +37,9 @@
               {{#each userTeams}}
               {{!-- Render each of the users teams --}}
               <div class="card card-body row">
-                <h5 class="card-title col
-                ">{{this.draft_master}}'s Draft League</h5>
+                <h5 class="card-title col">
+                  <a href="/tournamentResults/{{this.draftId}}">{{this.draft_master}}'s Draft League</a>
+                </h5>
                 <div class="row">
                   <p class="card-text col">Wins: {{this.wins}}</p>
                   <p class="card-text col">Losses: {{this.losses}}</p>
