@@ -2,7 +2,7 @@ import { dbConnection, closeConnection } from "../config/mongoConnection.js";
 import users from "../data/users.js";
 import tournament from "../data/tournaments.js";
 import team from "../data/team.js";
-import { createNewDraft, inviteUserToDraft, checkInviteForUser, draftPokemonToTeam } from "../data/draft.js";
+import { getDraft, createNewDraft, inviteUserToDraft, checkInviteForUser, draftPokemonToTeam } from "../data/draft.js";
 
 const db = await dbConnection();
 
@@ -113,7 +113,6 @@ try{
 
 
 try{
-    console.log(pokeMaster);
     await checkInviteForUser(pokeMasterDraft._id, pokeMaster._id, true);
     console.log("Invite accepted by pokeMaster");
     await checkInviteForUser(pokeMasterDraft._id, tom._id, true);
@@ -127,64 +126,72 @@ try{
 }
 
 try {
-    console.log(pokeMaster);
-    //console.log(pokeMasterDraft);
-    let PMTeam = await team.getTeam(pokeMaster.teams[0]);
-    let CGTeam = await team.getTeam(tom.teams[0]);
-    let G1Team = await team.getTeam(gaming1.teams[0]);
-    let G2Team = await team.getTeam(gaming2.teams[0]);
-    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "charizard", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    pokeMaster = await users.getUserByName("pokeMaster");
+    tom = await users.getUserByName("catguy");
+    gaming1 = await users.getUserByName("gaming1");
+    gaming2 = await users.getUserByName("gaming2");
+    pokeMasterDraft = await getDraft(pokeMasterDraft._id);
+} catch (e) {
+    console.log(e);
+}
+
+try {
+    let PMTeam = await team.getTeam(pokeMaster.teams[0]._id);
+    let CGTeam = await team.getTeam(tom.teams[0]._id);
+    let G1Team = await team.getTeam(gaming1.teams[0]._id);
+    let G2Team = await team.getTeam(gaming2.teams[0]._id);
+    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "charizard", pokeMasterDraft._id);
     console.log("Charizard selected by pokeMaster");
-    await draftPokemonToTeam(tom._id, CGTeam._id, "bulbasaur", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(tom._id, CGTeam._id, "bulbasaur", pokeMasterDraft._id);
     console.log("Bulbasaur selected by catguy");
-    await draftPokemonToTeam(gaming1._id, G1Team._id, "ivysaur", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming1._id, G1Team._id, "ivysaur", pokeMasterDraft._id);
     console.log("Ivysaur selected by gaming1");
-    await draftPokemonToTeam(gaming2._id, G2Team._id, "pikachu", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming2._id, G2Team._id, "pikachu", pokeMasterDraft._id);
     console.log("Pikachu selected by gaming2");
 
-    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "charmander", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "charmander", pokeMasterDraft._id);
     console.log("Charmander selected by pokeMaster");
-    await draftPokemonToTeam(tom._id, CGTeam._id, "dragonite", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(tom._id, CGTeam._id, "dragonite", pokeMasterDraft._id);
     console.log("Dragonite selected by catguy");
-    await draftPokemonToTeam(gaming1._id, G1Team._id, "caterpie", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming1._id, G1Team._id, "caterpie", pokeMasterDraft._id);
     console.log("Caterpie selected by gaming1");
-    await draftPokemonToTeam(gaming2._id, G2Team._id, "pidgeotto", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming2._id, G2Team._id, "pidgeotto", pokeMasterDraft._id);
     console.log("Pidgeotto selected by gaming2");
 
-    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "ekans", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "ekans", pokeMasterDraft._id);
     console.log("Ekans selected by pokeMaster");
-    await draftPokemonToTeam(tom._id, CGTeam._id, "slowbro", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(tom._id, CGTeam._id, "slowbro", pokeMasterDraft._id);
     console.log("Slowbro selected by catguy");
-    await draftPokemonToTeam(gaming1._id, G1Team._id, "golem", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming1._id, G1Team._id, "golem", pokeMasterDraft._id);
     console.log("Golem selected by gaming1");
-    await draftPokemonToTeam(gaming2._id, G2Team._id, "zubat", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming2._id, G2Team._id, "zubat", pokeMasterDraft._id);
     console.log("Zubat selected by gaming2");
 
-    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "meowth", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "meowth", pokeMasterDraft._id);
     console.log("Meowth selected by pokeMaster");
-    await draftPokemonToTeam(tom._id, CGTeam._id, "machamp", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(tom._id, CGTeam._id, "machamp", pokeMasterDraft._id);
     console.log("Machamp selected by catguy");
-    await draftPokemonToTeam(gaming1._id, G1Team._id, "voltorb", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming1._id, G1Team._id, "voltorb", pokeMasterDraft._id);
     console.log("Voltorb selected by gaming1");
-    await draftPokemonToTeam(gaming2._id, G2Team._id, "hypno", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming2._id, G2Team._id, "hypno", pokeMasterDraft._id);
     console.log("Hypno selected by gaming2");
 
-    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "haunter", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "haunter", pokeMasterDraft._id);
     console.log("Haunter selected by pokeMaster");
-    await draftPokemonToTeam(tom._id, CGTeam._id, "seaking", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(tom._id, CGTeam._id, "seaking", pokeMasterDraft._id);
     console.log("Seaking selected by catguy");
-    await draftPokemonToTeam(gaming1._id, G1Team._id, "staryu", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming1._id, G1Team._id, "staryu", pokeMasterDraft._id);
     console.log("Staryu selected by gaming1");
-    await draftPokemonToTeam(gaming2._id, G2Team._id, "magmar", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming2._id, G2Team._id, "magmar", pokeMasterDraft._id);
     console.log("Magmar selected by gaming2");
 
-    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "mr-mime", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(pokeMaster._id, PMTeam._id, "mr-mime", pokeMasterDraft._id);
     console.log("Mr. Mime selected by pokeMaster");
-    await draftPokemonToTeam(tom._id, CGTeam._id, "magikarp", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(tom._id, CGTeam._id, "magikarp", pokeMasterDraft._id);
     console.log("Magikarp selected by catguy");
-    await draftPokemonToTeam(gaming1._id, G1Team._id, "eevee", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming1._id, G1Team._id, "eevee", pokeMasterDraft._id);
     console.log("Eevee selected by gaming1");
-    await draftPokemonToTeam(gaming2._id, G2Team._id, "porygon", pokeMasterDraft.pkmn_list, pokeMasterDraft._id);
+    await draftPokemonToTeam(gaming2._id, G2Team._id, "porygon", pokeMasterDraft._id);
     console.log("Porygon selected by gaming2");
 } catch(e){
     console.log(e);
@@ -193,27 +200,24 @@ try {
 let tournament1;
 
 try {
-    tournament1 = await tournament.createNewTournament(pokeMasterDraft);
+    tournament1 = await tournament.createNewTournament(pokeMasterDraft._id);
     console.log("Tournament created");
 } catch(e){
     console.log(e);
 }
 
 try {
-    tournament1.schedule[0].winner = 1;
-    await team.reportMatch(tournament1._id, tournament1.schedule[0]);
+    tournament1 = await tournament.getTournament(tournament1._id);
+    await team.reportMatch(tournament1._id, tournament1.schedule[0], 1);
     console.log("Tournament match reported");
 
-    tournament.schedule[1].winner = 2;
-    await team.reportMatch(tournament1._id, tournament1.schedule[1]);
+    await team.reportMatch(tournament1._id, tournament1.schedule[1], 2);
     console.log("Tournament match reported");
 
-    tournament.schedule[2].winner = 2;
-    await team.reportMatch(tournament1._id, tournament1.schedule[2]);
+    await team.reportMatch(tournament1._id, tournament1.schedule[2], 2);
     console.log("Tournament match reported");
 
-    tournament.schedule[3].winner = 1;
-    await team.reportMatch(tournament1._id, tournament1.schedule[3]);
+    await team.reportMatch(tournament1._id, tournament1.schedule[3], 1);
     console.log("Tournament match reported");
 } catch(e){
     console.log(e);
