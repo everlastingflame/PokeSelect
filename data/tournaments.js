@@ -47,7 +47,7 @@ const createNewTournament = async (draft_id) => {
     return tournament;
 }
 
-const getTournament = async(tournamentId) => {
+const getTournament = async (tournamentId) => {
     tournamentId = validation.validateId(tournamentId);
 
     const tournamentCollection = await tournaments();
