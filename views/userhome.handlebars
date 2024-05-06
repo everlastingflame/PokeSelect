@@ -31,10 +31,10 @@
           {{#if isEmpty}}
           <p id="DraftText" class="card-text" style="display: block;">You have no teams.</p>
           {{else}}
-          <div>
+          <div id="DraftText">
             {{#each userTeams}}
             {{!-- Render each of the users teams --}}
-            <div id="DraftText" class="card draft-card">
+            <div class="card draft-card">
               <div class="card-body">
                 <h5 class="card-title
                 ">{{this.draft_master}}'s Draft League</h5>

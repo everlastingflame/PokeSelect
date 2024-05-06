@@ -110,7 +110,7 @@ router.get("/:id/settings", async (req, res) => {
             if(pokemon.isBanned) {
                 bannedPokemon.push(pokemon.name);
             }
-            if(draft.gen_num === 9 && pokemon.isTeraBanned) {
+            if(draft.gen_num === 9 && typeof pokemon.isTeraBanned === "boolean" && pokemon.isTeraBanned) {
                 teraBanned.push(pokemon.name);
             }
         }
@@ -122,7 +122,6 @@ router.get("/:id/settings", async (req, res) => {
         draftCollection.replaceOne({"_id": draft._id}, draft);
         
         res.status(200).send({redirect: `/draft/${req.params.id}/invite`})
-        // res.redirect(`/draft/${req.params.id}/invite`);
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
@@ -131,9 +130,9 @@ router.get("/:id/settings", async (req, res) => {
 router.post("/accept", async (req, res) => {
     let body = req.body;
     try {
-        body.draftId = data_validation.validateId(body.draftId);
+        body.draftId = data_validation.validateId(xss(body.draftId));
         await checkInviteForUser(body.draftId, req.session.user.id, true)
-        res.redirect(`/${body.draftId}`);
+        res.redirect(`/draft/${body.draftId}`);
     } catch (e) {
         res.status(500).redirect(`/user/${req.session.user.username}`);
     }
@@ -142,9 +141,9 @@ router.post("/accept", async (req, res) => {
 router.post("/decline", async(req, res) => {
     let body = req.body;
     try {
-        body.draftId = data_validation.validateId(body.draftId);
+        body.draftId = data_validation.validateId(xss(body.draftId));
         await checkInviteForUser(body.draftId, req.session.user.id, false)
-        res.redirect(`/${body.draftId}`);
+        res.redirect(`/user`);
     } catch (e) {
         res.status(500).redirect(`/user/${req.session.user.username}`);
     }
@@ -153,15 +152,27 @@ router.post("/decline", async(req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         req.session.user.inDraft = true;
-        res.render("draftPhase");
+        res.render("draftPhase", {layout: "main"});
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
 }).post("/:id", async (req, res) => {
     try {
-        res.redirect(`/draft/${req.params.id}/start`);
+        let pick_number; // should send from page
+        let draft = await getDraft(draftId); // should send from page
+        let num_teams = draft.team_ids.length;
+        let round_number = Math.ceil(pick_number / num_teams);
+
+
+        if(pick_number > (num_teams * draft.team_size)) {
+            draft.state = "complete";
+            return res.redirect(`/user/${req.session.user.username}`);
+        }
+
+
+        res.redirect(`/draft/${req.params.id}`);
     } catch (e) {
-        res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
+        res.status(500).render("draftBoard", {layout: 'main', error: e});
     }
 })
 
