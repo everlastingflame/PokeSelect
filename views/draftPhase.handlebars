@@ -1,3 +1,5 @@
+{{!< draftLayout}}
+
 <body>
     <div class="blurred-background"></div>
     <div class="container">
@@ -11,12 +13,13 @@
                     <div class="scrollable-card-container">
                       <!-- Dynamic insertion of user cards -->
                       <!-- Example otherUserCard1 -->
-                      <div id="userId" class="card user-card">
+                      {{#each user}}
+                      <div id="{{user._id}}" class="card user-card">
                         <div class="card-body">
                           <!--username updated based on username -->
-                          <h5 class="username">OtherUser1</h5>
+                          <h5 class="username">{{user.username}}</h5>
                           <!--Points remaining will be updated based on how many points left-->
-                          <p class="points">Points remaining: 10</p>
+                          <p class="points">Points remaining: {{draft.point_budget}}</p>
                           <div class="current-selections">
                             Current Selections:
                           </div>
@@ -30,14 +33,14 @@
                           </div>
                         </div>
                       </div>
-                      
+                      {{/each}}
                       <!-- More user cards can be added here -->
                     </div>
                     <div class="card main-card">
                       <div class="card-main-body">
                         <!--username updated based on username -->
                         <div id="currentUserId">
-                          <h5 class="username">MainUser</h5>
+                          <h5 class="username">{{mainUser}}</h5>
                           <!--Points remaining will be updated based on how many points left-->
                           <p class="points">Points remaining: 10</p>
                           <div class="current-selections">

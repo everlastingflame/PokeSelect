@@ -151,8 +151,14 @@ router.post("/decline", async(req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
+        let draftObj = await getDraft(req.params.id);
         req.session.user.inDraft = true;
-        res.render("draftPhase", {layout: "main"});
+        let mainUser = req.session.user.id; 
+        draftObj.user_ids = draftObj.user_ids.filter((userId) => userId.equal(mainUser));
+        mainUser = req.session.user.username;
+        let users = draftObj.user_ids.forEach((id) => dbData.users.getUserById(id));
+        users.map((e) => e.id = e._id.toString());
+        res.render("draftPhase", {layout: "draftLayout", draft: draftObj, mainUser: mainUser, users: users});
     } catch (e) {
         res.status(500).render("draftBoard", {layout: 'userProfiles', error: e});
     }
