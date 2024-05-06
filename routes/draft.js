@@ -110,7 +110,7 @@ router.get("/:id/settings", async (req, res) => {
             if(pokemon.isBanned) {
                 bannedPokemon.push(pokemon.name);
             }
-            if(draft.gen_num === 9 && pokemon.isTeraBanned) {
+            if(draft.gen_num === 9 && typeof pokemon.isTeraBanned === "boolean" && pokemon.isTeraBanned) {
                 teraBanned.push(pokemon.name);
             }
         }
@@ -131,9 +131,9 @@ router.get("/:id/settings", async (req, res) => {
 router.post("/accept", async (req, res) => {
     let body = req.body;
     try {
-        body.draftId = data_validation.validateId(body.draftId);
+        body.draftId = data_validation.validateId(xss(body.draftId));
         await checkInviteForUser(body.draftId, req.session.user.id, true)
-        res.redirect(`/${body.draftId}`);
+        res.redirect(`/draft/${body.draftId}`);
     } catch (e) {
         res.status(500).redirect(`/user/${req.session.user.username}`);
     }
@@ -142,9 +142,9 @@ router.post("/accept", async (req, res) => {
 router.post("/decline", async(req, res) => {
     let body = req.body;
     try {
-        body.draftId = data_validation.validateId(body.draftId);
+        body.draftId = data_validation.validateId(xss(body.draftId));
         await checkInviteForUser(body.draftId, req.session.user.id, false)
-        res.redirect(`/${body.draftId}`);
+        res.redirect(`/user`);
     } catch (e) {
         res.status(500).redirect(`/user/${req.session.user.username}`);
     }
