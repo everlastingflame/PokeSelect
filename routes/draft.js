@@ -234,8 +234,10 @@ router
         req.session.user.inDraft = true;
         let mainUser = req.session.user.id;
         draftObj.user_ids = draftObj.user_ids.filter((userId) => !userId.equals(mainUser));
-        mainUser = req.session.user.username;
-        let users = draftObj.user_ids.forEach(async (id) => await dbData.users.getUserById(id));
+        let mainUsername = req.session.user.username;
+        let users = draftObj.user_ids
+        users.forEach(async (id) => await dbData.users.getUserById(id));
+        users.forEach((e) => e.id = e._id.toString());
         let pokeObject = [];
         let pokemonList = draftObj.pkmn_list
 
@@ -252,7 +254,7 @@ router
         });
       }  
 
-        res.render("draftPhase", {layout: "draftLayout", draft: draftObj, mainUser: mainUser, users: users, pokeObject: pokeObject});
+        res.render("draftPhase", {layout: "draftLayout", draft: draftObj, main_id: mainUser, main_name: mainUsername, users: users, pokeObject: pokeObject});
     } catch (e) {
       res
         .status(500)

@@ -15,9 +15,9 @@ function initWebsockets(app) {
     ws.on("message", async function (msg) {
       msg = JSON.parse(msg);
       if (msg.type === "update") {
-        let user_id = req.session.user ? req.session.user.id : "no id";
         let draft = await getDraft(draft_id);
 
+        let user_id = req.session.user.id;
         let pick_index = draft.pick_number % draft.team_ids.length;
         let next_pick = draft.user_ids[pick_index].toString();
         if (user_id !== next_pick) {
@@ -32,9 +32,11 @@ function initWebsockets(app) {
         }
         // Push update info to all connected clients in the draft
         draft = await getDraft(draft_id);
+        let next_user = await dbData.users.getUserById(draft.user_ids[(pick_index+1) % draft.team_ids.length]);
         let team = await dbData.team.getTeam(team_id);
         pushUpdates(draft_id, {
           user: user_id,
+          next_user: next_user.username,
           team: team_id,
           name: msg.name,
           points_left: team.points_remaining,

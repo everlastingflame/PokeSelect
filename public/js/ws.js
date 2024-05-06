@@ -33,6 +33,13 @@ function parseMsg(msg) {
     let points = msg.state.points_left;
     let pick = msg.state.pick_no;
 
+    let next_username = msg.state.next_user;
+
+
+    let div = $(`#${user_id}`);
+    let point_tag = div.children('.points');
+    point_tag[0].innerText = `Points Remaining: ${points}`;
+
   } else {
     console.log(`Unknown message type ${msg.type}.`);
   }
