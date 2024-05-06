@@ -1,64 +1,53 @@
-<div class="blurred-background"></div>
-<div class="container">
-  <div class="card card-main-content">
-    <div class="card-body">
-      <div class="card card-drafts">
+{{!< draftLayout}}
+
+<body>
+    <div class="blurred-background"></div>
+    <div class="container">
+      <div class="card card-main-content">
         <div class="card-body">
-          <div id="DraftText" class="card-text">
-            <div class="col">
-              <div class="card-body card-body-scroll">
-                <div class="scrollable-card-container">
-                  <!-- Dynamic insertion of user cards -->
-                  <!-- Example otherUserCard1 -->
-                  <div id="userId" class="card user-card">
-                    <div class="card-body">
-                      <!--username updated based on username -->
-                      <h5 class="username">OtherUser1</h5>
-                      <!--Points remaining will be updated based on how many points left-->
-                      <p class="points">Points remaining: 10</p>
-                      <div class="current-selections">
-                        Current Selections:
-                      </div>
-                      <div class="pokemon-selections-grid">
-                        <!--pokemon slots, will be changed based on how many choices are allowed-->
-                        <div class="pokemon-slot">
-                          <!--pokemon image-->
-                        </div>
+          <div class="card card-drafts">
+            <div class="card-body">
+              <div id="DraftText" class="card-text">
+                <div class="col">
+                  <div class="card-body card-body-scroll">
+                    <div class="scrollable-card-container">
+                      <!-- Dynamic insertion of user cards -->
+                      <!-- Example otherUserCard1 -->
+                      {{#each user}}
+                      <div id="{{user.id}}" class="card user-card">
+                        <div id={{userDraftId}} class="card-body">
+                          <!--username updated based on username -->
+                          <h5 class="username">{{user.username}}</h5>
+                          <!--Points remaining will be updated based on how many points left-->
+                          <p class="points">Points remaining: {{draftId.point_budget}}</p>
+                          <div class="current-selections">
+                            Current Selections: {{draftId.selections}}
+                          </div>
+                          <div class="pokemon-selections-grid">
+                            <!--pokemon slots, will be changed based on how many choices are allowed-->
+                            {{#each draftId.selection}}
+                            <div class="pokemon-slot">
+                                <!--pokemon image-->
+                            </div>
+                            {{/each}}
 
                         <!-- Additional slots -->
                       </div>
-                    </div>
-                  </div>
-
-                  <!-- More user cards can be added here -->
-                </div>
-                <div class="card main-card">
-                  <div class="card-main-body">
-                    <!--username updated based on username -->
-                    <div id="currentUserId">
-                      <h5 class="username">MainUser</h5>
-                      <!--Points remaining will be updated based on how many points left-->
-                      <p class="points">Points remaining: 10</p>
-                      <div class="current-selections">
-                        Current Selections:
+                      <div class="card-footer">
+                          <p>Currently {{userId}} turn</p>
                       </div>
-                      <div class="pokemon-selections-grid">
-                        <!--pokemon slots, will be changed based on how many choices are allowed-->
-                        <div class="pokemon-slot"></div>
-                        <!-- Additional slots -->
-                      </div>
+                      {{/each}}
+                      <!-- More user cards can be added here -->
                     </div>
-
-                    <div class="card-footer">
-                      <p>Currently User's turn</p>
-                    </div>
-                    <div class="card pokemon-list-card">
-                      <div class="card-body" style="width: 100%">
-                        <h5 class="card-title">Choices</h5>
-                        <!-- Dynamically filled Pokémon slots will go here -->
-                        <div id="pokemonName" class="row">
-                          <div class="col">
-                            <!--pokemon image-->
+                    <div class="card main-card">
+                      <div class="card-main-body">
+                        <!--username updated based on username -->
+                        <div id="currentUserId">
+                          <h5 class="username">{{mainUser}}</h5>
+                          <!--Points remaining will be updated based on how many points left-->
+                          <p class="points">Points remaining: {{draft}}</p>
+                          <div class="current-selections">
+                            Current Selections:
                           </div>
                           <div class="col">
                             <p>Points</p>
@@ -68,6 +57,37 @@
                           </div>
                         </div>
                       </div>
+                        <div class="card pokemon-list-card">
+                          <div class="card-body" style="width: 100">
+                            <h5 class="card-title">Choices</h5>
+                              <!-- Dynamically filled Pokémon slots will go here -->
+                            <form id="draftChoice">
+                              {{#each pokeObject}}
+                              <div id="{{this.name}}" class="row"> 
+                                <div class="col popup-tooltip">
+                                  <img src="{{this.image}}" alt="{{this.name}}"/>
+                                  <span class="popup-tooltiptext">
+                                    types:
+                                    {{#each this.types}}
+                                      {{this}}
+                                    {{/each}},
+                                    abilities:
+                                    {{#each this.abilities}}
+                                    {{this}}
+                                    {{/each}}
+                                    hp: {{this.stats.hp}}, atk: {{this.stats.attack}}, def: {{this.stats.defense}}, sp-atk: {{this.stats.special-attack}}, sp-def: {{this.stats.special-defense}}, speed: {{this.stats.speed}}</span>
+                                </div>
+                                <div class="col">
+                                  <p class="points">{{this.pointVal}}</p>
+                                </div>
+                                  <div class="col">
+                                    <button name="choice"type="submit" value="{{this.name}}" class="btn btn-primary">Select {{this.name}}</button>
+                                  </div>
+                              </div>
+                              {{/each}}
+                              </form>
+                            </div>
+                        </div>
                     </div>
                     <div id="error_container" class="d-none alert alert-danger" role="alert">
                       <!--error-->

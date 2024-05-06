@@ -25,7 +25,7 @@ function initWebsockets(app) {
         
         let team_id = draft.team_ids[draft.pick_number];
         try {
-          await draftPokemonToTeam(user_id, team_id, msg.name, draft.pkmn_list, draft_id);
+          await draftPokemonToTeam(user_id, team_id, msg.name, draft_id);
         } catch (e) {
           console.log(e)
           return sendError(ws, e);
