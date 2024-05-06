@@ -197,7 +197,7 @@ router
     let draft_id = req.params.id;
     try {
       await deleteDraft(draft_id);
-      res.redirect(`/usr/${req.session.user.username}`);
+      res.redirect(`/user/${req.session.user.username}`);
     } catch (e) {
       res
         .status(500)

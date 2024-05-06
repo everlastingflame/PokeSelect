@@ -18,12 +18,12 @@ function initWebsockets(app) {
         let user_id = req.session.user ? req.session.user.id : "no id";
         let draft = await getDraft(draft_id);
 
-        let pick_index = draft.pick_number % draft.team_ids.length
+        let pick_index = draft.pick_number % draft.team_ids.length;
         let next_pick = draft.user_ids[pick_index].toString();
         if (user_id !== next_pick) {
           return sendError(ws, "It is not your turn to pick!");
         }
-        
+
         let team_id = draft.team_ids[draft.pick_number % draft.team_ids.length];
         try {
           await draftPokemonToTeam(user_id, team_id, msg.name, draft_id);
@@ -32,7 +32,15 @@ function initWebsockets(app) {
         }
         // Push update info to all connected clients in the draft
         draft = await getDraft(draft_id);
-        pushUpdates(draft_id, draft);
+        let team = await dbData.team.getTeam(team_id);
+        pushUpdates(draft_id, {
+          user: user_id,
+          team: team_id,
+          name: msg.name,
+          points_left: team.points_remaining,
+          pick_no: draft.pick_number,
+          // TODO: round number from draft object
+        });
       } else {
         console.error(`Unimplemented message type: ${msg.type}`);
       }
@@ -52,7 +60,7 @@ function sendError(ws, error_msg) {
 
 function pushUpdates(draft_id, data) {
   for (const ws of draft_groups[draft_id]) {
-    ws.send(JSON.stringify({type: "newState", state: data}));
+    ws.send(JSON.stringify({ type: "newState", state: data }));
   }
 }
 

@@ -137,7 +137,7 @@ const editPokemonList = async (
   }
 
   let draftCollection = await drafts();
-  await draftCollection.updateOne(
+  let _updateInfo = await draftCollection.updateOne(
     { _id: draft_id },
     [{
       $set: {
@@ -161,8 +161,9 @@ const editPokemonList = async (
   //   { _id: draft_id },
   //   { $pull: { pkmn_list: { point_val: -1 } } }
   // );
+  let draft = await getDraft(draft_id);
 
-  return pkmn_list;
+  return await draft.pkmn_list;
 };
 
 const editPokemonValue = async (pkmn_list, pokemon, value) => {
@@ -316,11 +317,17 @@ async function deleteDraft(draft_id) {
   draft_id = validation.validateId(draft_id, "Draft ID");
 
   let draftCollection = await drafts();
+  let draft = getDraft(draft_id);
   const deletionInfo = await draftCollection.deleteOne({_id: draft_id});
 
   if (!deletionInfo) {
     throw `Error: Cound not delete draft with id of ${draft_id}`;
   }
+
+  for (const user of draft.user_ids) {
+    // Remove team for this draft from each user
+  }
+
 }
 
 export {

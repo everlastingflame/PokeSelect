@@ -2,20 +2,20 @@ const ws = new WebSocket(
   "ws://" + window.location.host + window.location.pathname + "/ws"
 );
 
-ws.addEventListener("open", () => {
-  sendUpdate(
-    JSON.stringify({
-      type: "update",
-      name: "blastoise",
-      points: 57,
-    })
-  );
-});
+// ws.addEventListener("open", () => {
+//   sendUpdate(
+//     JSON.stringify({
+//       type: "update",
+//       name: "blastoise",
+//       points: 57,
+//     })
+//   );
+// });
 
 ws.onmessage = parseMsg;
 
 function sendUpdate(selection) {
-  ws.send(selection);
+  ws.send(JSON.stringify(selection));
 }
 
 function parseMsg(msg) {
@@ -32,3 +32,17 @@ function parseMsg(msg) {
     console.log(`Unknown message type ${msg.type}.`);
   }
 }
+
+(function() {
+  let form = document.getElementById('draftChoice');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    let name = event.submitter.value;
+    sendUpdate({type: "update", name: name});
+  });
+
+  // $("#draftChoice").on('submit', function (event) {
+  //   event.preventDefault();
+  //   console.log(event.submitter.value);
+  // })
+})()
