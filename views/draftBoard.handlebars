@@ -1,6 +1,9 @@
 <div class="blurred-background"></div>
 <div class="container">
 
+  {{#if error}}
+  <div id="server-error" class="alert alert-danger" role="alert">{{error}}</div>
+  {{/if}}
   <div id="error_container" class="d-none alert alert-danger" role="alert"></div>
 
   <div class="card card-main-content" style="width: 828px;">
@@ -44,9 +47,9 @@
               </div>
             </div>
             <button class="btn draftButtons" type="submit">Submit</button>
-            <form id="draftCancel" action="#" method="DELETE">
-              <button class="btn draftButtons">Cancel draft</button>
-            </form>
+          </form>
+          <form id="draftCancel" action="#">
+            <button class="btn draftButtons">Cancel draft </button>
           </form>
 
         </div>
@@ -57,4 +60,3 @@
 </div>
 
 <script src="/public/js/draftBoard.js"></script>
-</body>

@@ -29,9 +29,7 @@
                                 <!--pokemon image-->
                             </div>
 
-                            <!-- Additional slots -->
-                          </div>
-                        </div>
+                        <!-- Additional slots -->
                       </div>
                       {{/each}}
                       <!-- More user cards can be added here -->
@@ -46,37 +44,17 @@
                           <div class="current-selections">
                             Current Selections:
                           </div>
-                          <div class="pokemon-selections-grid">
-                            <!--pokemon slots, will be changed based on how many choices are allowed-->
-                            <div class="pokemon-slot"></div>
-                            <!-- Additional slots -->
+                          <div class="col">
+                            <p>Points</p>
+                          </div>
+                          <div class="col">
+                            <button type="button" class="btn btn-primary">Select Pokemon</button>
                           </div>
                         </div>
-                        
-                        <div class="card-footer">
-                          <p>Currently User's turn</p>
-                        </div>
-                        <div class="card pokemon-list-card">
-                          <div class="card-body" style="width: 100">
-                            <h5 class="card-title">Choices</h5>
-                              <!-- Dynamically filled Pokémon slots will go here -->
-                              <div id="pokemonName" class="row"> 
-                                <div class="col">
-                                    <!--pokemon image-->
-                                </div>
-                                <div class="col">
-                                  <p>Points</p>
-                                </div>
-                                  <div class="col">
-                                    <button type="button" class="btn btn-primary">Select Pokemon</button>
-                                  </div>
-                              </div>
-                            </div>
-                        </div>
-                        <div id="error_container"class="d-none alert alert-danger" role="alert">
-                          <!--error-->
-                        </div>
                       </div>
+                    </div>
+                    <div id="error_container" class="d-none alert alert-danger" role="alert">
+                      <!--error-->
                     </div>
                   </div>
                 </div>
@@ -86,5 +64,7 @@
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
 
+<script src="/public/js/ws.js"></script>
