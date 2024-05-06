@@ -197,7 +197,7 @@ router
     let draft_id = req.params.id;
     try {
       await deleteDraft(draft_id);
-      res.redirect(`/user/${req.session.user.username}`);
+      res.redirect(`/user/`);
     } catch (e) {
       res
         .status(500)
@@ -239,15 +239,19 @@ router.get("/:id/lobby", async (req, res) => {
 router
   .get("/:id", async (req, res) => {
     try {
-        let draftObj = await getDraft(req.params.id);
-        let mainUser = req.session.user.id;
-        draftObj.user_ids = draftObj.user_ids.filter((userId) => !userId.equals(mainUser));
-        mainUser = req.session.user.username;
-        let users = draftObj.user_ids.forEach(async (id) => await dbData.users.getUserById(id));
-        let pokeObject = [];
-        let pokemonList = draftObj.pkmn_list
+      let draftObj = await getDraft(req.params.id);
+      req.session.user.inDraft = true;
+      let mainUser = req.session.user.id;
+      draftObj.user_ids = draftObj.user_ids.filter(
+        (userId) => !userId.equals(mainUser)
+      );
+      let mainUsername = req.session.user.username;
+      let users = draftObj.user_ids;
+      users.forEach(async (id) => await dbData.users.getUserById(id));
+      users.forEach((e) => (e.id = e._id.toString()));
+      let pokeObject = [];
+      let pokemonList = draftObj.pkmn_list;
 
-        
       for (const pokemon of pokemonList) {
         let image = await pokemonApi.getPokemon(pokemon.name);
         pokeObject.push({
@@ -256,11 +260,18 @@ router
           pointVal: pokemon.point_val,
           stats: pokemon.stats,
           types: pokemon.types,
-          abilities: pokemon.abilities
+          abilities: pokemon.abilities,
         });
-      }  
+      }
 
-        res.render("draftPhase", {layout: "draftLayout", draft: draftObj, mainUser: mainUser, users: users, pokeObject: pokeObject});
+      res.render("draftPhase", {
+        layout: "draftLayout",
+        draft: draftObj,
+        main_id: mainUser,
+        main_name: mainUsername,
+        users: users,
+        pokeObject: pokeObject,
+      });
     } catch (e) {
       res
         .status(500)
