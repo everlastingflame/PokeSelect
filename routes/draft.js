@@ -197,7 +197,7 @@ router
     let draft_id = req.params.id;
     try {
       await deleteDraft(draft_id);
-      res.redirect(`/usr/${req.session.user.username}`);
+      res.redirect(`/user/${req.session.user.username}`);
     } catch (e) {
       res
         .status(500)
@@ -227,11 +227,19 @@ router.post("/decline", async (req, res) => {
   }
 });
 
+router.get("/:id/lobby", async (req, res) => {
+    try {
+        req.session.user.inDraft = true;
+        res.render("draftLobby", { layout: "userProfiles", action: `/${req.params.id}/settings`});
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+})
+
 router
   .get("/:id", async (req, res) => {
     try {
         let draftObj = await getDraft(req.params.id);
-        req.session.user.inDraft = true;
         let mainUser = req.session.user.id;
         draftObj.user_ids = draftObj.user_ids.filter((userId) => !userId.equals(mainUser));
         mainUser = req.session.user.username;
