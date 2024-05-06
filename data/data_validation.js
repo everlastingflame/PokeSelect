@@ -81,7 +81,7 @@ function validatePassword(password, name = "password") {
     password = password.trim();
 
     try{
-        checkString(password);
+        validateString(password);
     }
     catch(e){
         throw(`Password ${e}`);
