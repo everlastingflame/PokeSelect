@@ -250,6 +250,7 @@ router
   .get("/:id", async (req, res) => {
     try {
       let draftObj = await getDraft(req.params.id);
+      let next_id = draftObj.user_ids[0];
       req.session.user.inDraft = req.params.id;
       let mainUser = req.session.user.id;
       draftObj.user_ids = draftObj.user_ids.filter(
@@ -281,12 +282,14 @@ router
         let tournament = await tournamentCollection.findOne({ draft_id: req.params.id});
         res.redirect(`/tournament/${tournament._id}`);
       } else {
+        let next_user = await dbData.users.getUserById(next_id);
         res.render("draftPhase", {
             layout: "draftLayout",
             draft: draftObj,
             main_id: mainUser,
             main_name: mainUsername,
             users: users,
+            next_user: next_user,
             pokeObject: pokeObject,
             team_size: [...Array(draftObj.team_size).keys()],
         });
