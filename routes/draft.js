@@ -247,7 +247,7 @@ router
       );
       let mainUsername = req.session.user.username;
       let users = draftObj.user_ids;
-      users.forEach(async (id) => await dbData.users.getUserById(id));
+      users = await Promise.all(users.map(async (id) => await dbData.users.getUserById(id)));
       users.forEach((e) => (e.id = e._id.toString()));
       let pokeObject = [];
       let pokemonList = draftObj.pkmn_list;
@@ -256,6 +256,7 @@ router
         let image = await pokemonApi.getPokemon(pokemon.name);
         pokeObject.push({
           name: pokemon.name,
+          is_drafted: pokemon.is_drafted,
           image: image.sprites.front_default,
           pointVal: pokemon.point_val,
           stats: pokemon.stats,
@@ -271,6 +272,7 @@ router
         main_name: mainUsername,
         users: users,
         pokeObject: pokeObject,
+        team_size: [...Array(draftObj.team_size).keys()],
       });
     } catch (e) {
       res
