@@ -142,8 +142,6 @@ router
     try {
       const user = await dbData.users.loginUser(xss(username), xss(password));
       req.session.user = user;
-
-      req.session.user.inDraft = false;
       // console.log(req.session.user);
 
       res.redirect("/user/" + user.username);
