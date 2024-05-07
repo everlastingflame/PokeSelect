@@ -246,7 +246,7 @@ router
   .get("/:id", async (req, res) => {
     try {
       let draftObj = await getDraft(req.params.id);
-      req.session.user.inDraft = true;
+      req.session.user.inDraft = req.params.id;
       let mainUser = req.session.user.id;
       draftObj.user_ids = draftObj.user_ids.filter(
         (userId) => !userId.equals(mainUser)
