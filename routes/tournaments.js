@@ -30,7 +30,7 @@ router
         }
         schedule.push(matchup);
       }
-      res.render("tournamentResults", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
+      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
     } catch (e) {
       res.status(500).render("userError", {layout: "userProfiles", title: "Error"})
     }
