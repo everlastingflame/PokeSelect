@@ -12,7 +12,9 @@ import {
 } from "../data/draft.js";
 import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
-import { drafts } from "../config/mongoCollections.js";
+import { drafts, tournaments } from "../config/mongoCollections.js";
+import tournament from "../data/tournaments.js";
+
 
 const router = express.Router();
 
@@ -193,7 +195,9 @@ router
         .render("draftBoard", { layout: "userProfiles", error: e });
     }
   })
-  .delete("/:id/settings", async (req, res) => {
+
+
+router.post("/:id/delete", async (req, res) => {
     let draft_id = req.params.id;
     try {
       await deleteDraft(draft_id);
@@ -203,7 +207,7 @@ router
         .status(500)
         .render("draftBoard", { layout: "userProfiles", error: e });
     }
-  });
+});
 
 router.post("/accept", async (req, res) => {
   let body = req.body;
@@ -229,11 +233,13 @@ router.post("/decline", async (req, res) => {
 
 router.get("/:id/lobby", async (req, res) => {
     try {
-        req.session.user.inDraft = true;
         res.render("draftLobby", { layout: "userProfiles", action: `/${req.params.id}/settings`});
     } catch (e) {
         res.status(500).send(e.message);
     }
+}).post("/:id/lobby", async (req, res) => {
+    await tournament.createNewTournament(req.params.id);
+    res.redirect(`/${req.params.id}`);
 })
 
 router
@@ -265,29 +271,27 @@ router
         });
       }
 
-      res.render("draftPhase", {
-        layout: "draftLayout",
-        draft: draftObj,
-        main_id: mainUser,
-        main_name: mainUsername,
-        users: users,
-        pokeObject: pokeObject,
-        team_size: [...Array(draftObj.team_size).keys()],
-      });
+      if(draftObj.pick_number >= (draftObj.team_size * draftObj.team_ids.length)) {
+        delete req.session.user.inDraft;
+        let tournamentCollection = await tournaments();
+        let tournament = await tournamentCollection.findOne({ draft_id: req.params.id});
+        res.redirect(`/tournament/${tournament._id}`);
+      } else {
+        res.render("draftPhase", {
+            layout: "draftLayout",
+            draft: draftObj,
+            main_id: mainUser,
+            main_name: mainUsername,
+            users: users,
+            pokeObject: pokeObject,
+            team_size: [...Array(draftObj.team_size).keys()],
+        });
+      };
     } catch (e) {
       res
         .status(500)
         .render("draftBoard", { layout: "userProfiles", error: e });
     }
   })
-  .post("/:id", async (req, res) => {
-    try {
-      res.redirect(`/draft/${req.params.id}/start`);
-    } catch (e) {
-      res
-        .status(500)
-        .render("draftBoard", { layout: "userProfiles", error: e });
-    }
-  });
 
 export default router;
