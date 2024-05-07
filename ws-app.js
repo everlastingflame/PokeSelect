@@ -42,10 +42,11 @@ function initWebsockets(app) {
           points_left: team.points_remaining,
           pick_no: draft.pick_number,
           // TODO: round number from draft object
+          slot_no: Math.ceil((draft.pick_number) / draft.team_ids.length),
           round_no: Math.ceil((draft.pick_number+1) / draft.team_ids.length),
         });
-        if(draftObj.pick_number >= (draftObj.team_size * draftObj.team_ids.length)) {
-          pushUpdates(draft_id, {}, type = "end");
+        if(draft.pick_number >= (draft.team_size * draft.team_ids.length)) {
+          pushUpdates(draft_id, {}, "end");
         }
       } else {
         console.error(`Unimplemented message type: ${msg.type}`);
