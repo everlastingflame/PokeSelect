@@ -73,7 +73,7 @@ const createNewDraft = async (
     team_size: team_size,
     point_budget: point_budget,
     tera_num_captains: tera_num_captains,
-    state: "settings"
+    state: "settings",
   };
 
   const draftCollection = await drafts();
@@ -106,7 +106,7 @@ const editPokemonList = async (
   banned_pkmn,
   tera_banned_pkmn
 ) => {
-  draft_id = validation.validateId(draft_id, "Draft ID")
+  draft_id = validation.validateId(draft_id, "Draft ID");
   // pkmn_list is list of all pokemon in gen, banned_pkmn can't be selected, tera_banned_pkmn can't be tera captain
   if (typeof pkmn_list !== "object" || !Array.isArray(pkmn_list))
     throw "No Pokemon list provided";
@@ -137,9 +137,8 @@ const editPokemonList = async (
   }
 
   let draftCollection = await drafts();
-  let _updateInfo = await draftCollection.updateOne(
-    { _id: draft_id },
-    [{
+  let _updateInfo = await draftCollection.updateOne({ _id: draft_id }, [
+    {
       $set: {
         state: "invite",
         pkmn_list: {
@@ -155,8 +154,8 @@ const editPokemonList = async (
           },
         },
       },
-    }]
-  );
+    },
+  ]);
   // draftCollection.updateMany(
   //   { _id: draft_id },
   //   { $pull: { pkmn_list: { point_val: -1 } } }
@@ -219,7 +218,7 @@ const draftPokemonToTeam = async (
       await draftCollection.updateOne(
         { _id: draftId, "pkmn_list.name": draftedPokemon },
         {
-          $set: { pick_number: next_pick },
+          $inc: { pick_number: 1 },
           $set: { "pkmn_list.$.is_drafted": true },
         }
       );
@@ -278,7 +277,7 @@ const checkInviteForUser = async (draft_id, user_id, accept_invite) => {
 
     user = await userCollection.findOneAndUpdate(
       { _id: user_id },
-      { $push: { teams: newTeam }},
+      { $push: { teams: newTeam } },
       { returnNewDocument: true }
     );
 
@@ -319,7 +318,7 @@ async function deleteDraft(draft_id) {
 
   let draftCollection = await drafts();
   let draft = await getDraft(draft_id);
-  const deletionInfo = await draftCollection.deleteOne({_id: draft_id});
+  const deletionInfo = await draftCollection.deleteOne({ _id: draft_id });
 
   if (!deletionInfo) {
     throw `Error: Cound not delete draft with id of ${draft_id}`;
@@ -328,7 +327,6 @@ async function deleteDraft(draft_id) {
   for (const user of draft.user_ids) {
     // Remove team for this draft from each user
   }
-
 }
 
 export {
