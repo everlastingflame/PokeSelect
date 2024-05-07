@@ -1,0 +1,61 @@
+{{!< userProfiles}}
+    
+    <div class="blurred-background"></div>
+    <div class="container">
+      <div class="card card-main-content" style="width: 828px">
+        <div class="card-body">
+          <div class="row">
+            <div class="col text-center">
+              <h1>Matches</h1>
+            </div>
+          </div>
+          <div class="card card-drafts" style="width: 100%">
+          <form id="tourneyForm" action="#" method="POST">
+            <div class="card-body">
+            <!--Iterate over all matches-->
+            {{#each schedule}}
+              <div class = "matchId">
+                <div class="col text-center">
+                  <h4>Match 1 - Winner: {{schedule.matchup.winner}}</h4>
+                </div>
+                <div class = "card-team-content">
+                <div class = "team1">
+                  <div class = "row">
+                    <div class = "col">
+                      <h3>{{schedule.matchup.user1}}</h3>
+                    </div>
+                </div>
+                <div class = "team2">
+                  <div class = "row">
+                    <div class = "col">
+                      <h3>{{schedule.matchup.user2}}</h3>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            <!-- end matches here -->
+            {{/each}}
+
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary" onclick="window.location.href='/user'">Home
+              </button>
+            </div>
+              <div id="error_container" class="card-text" style="display: none">
+                {{#if error}}
+                <p id="serverError" class="alert alert-danger" role="alert">
+                {{error}}
+                </p>
+                {{/if}}
+                <div
+                  id="error_container"
+                  class="d-none alert alert-danger"
+                  role="alert"
+                ></div>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>  
+      </div>
+    </div>
