@@ -27,7 +27,6 @@ router
           user1: user1.username,
           user2: user2.username,
           winner: winnerUser
-          winner: winnerUser
         }
         schedule.push(matchup);
       }
