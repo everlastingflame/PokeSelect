@@ -45,7 +45,7 @@ const createNewTournament = async (draft_id) => {
     }
   
     const newId = insertInfo.insertedId.toString();
-    const tournament = await getTournament(draft_id);
+    const tournament = await getTournament(newId);
     return tournament;
 }
 

@@ -144,6 +144,15 @@ try {
     console.log(e);
 }
 
+let tournament1;
+
+try {
+    tournament1 = await tournament.createNewTournament(pokeMasterDraft._id);
+    console.log("Tournament created");
+} catch(e){
+    console.log(e);
+}
+
 try {
     let PMTeam = await team.getTeam(pokeMaster.teams[0]._id);
     let CGTeam = await team.getTeam(tom.teams[0]._id);
@@ -206,27 +215,19 @@ try {
     console.log(e);
 }
 
-let tournament1;
 
 try {
-    tournament1 = await tournament.createNewTournament(pokeMasterDraft._id);
-    console.log("Tournament created");
-} catch(e){
-    console.log(e);
-}
-
-try {
-    tournament1 = await tournament.getTournament(tournament1.draft_id.toString());
-    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[0], 1);
+    tournament1 = await tournament.getTournament(tournament1._id.toString());
+    await team.reportMatch(tournament1._id.toString(), tournament1.schedule[0], 1);
     console.log("Tournament match reported");
 
-    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[1], 2);
+    await team.reportMatch(tournament1._id.toString(), tournament1.schedule[1], 2);
     console.log("Tournament match reported");
 
-    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[2], 2);
+    await team.reportMatch(tournament1._id.toString(), tournament1.schedule[2], 2);
     console.log("Tournament match reported");
 
-    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[3], 1);
+    await team.reportMatch(tournament1._id.toString(), tournament1.schedule[3], 1);
     console.log("Tournament match reported");
 } catch(e){
     console.log(e);
