@@ -51,6 +51,10 @@ function parseMsg(msg) {
     let output = img_tag.appendTo(slot);
     $(`#${name} > .pokemon-selections-grid > div.pokemon-slot:nth-child(${round-1})`).append($(`#${name} img:first`));
 
+    $('#next-username').text(next_username);
+    $('#pick-num').text(pick+1);
+    $('#round-num').text(round);
+
   } else {
     console.log(`Unknown message type ${msg.type}.`);
   }

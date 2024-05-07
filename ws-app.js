@@ -42,7 +42,7 @@ function initWebsockets(app) {
           points_left: team.points_remaining,
           pick_no: draft.pick_number,
           // TODO: round number from draft object
-          round_no: Math.ceil(draft.pick_number / draft.team_ids.length),
+          round_no: Math.ceil((draft.pick_number+1) / draft.team_ids.length),
         });
       } else {
         console.error(`Unimplemented message type: ${msg.type}`);
