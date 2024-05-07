@@ -20,13 +20,13 @@ router
         let winnerUser = "";
         if(typeof match.winner === "number") {
           if(match.winner === 0) winnerUser = "TBD";
-          if(match.winner === 0) winnerUser = `${user1}`;
-          if(match.winner === 0) winnerUser = `${user2}`;
+          if(match.winner === 1) winnerUser = `${user1.username}`;
+          if(match.winner === 2) winnerUser = `${user2.username}`;
         }
         let matchup = {
           user1: user1.username,
           user2: user2.username,
-          winner: match.winner
+          winner: winnerUser
         }
         schedule.push(matchup);
       }
