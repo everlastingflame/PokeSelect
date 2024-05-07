@@ -55,6 +55,8 @@ function parseMsg(msg) {
     $('#pick-num').text(pick+1);
     $('#round-num').text(round);
 
+  } else if (msg.type === "end") {
+    location.reload();
   } else {
     console.log(`Unknown message type ${msg.type}.`);
   }

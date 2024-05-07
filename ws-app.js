@@ -44,6 +44,9 @@ function initWebsockets(app) {
           // TODO: round number from draft object
           round_no: Math.ceil((draft.pick_number+1) / draft.team_ids.length),
         });
+        if(draftObj.pick_number >= (draftObj.team_size * draftObj.team_ids.length)) {
+          pushUpdates(draft_id, {}, type = "end");
+        }
       } else {
         console.error(`Unimplemented message type: ${msg.type}`);
       }
@@ -61,9 +64,9 @@ function sendError(ws, error_msg) {
   return ws.send(JSON.stringify({ type: "error", data: error_msg }));
 }
 
-function pushUpdates(draft_id, data) {
+function pushUpdates(draft_id, data, type = "newState") {
   for (const ws of draft_groups[draft_id]) {
-    ws.send(JSON.stringify({ type: "newState", state: data }));
+    ws.send(JSON.stringify({ type: type, state: data }));
   }
 }
 
