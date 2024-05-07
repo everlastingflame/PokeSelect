@@ -17,7 +17,7 @@
         {{#each match}}
           <div class = "matchId">
             <div class="col text-center">
-              <h4>Match 1</h4>
+              <h4>Match</h4>
             </div>
             <div class = "card-team-content">
             <div class = "team1">
@@ -29,6 +29,10 @@
                   <input type="checkbox" id="{{this.Match}}-winnerCheckbox1" name="{{this.Match}}-winnerCheckbox1">
                   <label for="{{this.Match}}-winnerCheckbox1">Winner</label>
                 </div>
+                 <div class="col">
+                  <input type="checkbox" id="{{this.Match}}-loserCheckbox1" name="{{this.Match}}-loserCheckbox1">
+                  <label for="{{this.Match}}-loserCheckbox1">Loser</label>
+                </div>
               </div>
             </div>
             <div class = "team2">
@@ -39,6 +43,10 @@
                 <div class="col">
                   <input type="checkbox" id="{{this.Match}}-winnerCheckbox2" name="{{this.Match}}-winnerCheckbox2">
                   <label for="{{this.Match}}-winnerCheckbox2">Winner</label>
+                </div>
+                <div class="col">
+                  <input type="checkbox" id="{{this.Match}}-loserCheckbox2" name="{{this.Match}}-loserCheckbox2">
+                  <label for="{{this.Match}}-loserCheckbox2">Loser</label>
                 </div>
               </div>
             </div> 
