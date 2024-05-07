@@ -3,6 +3,7 @@ import express from "express";
 import xss from "xss";
 import tournaments from "../data/tournaments.js";
 import users from "../data/users.js";
+import teams from "../data/team.js";
 
 const router = express.Router();
 
@@ -12,17 +13,19 @@ router
       let tournamentObj = await tournaments.getTournament(req.params.id);
       let schedule = []
       for (let match of tournamentObj.schedule) {
-        let team1 = await users.getUserById(match.team_1);
-        let team2 = await users.getUserById(match.team_2);
+        let team1 = await teams.getTeam(match.team_1);
+        let user1 = await users.getUserById(team1.user_id.toString());
+        let team2 = await teams.getTeam(match.team_2);
+        let user2 = await users.getUserById(team2.user_id.toString());
         let winnerUser = "";
         if(typeof match.winner === "number") {
           if(match.winner === 0) winnerUser = "TBD";
-          if(match.winner === 0) winnerUser = `${team1}`;
-          if(match.winner === 0) winnerUser = `${team2}`;
+          if(match.winner === 0) winnerUser = `${user1}`;
+          if(match.winner === 0) winnerUser = `${user2}`;
         }
         let matchup = {
-          user1: team1.username,
-          user2: team2.username,
+          user1: user1.username,
+          user2: user2.username,
           winner: match.winner
         }
         schedule.push(matchup);
