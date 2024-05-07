@@ -32,6 +32,7 @@ function parseMsg(msg) {
     let name = msg.state.name;
     let points = msg.state.points_left;
     let pick = msg.state.pick_no;
+    let slot_no = msg.state.slot_no;
     let round = msg.state.round_no;
 
     let next_username = msg.state.next_user;
@@ -47,9 +48,9 @@ function parseMsg(msg) {
 
     let slots = $(`#${user_id} > .pokemon-selections-grid`);
     slots = $(`#${user_id} > .pokemon-selections-grid > div.pokemon-slot`);
-    let slot = $(`#${user_id} .pokemon-selections-grid > div.pokemon-slot:nth-child(${round})`);
+    let slot = $(`#${user_id} .pokemon-selections-grid > div.pokemon-slot:nth-child(${slot_no})`);
     let output = img_tag.appendTo(slot);
-    $(`#${name} > .pokemon-selections-grid > div.pokemon-slot:nth-child(${round-1})`).append($(`#${name} img:first`));
+    $(`#${name} > .pokemon-selections-grid > div.pokemon-slot:nth-child(${slot_no})`).append($(`#${name} img:first`));
 
     $('#next-username').text(next_username);
     $('#pick-num').text(pick+1);
