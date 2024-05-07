@@ -16,19 +16,19 @@
             {{#each schedule}}
               <div class = "matchId">
                 <div class="col text-center">
-                  <h4>Match 1 - Winner: {{schedule.matchup.winner}}</h4>
+                  <h4>Match 1 - Winner: {{winner}}</h4>
                 </div>
                 <div class = "card-team-content">
                 <div class = "team1">
                   <div class = "row">
                     <div class = "col">
-                      <h3>{{schedule.matchup.user1}}</h3>
+                      <h3>{{user1}}</h3>
                     </div>
                 </div>
                 <div class = "team2">
                   <div class = "row">
                     <div class = "col">
-                      <h3>{{schedule.matchup.user2}}</h3>
+                      <h3>{{user2}}</h3>
                     </div>
                   </div>
                 </div> 
@@ -47,11 +47,6 @@
                 {{error}}
                 </p>
                 {{/if}}
-                <div
-                  id="error_container"
-                  class="d-none alert alert-danger"
-                  role="alert"
-                ></div>
               </div>
             </div>
           </form>

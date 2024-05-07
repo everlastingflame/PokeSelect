@@ -20,18 +20,18 @@ router
         let winnerUser = "";
         if(typeof match.winner === "number") {
           if(match.winner === 0) winnerUser = "TBD";
-          if(match.winner === 0) winnerUser = `${user1}`;
-          if(match.winner === 0) winnerUser = `${user2}`;
+          if(match.winner === 1) winnerUser = `${user1.username}`;
+          if(match.winner === 2) winnerUser = `${user2.username}`;
         }
         let matchup = {
           user1: user1.username,
           user2: user2.username,
-          winner: match.winner
+          winner: winnerUser
         }
         schedule.push(matchup);
       }
 
-      res.render("tournamentDisplay", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
+      res.render("tournamentResults", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
     } catch (e) {
       res.status(500).render("userError", {layout: "userProfiles", title: "Error"})
     }

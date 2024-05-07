@@ -214,7 +214,7 @@ router.post("/accept", async (req, res) => {
   try {
     body.draftId = data_validation.validateId(body.draftId);
     await checkInviteForUser(body.draftId, req.session.user.id, true);
-    res.redirect(`/draft/${body.draftId}`);
+    res.redirect(`/draft/${body.draftId}/lobby`);
   } catch (e) {
     res.status(500).redirect(`/user/${req.session.user.username}`);
   }
