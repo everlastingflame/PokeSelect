@@ -54,10 +54,10 @@ const getTournament = async (tournamentId) => {
 
     const tournamentCollection = await tournaments();
     const tournament = await tournamentCollection.findOne({
-        draft_id: tournamentId,
+        _id: tournamentId,
     });
     if (tournament === null) {
-        throw `Error: No draft with id of ${tournamentId}`;
+        throw `Error: No tournament with id of ${tournamentId}`;
     }
     return tournament;
 }

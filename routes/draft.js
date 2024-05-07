@@ -14,6 +14,7 @@ import pokemonApi from "../data/pokeapi.js";
 import xss from "xss";
 import { drafts, tournaments } from "../config/mongoCollections.js";
 import tournament from "../data/tournaments.js";
+import { ObjectId } from 'mongodb';
 
 
 const router = express.Router();
@@ -279,7 +280,7 @@ router
       if(draftObj.pick_number >= (draftObj.team_size * draftObj.team_ids.length)) {
         delete req.session.user.inDraft;
         let tournamentCollection = await tournaments();
-        let tournament = await tournamentCollection.findOne({ draft_id: req.params.id});
+        let tournament = await tournamentCollection.findOne({ draft_id: new ObjectId(req.params.id)});
         res.redirect(`/tournament/${tournament._id}`);
       } else {
         let next_user = await dbData.users.getUserById(next_id);
