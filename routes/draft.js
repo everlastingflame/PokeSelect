@@ -238,8 +238,12 @@ router.get("/:id/lobby", async (req, res) => {
         res.status(500).send(e.message);
     }
 }).post("/:id/lobby", async (req, res) => {
-    await tournament.createNewTournament(req.params.id);
-    res.redirect(`/${req.params.id}`);
+    try {
+        await tournament.createNewTournament(req.params.id);
+        res.redirect(`/draft/${req.params.id}`);
+    } catch (e) {
+        res.render("draftLobby", {layout: "userProfiles", error: e, action: `/${req.params.id}/settings`});
+    }
 })
 
 router

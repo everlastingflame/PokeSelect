@@ -14,6 +14,8 @@ const createNewTournament = async (draft_id) => {
 
     let matches = [];
 
+    if(numTeams < 2) throw "Must have at least 2 teams to start draft";
+
     for (let i = 0; i < numTeams; i++) {
         for (let j = 0; j < numTeams; j++) {
             if(i < j) {
@@ -43,7 +45,7 @@ const createNewTournament = async (draft_id) => {
     }
   
     const newId = insertInfo.insertedId.toString();
-    const tournament = await getTournament(newId);
+    const tournament = await getTournament(draft_id);
     return tournament;
 }
 
