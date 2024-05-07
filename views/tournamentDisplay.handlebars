@@ -14,7 +14,7 @@
         <div class="card-body">
         <!--Iterate over all matches-->
 
-        {{#each match}}
+        {{#each schedule}}
           <div class = "matchId">
             <div class="col text-center">
               <h4>Match</h4>
@@ -23,11 +23,11 @@
             <div class = "team1">
               <div class = "row">
                 <div class = "col">
-                  <h3>{{TeamName}}</h3>
+                  <h3>{{user1}}</h3>
                 </div>
                 <div class="col">
-                  <input type="checkbox" id="{{this.Match}}-winnerCheckbox1" name="{{this.Match}}-winnerCheckbox1">
-                  <label for="{{this.Match}}-winnerCheckbox1">Winner</label>
+                  <input type="checkbox" id="{{user1}}-winnerCheckbox1" name="{{user1}}-winnerCheckbox1">
+                  <label for="{{user1}}-winnerCheckbox1">Winner</label>
                 </div>
                  <div class="col">
                   <input type="checkbox" id="{{this.Match}}-loserCheckbox1" name="{{this.Match}}-loserCheckbox1">
@@ -38,11 +38,11 @@
             <div class = "team2">
               <div class = "row">
                 <div class = "col">
-                  <h3>{{TeamName}}</h3>
+                  <h3>{{user2}}</h3>
                 </div>
                 <div class="col">
-                  <input type="checkbox" id="{{this.Match}}-winnerCheckbox2" name="{{this.Match}}-winnerCheckbox2">
-                  <label for="{{this.Match}}-winnerCheckbox2">Winner</label>
+                  <input type="checkbox" id="{{user2}}-winnerCheckbox2" name="{{user2}}-winnerCheckbox2">
+                  <label for="{{user2}}-winnerCheckbox2">Winner</label>
                 </div>
                 <div class="col">
                   <input type="checkbox" id="{{this.Match}}-loserCheckbox2" name="{{this.Match}}-loserCheckbox2">
