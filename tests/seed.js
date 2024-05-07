@@ -216,17 +216,17 @@ try {
 }
 
 try {
-    tournament1 = await tournament.getTournament(tournament1._id);
-    await team.reportMatch(tournament1._id, tournament1.schedule[0], 1);
+    tournament1 = await tournament.getTournament(tournament1.draft_id.toString());
+    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[0], 1);
     console.log("Tournament match reported");
 
-    await team.reportMatch(tournament1._id, tournament1.schedule[1], 2);
+    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[1], 2);
     console.log("Tournament match reported");
 
-    await team.reportMatch(tournament1._id, tournament1.schedule[2], 2);
+    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[2], 2);
     console.log("Tournament match reported");
 
-    await team.reportMatch(tournament1._id, tournament1.schedule[3], 1);
+    await team.reportMatch(tournament1.draft_id.toString(), tournament1.schedule[3], 1);
     console.log("Tournament match reported");
 } catch(e){
     console.log(e);

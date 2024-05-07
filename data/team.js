@@ -73,13 +73,13 @@ const addPokemonToTeam = async (teamId, pokemonDrafted) => {
   return team;
 };
 
-const reportMatch = async (tournamentId, tournamentMatch, result) => {
-  tournamentId = validation.validateId(tournamentId, "tournamentId");
+const reportMatch = async (draftId, tournamentMatch, result) => {
+  draftId = validation.validateId(draftId, "draftId");
   if (typeof tournamentMatch !== "object")
     throw "Tournament match must be an object";
 
   // adds win to team if they won match, add loss otherwise
-  let tournament = await tournamentsData.getTournament(tournamentId);
+  let tournament = await tournamentsData.getTournament(draftId);
   if (tournament === null) throw "Tournament doesn't exist";
 
   // check that match is in tournament
@@ -89,8 +89,6 @@ const reportMatch = async (tournamentId, tournamentMatch, result) => {
       const tournamentCollection = await tournaments();
       const match = await tournamentCollection.findOneAndUpdate(
         {"schedule._id": tournamentMatch._id}, {$set: {"schedule.$.winner": result}});
-
-      console.log(match);
 
       let team1 = await getTeam(tournamentMatch.team_1);
       let team2 = await getTeam(tournamentMatch.team_2);
@@ -105,7 +103,7 @@ const reportMatch = async (tournamentId, tournamentMatch, result) => {
           { _id: team2._id },
           {$set: {losses: team2.losses + 1}}
         )
-      } else {
+      } else if (tournamentMatch.winner === 2) {
         await teamCollection.updateOne(
           { _id: team1._id },
           {$set: {losses: team1.losses + 1}}
