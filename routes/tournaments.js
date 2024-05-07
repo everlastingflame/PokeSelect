@@ -27,10 +27,10 @@ router
           user1: user1.username,
           user2: user2.username,
           winner: winnerUser
+          winner: winnerUser
         }
         schedule.push(matchup);
       }
-
       res.render("tournamentResults", { layout: "userProfiles", title: "Tournament Page", schedule: schedule });
     } catch (e) {
       res.status(500).render("userError", {layout: "userProfiles", title: "Error"})
